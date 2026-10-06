@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ชำระเงินและแจ้งโอนสลิป - Order #ORD-00125</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
-<body data-prototype-page="checkout" data-prototype-id="checkout-v1">
+<body data-prototype-page="checkout" data-prototype-id="checkout-v2">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
       <span>Page: <strong>Checkout & Slip Upload</strong></span>
-      <span>ID: <strong>checkout-v1</strong></span>
+      <span>ID: <strong>checkout-v2</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" data-prototype-target="home-v1">1. Home <small>home-v1</small></a>
-      <a href="event-detail.html" data-prototype-target="event-v1">2. Event Detail <small>event-v1</small></a>
-      <a href="checkout.html" class="active" data-prototype-target="checkout-v1">3. Checkout (15m) <small>checkout-v1</small></a>
-      <a href="tickets.html" data-prototype-target="tickets-v1">4. My Tickets <small>tickets-v1</small></a>
-      <a href="admin-verifications.html" data-prototype-target="admin-v1">5. Admin Verify <small>admin-v1</small></a>
-      <a href="organizer-checkin.html" data-prototype-target="scanner-v1">6. Scanner (Re-entry) <small>scanner-v1</small></a>
+      <a href="index.html" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
+      <a href="event-detail.html" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
+      <a href="checkout.html" class="active" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
+      <a href="tickets.html" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
+      <a href="admin-verifications.html" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
+      <a href="organizer-checkin.html" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
     </nav>
   </div>
 
@@ -35,10 +35,11 @@
     </div>
   </header>
 
-  <main class="main-content" style="max-width: 800px;">
-    
+  <main class="main-content checkout-content">
+<p class="access-note">หน้าชำระเงินจาก checkout link • แยกจากลิงก์เปิดบัตรทางอีเมล (จำลอง)</p>
+
     <!-- 15-Minute Reservation Timer Banner -->
-    <div class="timer-banner">
+    <div class="timer-banner" id="timer-banner">
       <div>
         <strong style="color:#fbbf24; font-size:14px; display:block;">⏱️ เวลาในการล็อกบัตรและชำระเงิน</strong>
         <span style="font-size:12px; color:var(--text-secondary);">กรุณาโอนเงินและแนบสลิปก่อนหมดเวลา เพื่อรักษาสิทธิ์บัตรของท่าน</span>
@@ -52,7 +53,7 @@
     </div>
 
     <!-- Order Header & Status -->
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 24px; border-bottom:1px solid var(--border-subtle); padding-bottom: 16px;">
+    <div class="order-heading" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 24px; border-bottom:1px solid var(--border-subtle); padding-bottom: 16px;">
       <div>
         <span style="color:var(--text-muted); font-size:13px;">คำสั่งซื้อเลขที่</span>
         <h1 style="font-size: 26px; margin: 4px 0;">Order #ORD-00125</h1>
@@ -67,7 +68,7 @@
     <!-- Order Summary Details -->
     <div style="background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
       <h3 style="font-size:16px; margin-bottom:12px;">รายการบัตร</h3>
-      <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px;">
+      <div class="summary-line" style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px;">
         <span>Summer Live Concert &bull; บัตรทั่วไป (&times; 3 ใบ)</span>
         <span>1,197 THB</span>
       </div>
@@ -78,7 +79,7 @@
     </div>
 
     <!-- Payment Transfer Instructions -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; background-color: var(--bg-secondary); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px;">
+    <div class="payment-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; background-color: var(--bg-secondary); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px;">
       <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border-right: 1px solid var(--border-subtle); padding-right: 20px;">
         <div style="background-color:#ffffff; padding:12px; border-radius:var(--radius-md); margin-bottom:12px; width:160px; height:160px; display:flex; align-items:center; justify-content:center; border: 2px solid #000;">
           <!-- Mock PromptPay QR code -->
@@ -97,11 +98,11 @@
             <rect x="45" y="70" width="15" height="15" fill="#000"/>
           </svg>
         </div>
-        <span style="font-size:12px; color:var(--text-muted);">สแกน QR พร้อมเพย์เพื่อชำระเงิน</span>
+        <span style="font-size:12px; color:var(--text-muted);">QR พร้อมเพย์ตัวอย่าง • ใช้ชำระเงินจริงไม่ได้</span>
       </div>
 
       <div style="display:flex; flex-direction:column; justify-content:center; gap:10px; font-size:14px;">
-        <span class="badge badge-outline" style="width:fit-content;">ข้อมูลบัญชีธนาคาร</span>
+        <span class="badge badge-outline" style="width:fit-content;">ข้อมูลบัญชีตัวอย่าง</span>
         <div>
           <span style="color:var(--text-muted); font-size:12px; display:block;">ธนาคาร:</span>
           <strong>ธนาคารกสิกรไทย (KBANK)</strong>
@@ -112,7 +113,7 @@
         </div>
         <div>
           <span style="color:var(--text-muted); font-size:12px; display:block;">เลขที่บัญชี:</span>
-          <strong style="font-size:18px; font-family:monospace; color:var(--accent-white); letter-spacing:1px;">123-4-56789-0</strong>
+          <strong style="font-size:18px; font-family:monospace; color:var(--accent-white); letter-spacing:1px;">XXX-X-XX789-X</strong>
         </div>
         <div>
           <span style="color:var(--text-muted); font-size:12px; display:block;">ยอดเงินที่ต้องโอน (ยอดตรงเป๊ะ):</span>
@@ -125,7 +126,7 @@
     <section style="background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px;">
       <h2 style="font-size: 18px; margin-bottom: 8px;">แนบสลิปหลักฐานการโอนเงิน</h2>
       <p style="font-size:13px; margin-bottom: 20px;">
-        รองรับไฟล์รูปภาพ JPG, PNG ขนาดไม่เกิน 5MB (ระบบจะคำนวณ Hash ตรวจสอบสลิปซ้ำ)
+        รองรับไฟล์ JPEG และ PNG ขนาดไม่เกิน 5 MB
       </p>
 
       <div style="border: 2px dashed var(--border-strong); border-radius: var(--radius-md); padding: 32px; text-align: center; background-color: var(--bg-secondary); margin-bottom: 20px;">
@@ -134,11 +135,12 @@
           <circle cx="8.5" cy="8.5" r="1.5"/>
           <polyline points="21 15 16 10 5 21"/>
         </svg>
-        <p style="font-size:14px; margin-bottom: 12px; color:var(--text-secondary);">ลากและวางรูปสลิปที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
-        <input type="file" id="slip-file-input" accept="image/*" style="font-size:13px; color:var(--text-muted);">
+        <p style="font-size:14px; margin-bottom: 12px; color:var(--text-secondary);">เลือกไฟล์รูปสลิปที่ต้องการส่ง</p>
+        <input type="file" id="slip-file-input" aria-label="เลือกสลิป JPEG หรือ PNG ไม่เกิน 5 MB" accept="image/jpeg,image/png" style="font-size:13px; color:var(--text-muted);">
       </div>
 
-      <!-- Slip Image Preview -->
+      <p id="upload-error" class="inline-error" role="alert" hidden></p>
+<!-- Slip Image Preview -->
       <div id="slip-preview-container" style="display:none; margin-bottom:20px; text-align:center;">
         <span style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">ภาพสลิปที่เลือก:</span>
         <img id="slip-preview-img" src="" alt="Slip Preview" style="max-height:220px; border-radius:var(--radius-md); border:1px solid var(--border-strong);">
@@ -150,26 +152,26 @@
       </button>
 
       <!-- Upload Success Notice (Hidden Initially) -->
-      <div id="upload-success-notice" style="display:none; background-color:rgba(16, 185, 129, 0.15); border:1px solid #10b981; border-radius:var(--radius-md); padding:20px; margin-top:20px;">
-        <h3 style="color:#34d399; font-size:16px; margin-bottom:6px;">✓ อัปโหลดสลิปเรียบร้อยแล้ว!</h3>
+      <div id="upload-success-notice" class="order-notice notice-pending" style="display:none;">
+        <h3 style=" font-size:16px; margin-bottom:6px;">✓ อัปโหลดสลิปเรียบร้อยแล้ว!</h3>
         <p style="font-size:13px; color:var(--text-primary); margin-bottom:12px;">
-          สถานะคำสั่งซื้อเปลี่ยนเป็น <strong>WAITING_FOR_VERIFY</strong> (ห้ามเปลี่ยนเป็น PAID ทันที โดยลูกค้าต้องรอให้ Admin ตรวจสอบยอดเงิน)
+          สถานะ <strong>WAITING_FOR_VERIFY</strong> — รอแอดมินตรวจสอบ เมื่ออนุมัติแล้วจึงออกบัตรและส่งลิงก์เปิดบัตรทางอีเมล
         </p>
         <div style="border-top:1px solid rgba(16, 185, 129, 0.3); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
           <span style="font-size:12px; color:var(--text-muted);">ทดสอบมุมมองแอดมิน:</span>
-          <a href="admin-verifications.html" class="btn btn-secondary" style="font-size:12px; padding:6px 12px;" data-prototype-target="admin-v1">
-            ไปยังหน้า Admin Verification &rarr;
+          <a href="admin-verifications.html" class="btn btn-secondary" style="font-size:12px; padding:6px 12px;" data-prototype-target="admin-v2">
+            เปิดมุมมอง Admin จำลอง →
           </a>
         </div>
       </div>
     </section>
 
-  </main>
+  <details class="demo-controls"><summary>เครื่องมือจำลองสำหรับตรวจทาน prototype</summary><p>การเลือกไฟล์เป็น preview ภายใน browser ไม่มีการส่งไฟล์ไป R2 จริง</p><button class="btn btn-secondary" id="demo-expire">จำลองหมดเวลาจอง</button><button class="btn btn-secondary" id="demo-reset-order">เริ่ม Order ตัวอย่างใหม่</button></details></main>
 
   <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
     TICKETBOX Prototype MVP &copy; 2026
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>

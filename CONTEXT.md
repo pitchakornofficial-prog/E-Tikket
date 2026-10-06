@@ -7,10 +7,10 @@ Durable domain understanding, vocabulary, business rules, and invariants for the
 - **User:** ผู้ใช้งานระบบที่ต้องเข้าสู่ระบบ มี 2 บทบาท:
   - `ADMIN`: ผู้ดูแลระบบส่วนกลาง ตรวจสอบความถูกต้องของสลิปโอนเงิน (Approve/Reject) และดูภาพรวมทั้งระบบ
   - `ORGANIZER`: ผู้จัดงาน สร้างและแก้ไขข้อมูลงานของตนเอง และใช้สแกนเนอร์ตรวจสอบบัตรหน้างาน
-- **Order:** คำสั่งซื้อบัตรของลูกค้า (Guest Checkout) ระบุจำนวนบัตร ยอดเงินรวม ข้อมูลผู้ซื้อ (ชื่อ, อีเมล, เบอร์โทรศัพท์) มีอายุ 15 นาที และมี `view_token` สำหรับเข้าดูสถานะคำสั่งซื้อและบัตร
+- **Order:** คำสั่งซื้อบัตรของลูกค้า (Guest Checkout) ระบุจำนวนบัตร ยอดเงินรวม ข้อมูลผู้ซื้อ (ชื่อ, อีเมล, เบอร์โทรศัพท์) มีระยะเวลาจองในสถานะ `PENDING_PAYMENT` 15 นาที ใช้ checkout token สำหรับหน้าชำระเงิน/สถานะคำสั่งซื้อและอัปโหลดสลิป แยกจาก `view_token` สำหรับเปิดบัตรผ่านลิงก์ทางอีเมล ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
 - **Payment:** ข้อมูลการชำระเงินของคำสั่งซื้อ ประกอบด้วยรูปสลิป (`slip_url`), แฮชของไฟล์สลิป (`slip_hash`), สถานะ และข้อมูลผู้ตรวจสอบ
 - **Ticket:** บัตรเข้างานแต่ละใบ ออกให้เมื่อ Order มีสถานะ `PAID` มี `ticket_number` สำหรับการอ้างอิง และ `qr_token_hash` สำหรับการตรวจสอบสิทธิ์
-- **TicketScan:** บันทึกประวัติ (Audit Log) การสแกนบัตรเข้า-ออกหน้างาน ระบุ Action (`CHECK_IN` หรือ `CHECK_OUT`), เวลาที่สแกน, และเจ้าหน้าที่ผู้สแกน
+- **TicketScan:** บันทึกประวัติ (Audit Log) ทุกความพยายามสแกนบัตรเข้า-ออกหน้างาน ทั้งผ่านและไม่ผ่าน ระบุ Action (`CHECK_IN` หรือ `CHECK_OUT`), เวลา, เจ้าหน้าที่, งาน และผลลัพธ์ โดย ticket association ว่างได้เมื่อไม่พบบัตร ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
 
 ## Invariants & Business Rules
 1. **Zero Customer Accounts:** ลูกค้าสั่งซื้อบัตรโดยไม่ต้องลงทะเบียนหรือจำรหัสผ่าน เข้าถึงบัตรผ่าน `view_token` ทางอีเมลเท่านั้น
@@ -26,6 +26,10 @@ Durable domain understanding, vocabulary, business rules, and invariants for the
    - หากบัตรอยู่ในสถานะ `INSIDE` แล้วพยายามสแกน `CHECK_IN` ซ้ำ ระบบจะปฏิเสธด้วยข้อความ `ALREADY CHECKED IN`
 8. **Event Scoping:** การสแกนบัตรหน้างานต้องผูกกับ `event_id` ที่กำลังจัดงานอยู่ บัตรของงานอื่นจะถูกปฏิเสธทันที
 9. **Platform Fee Calculation:** ทุก Order คำนวณหัก Platform Fee (ค่าเริ่มต้น 5.00%) โดยคำนวณ `platform_fee_amount = total_amount * (platform_fee_percent / 100)` และ `organizer_revenue = total_amount - platform_fee_amount`
+10. **Separate Guest Capabilities:** checkout token ให้สิทธิ์เฉพาะหน้าชำระเงิน/สถานะคำสั่งซื้อและการส่งสลิปที่ยังมีสิทธิ์ส่ง ไม่ให้สิทธิ์เปิด QR บัตร; `view_token` ที่ส่งทางอีเมลใช้สำหรับเปิดบัตรของ Order นั้น ทั้งสองไม่ใช่ staff session และเลข Order อย่างเดียวไม่ใช่สิทธิ์เข้าถึง ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
+11. **Protected QR Redisplay:** ภาพ QR เดิมเก็บใน R2 แบบ private แอปตรวจสิทธิ์ก่อนส่งภาพ ส่วนฐานข้อมูลเก็บเพียง hash ของ QR token และตำแหน่งไฟล์ ภาพ QR เป็นข้อมูลลับที่ใช้ผ่านประตูได้ ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
+12. **Every Scan Is Auditable:** บันทึกทุก scan รวมถึงบัตรซ้ำ, action ที่ไม่ถูกต้อง, บัตรยกเลิก, ผิดงาน, ยังไม่จ่ายเงิน และไม่พบบัตร โดยการบันทึกเหตุการณ์ไม่ทำให้การสแกนที่ถูกปฏิเสธเปลี่ยนสถานะบัตร ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
+13. **Approval and Delivery Failure:** กติกาเมื่อเตรียม QR/ออกบัตรล้มเหลว และเมื่อส่งอีเมลล้มเหลว ยึด [Confirmed Purchase and Entry Decisions](docs/requirement.md#confirmed-purchase-and-entry-decisions); การส่งใหม่ต้องใช้บัตรเดิมและไม่ออกบัตรซ้ำ
 
 ## Verification Policy
 

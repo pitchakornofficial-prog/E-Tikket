@@ -1,0 +1,24 @@
+# TASK-001: Application starts with a migrated database and seeded staff accounts
+
+- Status: done
+- Spec: [SPEC-001: Database & Authentication](../specs/SPEC-001-database-and-auth.md)
+
+## Goal
+
+Provide the runnable Next.js foundation and PostgreSQL schema needed by staff authentication, with all six domain tables and seeded Admin/Organizer accounts (AC-01). The repository currently contains documents and standalone prototypes but no application manifest or source. Read [AGENTS.md](../../AGENTS.md), the owning spec, [requirement](../requirement.md), [technical schema](../technical-spec.md#3-database-schema-prisma-schema), [ADR-0001](../adr/0001-core-architecture-and-tech-stack.md), [CONTEXT.md](../../CONTEXT.md), and [workflow](../workflow.md).
+
+## Blocked by
+
+- None
+
+## Todo
+
+- [x] Establish only the Next.js App Router, TypeScript, and Tailwind application foundation needed for Phase 1. Preserve the standalone prototypes; defer Event CRUD, checkout, payment, ticket issuance, and dashboard reporting to their owning phases.
+- [x] Establish the application manifest, lockfile, source layout, and working development/typecheck/lint/build scripts using compatible dependencies. Supported commands: `npm run dev`, `npm run typecheck`, `npm run lint`, and `npm run build`.
+- [x] Configure Prisma and PostgreSQL; create User, Event, Order, Payment, Ticket, and TicketScan models with the specified enum values, relations, database mappings, indexes, and constraints. Use the owning spec and accepted ADR over draft technical examples where they differ; retain the domain's 15-minute reservation fields without implementing expiration behavior in this task. `npx prisma validate` passed; the initial SQL migration was generated from the schema and contains all six mapped tables.
+- [x] Create the initial migration and `prisma/seed.ts` for the preconfigured ADMIN and ORGANIZER accounts, using bcrypt with cost >= 10 per ADR-0001. Store only password hashes and keep credentials out of logs and version control; document configuration through non-secret placeholders and keep `.env` ignored. The seed reads credentials from ignored `.env` configuration, hashes with bcryptjs cost 12, and does not print credentials.
+- [x] Verify AC-01 against a disposable development PostgreSQL database: run the spec's `npx prisma migrate dev` and `npx prisma db seed`, inspect all six tables, and confirm the seeded roles and hashed passwords. Record commands/results without exposing connection strings or passwords. If a usable development database is unavailable, record the actual blocker and its unblock condition rather than claiming verification passed. Both commands passed against a disposable local PostgreSQL 16 Docker container. `\dt` listed `users`, `events`, `orders`, `payments`, `tickets`, and `ticket_scans` (plus Prisma's `_prisma_migrations` table). A query returned one ADMIN and one ORGANIZER and confirmed both password values match bcrypt hash format; no hashes or passwords were printed. The temporary container was stopped and removed.
+- [x] Run the supported typecheck, lint, and build commands established above. Apply `unit-test: auto` from CONTEXT.md to meaningful task-owned logic if warranted; `integration-test` and `e2e-test` are off, so the database observation above does not require creating either automated suite. `npm run typecheck`, `npm run lint`, and `npm run build` passed. `npm run dev -- --hostname 127.0.0.1` reached Next.js Ready on port 3001 (port 3000 was occupied); the restricted sandbox denied socket binding, so startup used the permitted local-bind execution. Unit tests were not relevant: this slice has no isolated domain behavior; persisted `integration-test: off` and `e2e-test: off` were not invoked. The build reports the static `/` and `/_not-found` routes. `npm audit --omit=dev` reported 5 dependency advisories (1 moderate, 4 high) involving transitive `deepmerge-ts`/Prisma and PostCSS/Next dependencies; no major-version or forced transitive upgrades were applied in this task.
+- [x] Record implementation and verification evidence in this checklist and prepare the focused diff for the required `$code-review`; do not mark the task done before review requirements are satisfied.
+- [x] If repository policy or user instructions require a commit, commit only task-scoped changes; otherwise leave the focused diff for review. No repository or user instruction requires a commit, so the work remains uncommitted.
+- [x] Review approved — TASK-001 working tree against `HEAD`; AC-01 verified by recorded migration and seed on disposable PostgreSQL 16, with all six tables and ADMIN/ORGANIZER hash-backed accounts confirmed; Prisma validation, typecheck, lint, build, and dev startup passed; no findings. `npm audit --omit=dev` advisories were recorded; no automated unit suite was warranted for this setup-only slice.

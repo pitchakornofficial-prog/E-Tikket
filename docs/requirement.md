@@ -553,3 +553,57 @@ Dashboard + Reports
 
 อย่าสร้างระบบเกิน Scope ที่ระบุ
 และถ้ามีจุดที่ต้องตัดสินใจ ให้เลือกวิธีที่ง่ายที่สุดสำหรับ MVP ก่อน
+
+## Confirmed Purchase and Entry Decisions
+
+- Scope: SPEC-002 purchase, payment verification, ticket delivery, and event entry journeys.
+- Status: Agreed
+- Source: explicit user answers in `$grill-workflow` on 2026-10-06 (Asia/Bangkok).
+- These decisions clarify the existing MVP. They do not authorize implementing code, alter completed task evidence, or confirm the prototype UI.
+
+| ID | Selected option | State | Confirmed decision |
+| --- | --- | --- | --- |
+| S1 | A | Agreed | Store the original QR image privately in R2; the application checks access before returning it. The database stores the QR token hash and artifact location. Architecture: [ADR-0002](adr/0002-ticket-artifacts-guest-access-and-scan-audit.md). |
+| S2 | A | Agreed | Extend the existing TicketScan model to record all scan attempts in one table, with optional ticket association, event, and result. Architecture: [ADR-0002](adr/0002-ticket-artifacts-guest-access-and-scan-audit.md). |
+| S3 | A | Agreed | Use a checkout token for payment/order-status/slip access, separate from the ticket view_token delivered by email. Architecture: [ADR-0002](adr/0002-ticket-artifacts-guest-access-and-scan-audit.md). |
+| F1 | A | Agreed | Accept only JPEG and PNG payment slips, with a maximum file size of 5 MB. Validate the actual file server-side; an input accept attribute does not enforce this rule. |
+| R1 | A | Agreed | If QR preparation or ticket issuance fails during approval, approval has not succeeded and the order remains WAITING_FOR_VERIFY. Show the failure so Admin can retry; the retry must not produce duplicate tickets or falsely report PAID/issuance success. |
+| R2 | A | Agreed | If tickets are successfully issued but email delivery fails, retain PAID and the existing tickets. Persist/show the unsuccessful delivery state and provide an Admin action to send the same tickets again. Automatic scheduled retry is not required for this MVP decision. |
+| D1 | Yes | Agreed workflow intent | Perform `$grill-design` for the six SPEC-002 prototype journeys before confirming UI/design evidence. This opt-in does not approve any new visual choices. |
+
+Private order access still enforces the original order status and 15-minute reservation rule: possession of a checkout token cannot extend a reservation or permit an expired upload. Email delivery success is separate from payment approval and ticket issuance success.
+
+### Design discovery intent
+
+- Scope: home-v1, event-v1, checkout-v1, tickets-v1, admin-v1, and scanner-v1 for SPEC-002.
+- Discovery: completed
+- Source: D1 = Yes, followed by explicit design answers D2–D7 = A and D8 = TICKETBOX, confirmed 2026-10-06.
+- Existing direction: ADR-0001's high-contrast black-and-white aesthetic remains the base. Limited status colors and original-color event imagery are explicitly agreed exceptions for these six journeys, as recorded below.
+- The agreed design brief is recorded in [UI Design Requirements](#ui-design-requirements). Discovery completion confirms the brief, not acceptance of the current or future prototype rendering; visual review remains pending.
+- SPEC-002 remains draft. The owning specification workflow must incorporate the agreed decisions, complete API/state/error contracts, and reconcile UI evidence before it can become ready.
+
+## UI Design Requirements
+
+- Scope: SPEC-002's six journeys: home-v1, event-v1, checkout-v1, tickets-v1, admin-v1, and scanner-v1.
+- Status: Agreed
+- Source: explicit `$grill-design` request and answers on 2026-10-06 (Asia/Bangkok). User answer IDs D2–D8 map to stable record IDs D-02–D-08 below.
+- Discovery: completed
+- Product boundaries: [Confirmed Purchase and Entry Decisions](#confirmed-purchase-and-entry-decisions). UI discovery does not change permissions, reservation rules, ticket issuance, or the agreed failure/retry behavior.
+- Prototype references are review evidence, not acceptance of every current layout or interaction. Existing revisions are unchanged in this workflow.
+
+| ID | Scope | Status | Kind | Design decision | Basis / reference | Verification |
+| --- | --- | --- | --- | --- | --- | --- |
+| D-01 | All six SPEC-002 journeys | Agreed | constraint | Use the existing high-contrast black-and-white direction as the base, with only the scoped color exceptions in D-04 and D-05. Keep authoritative responsive/accessibility and product requirements active. | Explicit user request; [ADR-0001](adr/0001-core-architecture-and-tech-stack.md). [Current shared prototype styles](assets/prototype/style.css) are evidence, not blanket UI acceptance. | Inspect the views for a predominantly monochrome interface, readable contrast, and the agreed scoped exceptions. |
+| D-02 | All six journeys, including Admin and Scanner | Agreed | constraint | Use dark backgrounds and white/light text throughout. Do not switch staff views to the proposed light theme. | D2 = A, explicit user answer on 2026-10-06. | Review all six views on mobile and desktop for the consistent dark base and readable text/controls. |
+| D-03 | home-v1 and event-v1 | Agreed | constraint | Lead with event imagery and prominent event names, followed by date, venue, price, and the purchase action. Preserve an event-led hierarchy rather than the proposed compact information-first layout. Required event details remain available. | D3 = A; [home-v1](assets/prototype/index.html) and [event-v1](assets/prototype/event-detail.html) provide source-page context. | Inspect the first-read hierarchy and purchase action on desktop/mobile, checking that required details remain easy to find. |
+| D-04 | Status feedback across all six journeys | Agreed | constraint | Permit limited green/yellow/red semantic status accents, always accompanied by meaningful text and icons. Main interface surfaces and controls remain based on black/white. This is a scoped exception to a strictly colorless interpretation of the monochrome base. | D4 = A; explicit selection of semantic status colors over the fully monochrome alternative. | Inspect success/waiting/error feedback for text and icon cues that remain understandable without color alone; verify contrast against the dark surfaces. |
+| D-05 | Event photos/posters in the customer journeys | Agreed | constraint | Preserve organizers' original image colors; do not impose grayscale. Surrounding frames and interface remain monochrome. This is an explicit imagery exception, not permission for a new colored UI theme. | D5 = A; original-color imagery selected over grayscale. | Compare supplied event artwork with its displayed rendition and inspect that surrounding interface elements retain the agreed base. |
+| D-06 | admin-v1 payment review | Agreed | constraint | On desktop, show the order information alongside the slip so both can be inspected together. On mobile, arrange order information, slip, and decision actions vertically in that order. | D6 = A; [admin-v1](assets/prototype/admin-verifications.html) is the targeted source revision. | Inspect concurrent order/slip visibility on desktop, mobile reading/action order, and usability of Approve/Reject under the agreed product rules. |
+| D-07 | scanner-v1 scan feedback | Agreed | constraint | Show large, clear scan-result feedback below the camera. Staff acknowledge the result using “สแกนคนถัดไป” to continue, rather than the proposed popup covering the camera. Preserve the agreed scan mode, validation, and audit rules. | D7 = A; [scanner-v1](assets/prototype/organizer-checkin.html) is the targeted source revision. | Observe success, duplicate entry, invalid ticket, and checkout feedback below the camera, and use the acknowledgment action to return to the next scan. |
+| D-08 | Display branding across all six journeys | Agreed | constraint | Use the display brand TICKETBOX, with that spelling and capitalization. This sets visible branding; it does not require renaming the repository, application package, or technical identifiers. | D8 = “ใช้ชื่อว่า TICKETBOX”, explicit user answer. | Inspect the brand label and visible page branding for the agreed name. |
+
+### Open questions
+
+- No consequential design conflict remains for this scoped brief. Exact fonts, spacing, radii, icon artwork, and animation parameters are not fixed by these answers and remain non-blocking details; do not present invented values as user-confirmed choices.
+- Visual validation of the adjusted prototype remains pending. Existing v1 revisions are source evidence and have not been declared fully accepted by these design answers.
+- The owning specification workflow still needs to incorporate the latest product and design agreements and complete its API/state/error contract. This design brief does not mark SPEC-002 ready or change its ACs.

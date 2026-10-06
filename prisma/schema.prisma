@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  ORGANIZER
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  WAITING_FOR_VERIFY
+  PAID
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum TicketStatus {
+  OUTSIDE
+  INSIDE
+  CANCELLED
+}
+
+enum ScanAction {
+  CHECK_IN
+  CHECK_OUT
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  passwordHash  String       @map("password_hash")
+  name          String
+  role          Role         @default(ORGANIZER)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  events        Event[]      @relation("OrganizerEvents")
+  verifiedSlips Payment[]    @relation("AdminVerifiedPayments")
+  scans         TicketScan[] @relation("StaffScans")
+
+  @@map("users")
+}
+
+model Event {
+  id           String      @id @default(cuid())
+  organizerId  String      @map("organizer_id")
+  name         String
+  description  String      @db.Text
+  imageUrl     String      @map("image_url")
+  venue        String
+  eventDate    DateTime    @map("event_date") @db.Date
+  startTime    String      @map("start_time")
+  ticketPrice  Decimal     @map("ticket_price") @db.Decimal(10, 2)
+  totalTickets Int         @map("total_tickets")
+  status       EventStatus @default(DRAFT)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  organizer    User        @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  orders       Order[]
+  tickets      Ticket[]
+
+  @@index([status, eventDate])
+  @@map("events")
+}
+
+model Order {
+  id                 String      @id @default(cuid())
+  eventId            String      @map("event_id")
+  customerName       String      @map("customer_name")
+  customerEmail      String      @map("customer_email")
+  customerPhone      String      @map("customer_phone")
+  quantity           Int
+  totalAmount        Decimal     @map("total_amount") @db.Decimal(10, 2)
+  platformFeePercent Decimal     @default(5.00) @map("platform_fee_percent") @db.Decimal(5, 2)
+  platformFeeAmount  Decimal     @map("platform_fee_amount") @db.Decimal(10, 2)
+  organizerRevenue   Decimal     @map("organizer_revenue") @db.Decimal(10, 2)
+  viewToken          String      @unique @map("view_token")
+  status             OrderStatus @default(PENDING_PAYMENT)
+  expiresAt          DateTime    @map("expires_at")
+  createdAt          DateTime    @default(now()) @map("created_at")
+  updatedAt          DateTime    @updatedAt @map("updated_at")
+
+  event              Event       @relation(fields: [eventId], references: [id])
+  payments           Payment[]
+  tickets            Ticket[]
+
+  @@index([customerEmail])
+  @@index([status])
+  @@map("orders")
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  orderId      String        @map("order_id")
+  amount       Decimal       @db.Decimal(10, 2)
+  slipUrl      String        @map("slip_url")
+  slipHash     String        @map("slip_hash")
+  status       PaymentStatus @default(PENDING)
+  verifiedById String?       @map("verified_by")
+  rejectReason String?       @map("reject_reason") @db.Text
+  verifiedAt   DateTime?     @map("verified_at")
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  order        Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  verifier     User?         @relation("AdminVerifiedPayments", fields: [verifiedById], references: [id])
+
+  @@index([slipHash])
+  @@map("payments")
+}
+
+model Ticket {
+  id           String       @id @default(cuid())
+  eventId      String       @map("event_id")
+  orderId      String       @map("order_id")
+  ticketNumber String       @unique @map("ticket_number")
+  qrTokenHash  String       @unique @map("qr_token_hash")
+  status       TicketStatus @default(OUTSIDE)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  event        Event        @relation(fields: [eventId], references: [id])
+  order        Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  scans        TicketScan[]
+
+  @@index([eventId, status])
+  @@map("tickets")
+}
+
+model TicketScan {
+  id        String     @id @default(cuid())
+  ticketId  String     @map("ticket_id")
+  staffId   String     @map("staff_id")
+  action    ScanAction
+  note      String?
+  scannedAt DateTime   @default(now()) @map("scanned_at")
+
+  ticket    Ticket     @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  staff     User       @relation("StaffScans", fields: [staffId], references: [id])
+
+  @@index([ticketId, scannedAt])
+  @@map("ticket_scans")
+}

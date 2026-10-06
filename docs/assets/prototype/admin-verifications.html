@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard & Payment Verification - TICKETBOX</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
-<body data-prototype-page="admin" data-prototype-id="admin-v1">
+<body data-prototype-page="admin" data-prototype-id="admin-v2">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
       <span>Page: <strong>Admin Payment Verification</strong></span>
-      <span>ID: <strong>admin-v1</strong></span>
+      <span>ID: <strong>admin-v2</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" data-prototype-target="home-v1">1. Home <small>home-v1</small></a>
-      <a href="event-detail.html" data-prototype-target="event-v1">2. Event Detail <small>event-v1</small></a>
-      <a href="checkout.html" data-prototype-target="checkout-v1">3. Checkout (15m) <small>checkout-v1</small></a>
-      <a href="tickets.html" data-prototype-target="tickets-v1">4. My Tickets <small>tickets-v1</small></a>
-      <a href="admin-verifications.html" class="active" data-prototype-target="admin-v1">5. Admin Verify <small>admin-v1</small></a>
-      <a href="organizer-checkin.html" data-prototype-target="scanner-v1">6. Scanner (Re-entry) <small>scanner-v1</small></a>
+      <a href="index.html" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
+      <a href="event-detail.html" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
+      <a href="checkout.html" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
+      <a href="tickets.html" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
+      <a href="admin-verifications.html" class="active" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
+      <a href="organizer-checkin.html" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
     </nav>
   </div>
 
@@ -33,135 +33,20 @@
           <span class="brand-badge">ADMIN</span>
         </a>
       </div>
-      <nav class="nav-links">
-        <a href="#" style="color:#ffffff;">Payment Verification</a>
-        <a href="#">Events</a>
-        <a href="#">Orders</a>
-        <a href="#">Reports</a>
-        <a href="index.html" style="font-size:12px; color:var(--text-muted);">&larr; กลับหน้าร้าน</a>
-      </nav>
+      <nav class="nav-links"><a href="index.html">← กลับหน้ารวมงาน</a><span class="access-note">ADMIN จำลอง</span></nav>
     </div>
   </header>
 
-  <main class="main-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
-      <div>
-        <h1 style="font-size: 26px; margin-bottom: 4px;">ตรวจสอบการชำระเงิน (Payment Verification)</h1>
-        <p style="font-size: 14px;">อนุมัติหรือปฏิเสธสลิปการโอนเงิน (เฉพาะคำสั่งซื้อที่ Approved เท่านั้นที่จะถูกสร้าง E-Ticket)</p>
-      </div>
-      <span class="badge badge-pending">รอตรวจสอบ: 1 รายการ</span>
-    </div>
-
-    <!-- Admin KPI Cards Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px;">
-      <div style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px;">
-        <span style="color:var(--text-muted); font-size:12px; display:block;">ยอดขายรวม (Gross)</span>
-        <strong style="font-size:22px; color:var(--accent-white);">199,500 <small style="font-size:12px;">THB</small></strong>
-      </div>
-      <div style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px;">
-        <span style="color:var(--text-muted); font-size:12px; display:block;">รายได้ Platform (5%)</span>
-        <strong style="font-size:22px; color:#10b981;">9,975 <small style="font-size:12px;">THB</small></strong>
-      </div>
-      <div style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px;">
-        <span style="color:var(--text-muted); font-size:12px; display:block;">บัตรที่ขายแล้ว</span>
-        <strong style="font-size:22px; color:var(--accent-white);">327 / 500</strong>
-      </div>
-      <div style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px;">
-        <span style="color:var(--text-muted); font-size:12px; display:block;">สแกนเข้างานแล้ว</span>
-        <strong style="font-size:22px; color:#3b82f6;">289 คน</strong>
-      </div>
-      <div style="background-color:var(--bg-card); border:1px solid rgba(245, 158, 11, 0.4); border-radius:var(--radius-md); padding:16px;">
-        <span style="color:#fbbf24; font-size:12px; display:block;">สลิปรอตรวจสอบ</span>
-        <strong style="font-size:22px; color:#fbbf24;">1 ออเดอร์</strong>
-      </div>
-    </div>
-
-    <!-- Verification Table -->
-    <div style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); overflow:hidden;">
-      <div style="padding:16px 20px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="font-size:16px; margin:0;">รายการสลิปที่รอการตรวจสอบ</h2>
-        <span style="font-size:12px; color:var(--text-muted);">กด Approve เพื่อสร้างบัตรและส่งอีเมลทันที</span>
-      </div>
-
-      <div style="overflow-x:auto;">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>ลูกค้า</th>
-              <th>อีเวนต์</th>
-              <th>จำนวน</th>
-              <th>ยอดเงิน</th>
-              <th>รูปสลิป</th>
-              <th>สถานะปัจจุบัน</th>
-              <th style="text-align:right;">การดำเนินการ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Pending Order Row -->
-            <tr>
-              <td><strong style="color:var(--accent-white);">#ORD-00125</strong></td>
-              <td>
-                <div>John Doe</div>
-                <small style="color:var(--text-muted);">john@example.com</small>
-              </td>
-              <td>Summer Live Concert</td>
-              <td>3 ใบ</td>
-              <td><strong style="color:#10b981;">1,197.00 THB</strong></td>
-              <td>
-                <!-- Slip Thumbnail Preview -->
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <div style="width:48px; height:60px; background-color:#27272a; border-radius:4px; border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="2">
-                      <rect x="3" y="3" width="18" height="18" rx="2"/>
-                      <circle cx="8.5" cy="8.5" r="1.5"/>
-                      <polyline points="21 15 16 10 5 21"/>
-                    </svg>
-                  </div>
-                  <button class="btn btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="alert('เปิดแสดงรูปสลิปขนาดเต็ม (SHA-256 Hash ตรวจสอบผ่าน ไม่มีประวัติสลิปซ้ำ)')">
-                    🔍 ดูสลิป
-                  </button>
-                </div>
-              </td>
-              <td class="order-status-col">
-                <span class="badge badge-pending">WAITING_FOR_VERIFY</span>
-              </td>
-              <td class="order-actions-col" style="text-align:right;">
-                <div style="display:inline-flex; gap:8px;">
-                  <button class="btn btn-primary" style="padding:6px 14px; font-size:13px;" onclick="approveOrder(this, 'ORD-00125')">
-                    ✓ Approve
-                  </button>
-                  <button class="btn btn-danger" style="padding:6px 14px; font-size:13px;" onclick="rejectOrder(this, 'ORD-00125')">
-                    ✕ Reject
-                  </button>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Historical Order Row -->
-            <tr style="opacity:0.6;">
-              <td>#ORD-00124</td>
-              <td>
-                <div>Jane Smith</div>
-                <small>jane@example.com</small>
-              </td>
-              <td>Summer Live Concert</td>
-              <td>2 ใบ</td>
-              <td>798.00 THB</td>
-              <td><small style="color:var(--text-muted);">ตรวจแล้ว</small></td>
-              <td><span class="badge badge-success">PAID</span></td>
-              <td style="text-align:right;"><small style="color:var(--text-muted);">อนุมัติแล้ว (โดย Admin)</small></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
+  <main class="main-content admin-content"><p class="eyebrow">ADMIN / PAYMENT VERIFICATION · มุมมองจำลอง</p><div class="section-heading"><div><h1>ตรวจสอบการชำระเงิน</h1><p>เทียบข้อมูลคำสั่งซื้อกับสลิปก่อนอนุมัติ</p></div><span id="admin-status" class="badge badge-pending">◷ WAITING_FOR_VERIFY</span></div>
+<div class="review-layout"><section class="order-review"><p class="eyebrow">คำสั่งซื้อที่กำลังตรวจ</p><h2>#ORD-00125</h2><dl class="review-details"><div><dt>งาน</dt><dd>Summer Live Concert</dd></div><div><dt>ผู้ซื้อ</dt><dd>John Doe<br><span>john@example.com</span></dd></div><div><dt>จำนวนบัตร</dt><dd>3 ใบ × 399 THB</dd></div><div class="amount-row"><dt>ยอดที่ต้องได้รับ</dt><dd>1,197.00 THB</dd></div></dl><p class="access-note">อัปโหลดสลิปยังไม่ใช่การชำระเงินที่ผ่านการตรวจสอบ</p></section>
+<section class="slip-review"><div class="section-heading"><h2>หลักฐานการโอน</h2><span class="badge badge-outline">ภาพตัวอย่าง</span></div><div class="slip-sample" aria-label="ตัวอย่างสลิปโอนเงิน ไม่ใช่สลิปจริง"><p class="slip-watermark">DEMO / ไม่ใช่หลักฐานจริง</p><div class="slip-logo">TRANSFER RECEIPT</div><p class="slip-check">✓</p><h3>โอนเงินสำเร็จ</h3><p>24 ต.ค. 2026 · 16:08 น.</p><strong class="slip-amount">1,197.00 THB</strong><hr><dl><dt>จาก</dt><dd>John Doe · XXX-X-XX001-X</dd><dt>ถึง</dt><dd>TICKETBOX · XXX-X-XX789-X</dd><dt>รายการอ้างอิง</dt><dd>DEMO-TRANSFER-00125</dd></dl></div></section>
+<section class="review-actions"><div class="action-row"><button id="approve-order-btn" class="btn btn-primary" onclick="approveOrder()">✓ Approve / อนุมัติ</button><button id="reject-order-btn" class="btn btn-danger" onclick="rejectOrder()">✕ Reject / ปฏิเสธ</button></div><p id="admin-result" class="review-result" role="status" aria-live="polite">รอการตรวจสอบ • ยังไม่มีบัตรที่ออกจากการตัดสินใจนี้</p><button id="resend-email-btn" class="btn btn-secondary" onclick="resendEmail()" hidden>↗ ส่งอีเมลบัตรเดิมอีกครั้ง</button></section></div>
+<details class="demo-controls"><summary>สถานการณ์จำลองสำหรับตรวจทาน</summary><label for="approval-scenario">ผลของการ Approve</label><select id="approval-scenario" class="form-select"><option value="success">ออกบัตรและส่งอีเมลสำเร็จ</option><option value="issuance-failure">เตรียม QR / ออกบัตรล้มเหลว</option><option value="email-failure">ออกบัตรสำเร็จ แต่อีเมลล้มเหลว</option></select><button class="btn btn-secondary" id="reset-review">เริ่มตรวจรายการตัวอย่างใหม่</button><p>เป็นการจำลองสถานะเท่านั้น ไม่อนุมัติเงิน ออกบัตร หรือส่งอีเมลจริง</p></details></main>
 
   <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
     TICKETBOX Prototype MVP &copy; 2026
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>

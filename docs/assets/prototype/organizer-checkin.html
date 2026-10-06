@@ -4,57 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Check-in & Re-entry Scanner - TICKETBOX</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Scanner Modal Feedback Overlays */
-    .modal-feedback {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      max-width: 420px;
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      z-index: 2000;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-      text-align: center;
-      border: 2px solid;
-    }
-    .modal-feedback.bg-success {
-      background-color: #064e3b;
-      border-color: #10b981;
-      color: #ecfdf5;
-    }
-    .modal-feedback.bg-pending {
-      background-color: #78350f;
-      border-color: #f59e0b;
-      color: #fffbeb;
-    }
-    .modal-feedback.bg-danger {
-      background-color: #7f1d1d;
-      border-color: #ef4444;
-      color: #fef2f2;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
-<body data-prototype-page="scanner" data-prototype-id="scanner-v1">
+<body data-prototype-page="scanner" data-prototype-id="scanner-v2">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
       <span>Page: <strong>Organizer QR Scanner (Re-entry)</strong></span>
-      <span>ID: <strong>scanner-v1</strong></span>
+      <span>ID: <strong>scanner-v2</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" data-prototype-target="home-v1">1. Home <small>home-v1</small></a>
-      <a href="event-detail.html" data-prototype-target="event-v1">2. Event Detail <small>event-v1</small></a>
-      <a href="checkout.html" data-prototype-target="checkout-v1">3. Checkout (15m) <small>checkout-v1</small></a>
-      <a href="tickets.html" data-prototype-target="tickets-v1">4. My Tickets <small>tickets-v1</small></a>
-      <a href="admin-verifications.html" data-prototype-target="admin-v1">5. Admin Verify <small>admin-v1</small></a>
-      <a href="organizer-checkin.html" class="active" data-prototype-target="scanner-v1">6. Scanner (Re-entry) <small>scanner-v1</small></a>
+      <a href="index.html" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
+      <a href="event-detail.html" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
+      <a href="checkout.html" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
+      <a href="tickets.html" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
+      <a href="admin-verifications.html" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
+      <a href="organizer-checkin.html" class="active" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
     </nav>
   </div>
 
@@ -71,18 +38,18 @@
   </header>
 
   <main class="main-content" style="max-width: 600px;">
-    
+
     <!-- Action Mode Switcher (Check-in vs Re-entry Check-out) -->
     <div style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:16px; margin-bottom:24px;">
       <label class="form-label" for="scan-action" style="font-size:14px; color:var(--accent-white); margin-bottom:8px;">
         โหมดการสแกนบัตรหน้างาน (Scan Action):
       </label>
       <select id="scan-action" class="form-select" style="font-size:16px; padding:12px; font-weight:700;">
-        <option value="CHECK_IN">🟢 CHECK_IN (เข้างาน: OUTSIDE &rarr; INSIDE)</option>
-        <option value="CHECK_OUT">🔵 CHECK_OUT (ออกชั่วคราว: INSIDE &rarr; OUTSIDE เพื่อ Re-entry)</option>
+        <option value="CHECK_IN">CHECK_IN • เข้างาน</option>
+        <option value="CHECK_OUT">CHECK_OUT • ออกชั่วคราว</option>
       </select>
       <small style="color:var(--text-muted); font-size:11px; display:block; margin-top:6px;">
-        Staff เลือกโหมดตามจุดประตู (ประตูเข้าเลือก CHECK_IN / ประตูออกเพื่อสูบบุหรี่หรือทำธุระเลือก CHECK_OUT)
+        CHECK_IN: OUTSIDE → INSIDE • CHECK_OUT: INSIDE → OUTSIDE เพื่อกลับเข้างาน
       </small>
     </div>
 
@@ -91,38 +58,39 @@
       <div class="laser-line"></div>
       <div class="scanner-crosshair"></div>
       <span style="position:absolute; bottom:16px; font-size:12px; color:rgba(255,255,255,0.7); background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:4px;">
-        📷 กล้องตรวจจับ QR Code พร้อมทำงาน
+        ช่องกล้องจำลอง • ไม่ได้เปิดกล้องจริง
       </span>
     </div>
 
+<section id="scan-result-panel" class="scan-result" role="status" aria-live="polite" tabindex="-1" hidden><h2 id="scan-result-title"></h2><div id="scan-result-body"></div><button id="next-scan-btn" class="btn btn-primary btn-block" onclick="closeModal()">สแกนคนถัดไป</button></section>
     <!-- Interactive Simulation Buttons (For testing all scenarios) -->
     <div style="background-color:var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:20px; margin-bottom:24px;">
-      <h3 style="font-size:14px; margin-bottom:12px; color:var(--text-muted); text-transform:uppercase;">
-        คลิกปุ่มด้านล่างเพื่อจำลองการสแกนสถานการณ์ต่างๆ:
+      <h3 style="font-size:14px; margin-bottom:12px; color:var(--text-muted);">
+        เครื่องมือจำลองการสแกน · ไม่ใช่ปุ่มสำหรับผู้ใช้งานจริง
       </h3>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" onclick="simulateScan('TKT-00125-01')">
+        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" data-scan-simulation onclick="simulateScan('TKT-00125-01')">
           🎟️ สแกนบัตร #1<br><small style="color:#10b981;">(ปกติ: OUTSIDE)</small>
         </button>
-        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" onclick="simulateScan('TKT-00125-02')">
-          🎟️ สแกนบัตร #2<br><small style="color:#3b82f6;">(อยู่ในงาน: INSIDE)</small>
+        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" data-scan-simulation onclick="simulateScan('TKT-00125-02')">
+          🎟️ สแกนบัตร #2<br><small style="color:var(--text-primary);">(อยู่ในงาน: INSIDE)</small>
         </button>
-        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" onclick="simulateScan('TKT-00125-03')">
+        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" data-scan-simulation onclick="simulateScan('TKT-00125-03')">
           🚫 สแกนบัตร #3<br><small style="color:#ef4444;">(ยกเลิก: CANCELLED)</small>
         </button>
-        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" onclick="simulateScan('INVALID_QR')">
+        <button class="btn btn-secondary" style="font-size:12px; padding:10px;" data-scan-simulation onclick="simulateScan('INVALID_QR')">
           ❌ สแกน QR ปลอม<br><small style="color:#ef4444;">(ไม่พบบัตรในระบบ)</small>
         </button>
-      </div>
+      <button class="btn btn-secondary" data-scan-simulation onclick="simulateScan('WRONG_EVENT')">✕ บัตรผิดงาน</button><button class="btn btn-secondary" data-scan-simulation onclick="simulateScan('UNPAID')">✕ ยังไม่จ่ายเงิน</button></div>
     </div>
 
     <!-- Scan Log Table (Audit Trail) -->
     <section style="background-color:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); overflow:hidden;">
       <div style="padding:14px 18px; border-bottom:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
         <h3 style="font-size:14px; margin:0;">ประวัติการสแกนล่าสุด (Scan Audit Log)</h3>
-        <span class="badge badge-outline">Auto-sync</span>
+        <span class="badge badge-outline">บันทึกทุกครั้ง (จำลอง)</span>
       </div>
-      <div style="max-height: 220px; overflow-y:auto;">
+      <div style="max-height: 330px; overflow:auto;">
         <table class="data-table" style="font-size:12px;">
           <thead>
             <tr>
@@ -130,35 +98,20 @@
               <th>เลขที่บัตร</th>
               <th>Action</th>
               <th>ผลลัพธ์</th>
-              <th>Staff</th>
+              <th>Staff</th><th>งานที่สแกน</th>
             </tr>
           </thead>
-          <tbody id="scan-log-tbody">
-            <tr>
-              <td>10:05:12</td>
-              <td><strong>TKT-00120-01</strong></td>
-              <td><span class="badge badge-success">CHECK_IN</span></td>
-              <td><span class="badge badge-success">PASS</span></td>
-              <td>Staff #STF-01</td>
-            </tr>
-          </tbody>
+          <tbody id="scan-log-tbody"><tr id="scan-log-empty"><td colspan="6">ยังไม่มีการสแกนในรอบจำลองนี้</td></tr></tbody>
         </table>
       </div>
     </section>
 
   </main>
 
-  <!-- Dynamic Modal Feedback Popup -->
-  <div id="scan-result-modal" class="modal-feedback">
-    <h2 id="scan-result-title" style="font-size: 22px; margin-bottom: 8px;"></h2>
-    <div id="scan-result-body" style="font-size: 14px; margin-bottom: 20px;"></div>
-    <button class="btn btn-primary btn-block" onclick="closeModal()">ตกลง (สแกนคนถัดไป)</button>
-  </div>
-
   <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
     TICKETBOX Prototype MVP &copy; 2026 &bull; Mobile-First Scanner Interface
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
