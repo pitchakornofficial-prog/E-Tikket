@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangleIcon, LockIcon, ArrowRightIcon } from "@/components/icons";
+import { formatPrice } from "@/lib/format";
 
 interface TicketPurchaseFormProps {
   eventId: string;
@@ -212,11 +213,11 @@ export function TicketPurchaseForm({
       <div className="p-3 bg-neutral-900 border border-neutral-800 rounded space-y-2">
         <div className="flex justify-between text-xs text-neutral-400">
           <span>ราคาบัตรรวม ({quantity} ใบ)</span>
-          <span className="font-mono text-neutral-200">฿{subtotal.toFixed(2)}</span>
+          <span className="font-mono text-neutral-200">฿{formatPrice(subtotal, true)}</span>
         </div>
         <div className="flex justify-between items-baseline pt-2 border-t border-neutral-800">
           <span className="text-xs font-bold text-white">ยอดรวมสุทธิ</span>
-          <span className="text-lg font-black text-white font-mono">฿{subtotal.toFixed(2)}</span>
+          <span className="text-lg font-black text-white font-mono">฿{formatPrice(subtotal, true)}</span>
         </div>
       </div>
 

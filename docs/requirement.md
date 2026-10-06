@@ -607,3 +607,42 @@ Private order access still enforces the original order status and 15-minute rese
 - No consequential design conflict remains for this scoped brief. Exact fonts, spacing, radii, icon artwork, and animation parameters are not fixed by these answers and remain non-blocking details; do not present invented values as user-confirmed choices.
 - Visual validation of the adjusted prototype remains pending. Existing v1 revisions are source evidence and have not been declared fully accepted by these design answers.
 - The owning specification workflow still needs to incorporate the latest product and design agreements and complete its API/state/error contract. This design brief does not mark SPEC-002 ready or change its ACs.
+
+## Confirmed News/Blog Feature Decisions
+
+- Scope: News/Blog content feature for SEO — client-facing article pages and admin/organizer article management.
+- Status: Agreed
+- Source: explicit user answers in `$grill-workflow` on 2026-10-07 (Asia/Bangkok).
+- These decisions define a new feature addition to the existing MVP. They do not authorize implementing code or confirm UI layout.
+
+| ID | Selected option | State | Confirmed decision |
+| --- | --- | --- | --- |
+| P1 | C | Agreed | Mixed content: articles about events/music scene to drive organic traffic AND platform announcements for TICKETBOX. |
+| P2 | B | Agreed | Both Admin and Organizer can write articles. Organizer writes about their own events; Admin writes general articles and reviews Organizer submissions. |
+| P3 | B | Agreed | Support both Category and Tag for article classification. |
+| P4 | A | Agreed | Articles can link to existing Events in the system. Article page shows links to the related event; Event page may show related articles. |
+| P5 | A | Agreed | Use a rich text editor (e.g. TipTap) supporting headings, bold, italic, inline images, and links. |
+| S1 | A | Agreed | Organizer articles require Admin approval before publishing: Draft → Pending Review → Published. Admin articles publish directly. |
+| S2 | A | Agreed | Article URL path: `/news/[slug]`. |
+| S3 | A | Agreed | Slug auto-generated from title, editable for SEO keyword optimization. |
+| S4 | A | Agreed | Admin is superuser for all articles: can edit, delete, and unpublish any article including Organizer's. |
+| S5 | A | Agreed | Store article images (cover and inline) in Cloudflare R2, reusing existing storage infrastructure. |
+| S6 | A | Agreed | Dedicated `/news` listing page with a link in the main navigation bar. |
+| T1 | A | Agreed | Admin manages Categories (CRUD). Tags are free-form typed during article creation with autocomplete suggestions from existing tags. |
+| T2 | A | Agreed | Editable SEO Title, Meta Description, and OG Image per article. Auto-generated from article title, first paragraph, and cover image respectively when left blank. |
+| T3 | A | Agreed | Admin can edit published articles immediately without re-review. Organizer edits to published articles automatically revert status to Pending Review. |
+| T4 | A | Agreed workflow intent | Use existing design direction (dark monochrome D-01–D-08) for news pages. No separate grill-design session needed. |
+
+### Article status lifecycle
+
+- Admin creates article: `DRAFT` → (publish) → `PUBLISHED`
+- Admin can also: `PUBLISHED` → `ARCHIVED` or `DRAFT`
+- Organizer creates article: `DRAFT` → (submit) → `PENDING_REVIEW` → Admin Approve → `PUBLISHED`
+- Organizer creates article: `DRAFT` → (submit) → `PENDING_REVIEW` → Admin Reject → `DRAFT`
+- Organizer edits published article: `PUBLISHED` → automatically `PENDING_REVIEW`
+- Admin edits any published article: stays `PUBLISHED`
+- Any article can be unpublished/archived by Admin
+
+### Design direction
+
+Existing agreed design constraints D-01 through D-08 apply to news feature pages. No additional design discovery was requested. The dark monochrome base, semantic status colors, and original-color event/article imagery exceptions remain active.

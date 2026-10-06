@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { calculateAvailableTickets } from "@/lib/inventory";
 import { EventCatalogBrowser, CatalogEvent } from "@/components/event-catalog-browser";
+import { PublicNavbar } from "@/components/public-navbar";
 
 async function getPublishedEvents(): Promise<{ events: CatalogEvent[] | null; error: boolean }> {
   try {
@@ -55,22 +56,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col font-sans">
       {/* Header */}
-      <header className="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-white font-bold tracking-wider text-lg uppercase">
-            <span>TICKETBOX</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-300 font-mono">MVP</span>
-          </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/" className="text-white hover:text-white font-medium">
-              สำรวจงานแสดง
-            </Link>
-            <Link href="/my-tickets" className="text-neutral-400 hover:text-white transition-colors">
-              ตั๋วของฉัน
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <PublicNavbar />
 
       {/* Main Content */}
       <main className="flex-1 max-w-6xl mx-auto px-4 py-10 w-full space-y-10">

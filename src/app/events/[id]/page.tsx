@@ -11,6 +11,7 @@ import {
   CheckIcon,
   ArrowLeftIcon,
 } from "@/components/icons";
+import { formatPrice } from "@/lib/format";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -65,7 +66,7 @@ export default async function EventDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col font-sans">
       {/* Header */}
-      <header className="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur sticky top-0 z-10">
+      <header className="border-b border-neutral-900 bg-neutral-950/90 backdrop-blur sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-white font-bold tracking-wider text-lg uppercase">
             <span>TICKETBOX</span>
@@ -176,7 +177,7 @@ export default async function EventDetailPage({ params }: PageProps) {
               <div className="border-b border-neutral-900 pb-4 space-y-1">
                 <p className="text-xs text-neutral-400 uppercase font-medium">บัตรเข้าชมการแสดง</p>
                 <div className="flex items-baseline justify-between">
-                  <span className="text-3xl font-black text-white">฿{event.ticketPrice.toFixed(2)}</span>
+                  <span className="text-3xl font-black text-white font-mono">฿{formatPrice(event.ticketPrice, true)}</span>
                   <span className="text-xs text-neutral-500">/ ใบ</span>
                 </div>
               </div>

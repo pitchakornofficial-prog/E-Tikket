@@ -13,6 +13,8 @@ import {
   ArrowRightIcon,
   MusicIcon,
 } from "@/components/icons";
+import { PublicNavbar } from "@/components/public-navbar";
+import { formatPrice } from "@/lib/format";
 
 interface TicketOrder {
   orderId: string;
@@ -91,23 +93,8 @@ export default function MyTicketsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col font-sans">
-      {/* Header - Staff login hidden from regular navbar */}
-      <header className="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-white font-bold tracking-wider text-lg uppercase">
-            <span>TICKETBOX</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-300 font-mono">MVP</span>
-          </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/" className="text-neutral-400 hover:text-white transition-colors">
-              สำรวจงานแสดง
-            </Link>
-            <Link href="/my-tickets" className="text-white font-medium">
-              ตั๋วของฉัน
-            </Link>
-          </nav>
-        </div>
-      </header>
+      {/* Header - Shared Public Navbar */}
+      <PublicNavbar />
 
       {/* Main Container */}
       <main className="flex-1 max-w-5xl mx-auto px-4 py-12 w-full space-y-10">
@@ -291,7 +278,7 @@ export default function MyTicketsPage() {
                                   จำนวน: <strong className="text-white font-mono">{order.quantity}</strong> ใบ
                                 </span>
                                 <span className="font-mono text-emerald-400 font-bold text-sm">
-                                  ฿{order.totalAmount}
+                                  ฿{formatPrice(order.totalAmount, true)}
                                 </span>
                               </div>
                             </div>

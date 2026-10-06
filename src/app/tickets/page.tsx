@@ -109,7 +109,7 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col selection:bg-white selection:text-black">
       {/* Header */}
-      <header className="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur sticky top-0 z-10">
+      <header className="border-b border-neutral-900 bg-neutral-950/90 backdrop-blur sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-white font-bold tracking-wider text-lg uppercase">
             <span>TICKETBOX</span>

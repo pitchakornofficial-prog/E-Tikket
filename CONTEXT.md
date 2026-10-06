@@ -11,6 +11,9 @@ Durable domain understanding, vocabulary, business rules, and invariants for the
 - **Payment:** ข้อมูลการชำระเงินของคำสั่งซื้อ ประกอบด้วยรูปสลิป (`slip_url`), แฮชของไฟล์สลิป (`slip_hash`), สถานะ และข้อมูลผู้ตรวจสอบ
 - **Ticket:** บัตรเข้างานแต่ละใบ ออกให้เมื่อ Order มีสถานะ `PAID` มี `ticket_number` สำหรับการอ้างอิง และ `qr_token_hash` สำหรับการตรวจสอบสิทธิ์
 - **TicketScan:** บันทึกประวัติ (Audit Log) ทุกความพยายามสแกนบัตรเข้า-ออกหน้างาน ทั้งผ่านและไม่ผ่าน ระบุ Action (`CHECK_IN` หรือ `CHECK_OUT`), เวลา, เจ้าหน้าที่, งาน และผลลัพธ์ โดย ticket association ว่างได้เมื่อไม่พบบัตร ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
+- **Article:** บทความ/ข่าวสำหรับ SEO เขียนโดย Admin หรือ Organizer มี title, slug (URL-friendly, editable), เนื้อหา rich text, cover image, SEO metadata (title, description, OG image), เชื่อมโยง Category, Tag, และ Event ที่เกี่ยวข้องได้ สถานะ: `DRAFT`, `PENDING_REVIEW`, `PUBLISHED`, `ARCHIVED`
+- **ArticleCategory:** หมวดหมู่บทความ จัดการโดย Admin เท่านั้น (CRUD) ใช้จัดกลุ่มบทความ เช่น "ข่าวอีเวนต์", "รีวิวคอนเสิร์ต"
+- **ArticleTag:** แท็กบทความ เป็น free-form สร้างขณะเขียนบทความ ระบบเสนอ tag ที่เคยใช้แล้ว (autocomplete)
 
 ## Invariants & Business Rules
 1. **Zero Customer Accounts:** ลูกค้าสั่งซื้อบัตรโดยไม่ต้องลงทะเบียนหรือจำรหัสผ่าน เข้าถึงบัตรผ่าน `view_token` ทางอีเมลเท่านั้น
@@ -30,6 +33,9 @@ Durable domain understanding, vocabulary, business rules, and invariants for the
 11. **Protected QR Redisplay:** ภาพ QR เดิมเก็บใน R2 แบบ private แอปตรวจสิทธิ์ก่อนส่งภาพ ส่วนฐานข้อมูลเก็บเพียง hash ของ QR token และตำแหน่งไฟล์ ภาพ QR เป็นข้อมูลลับที่ใช้ผ่านประตูได้ ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
 12. **Every Scan Is Auditable:** บันทึกทุก scan รวมถึงบัตรซ้ำ, action ที่ไม่ถูกต้อง, บัตรยกเลิก, ผิดงาน, ยังไม่จ่ายเงิน และไม่พบบัตร โดยการบันทึกเหตุการณ์ไม่ทำให้การสแกนที่ถูกปฏิเสธเปลี่ยนสถานะบัตร ([ADR-0002](docs/adr/0002-ticket-artifacts-guest-access-and-scan-audit.md))
 13. **Approval and Delivery Failure:** กติกาเมื่อเตรียม QR/ออกบัตรล้มเหลว และเมื่อส่งอีเมลล้มเหลว ยึด [Confirmed Purchase and Entry Decisions](docs/requirement.md#confirmed-purchase-and-entry-decisions); การส่งใหม่ต้องใช้บัตรเดิมและไม่ออกบัตรซ้ำ
+14. **Article Approval Gate:** บทความของ Organizer ต้องผ่าน Admin approve ก่อนเผยแพร่ (DRAFT → PENDING_REVIEW → PUBLISHED) ส่วนบทความของ Admin เผยแพร่ได้ทันที (DRAFT → PUBLISHED)
+15. **Organizer Edit Reverts Review:** เมื่อ Organizer แก้ไขบทความที่ PUBLISHED แล้ว สถานะจะเปลี่ยนเป็น PENDING_REVIEW อัตโนมัติ Admin แก้ไขบทความใดก็ได้โดยคง PUBLISHED
+16. **Admin Article Superuser:** Admin จัดการบทความทั้งหมดได้ (แก้ไข, ลบ, unpublish) รวมถึงบทความของ Organizer
 
 ## Verification Policy
 
