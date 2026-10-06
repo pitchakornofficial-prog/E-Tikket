@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b" />
+      <stop offset="50%" stop-color="#1c1917" />
+      <stop offset="100%" stop-color="#0c0a09" />
+    </linearGradient>
+    <radialGradient id="glow" cx="40%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#292524" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0c0a09" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)" />
+  <circle cx="500" cy="450" r="350" fill="url(#glow)" />
+  <g stroke="#292524" stroke-width="1.5" opacity="0.4">
+    <circle cx="600" cy="375" r="100" fill="none" />
+    <circle cx="600" cy="375" r="200" fill="none" />
+    <circle cx="600" cy="375" r="300" fill="none" />
+    <circle cx="600" cy="375" r="400" fill="none" />
+  </g>
+  <rect x="80" y="80" width="1040" height="590" fill="none" stroke="#44403c" stroke-width="2" />
+  <text x="140" y="240" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="72" fill="#ffffff" letter-spacing="-2">INDIE ROCK</text>
+  <text x="140" y="320" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="72" fill="#a8a29e" letter-spacing="-2">NIGHT FEST</text>
+  <text x="140" y="400" font-family="monospace" font-size="24" fill="#78716c" letter-spacing="4">THE UNDERGROUND CLUB • BANGKOK</text>
+  <rect x="900" y="280" width="140" height="140" fill="none" stroke="#ffffff" stroke-width="3" transform="rotate(45 970 350)" opacity="0.6" />
+  <text x="970" y="358" font-family="monospace" font-weight="bold" font-size="24" fill="#ffffff" text-anchor="middle">INDIE</text>
+</svg>

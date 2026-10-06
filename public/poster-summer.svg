@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111111" />
+      <stop offset="50%" stop-color="#18181b" />
+      <stop offset="100%" stop-color="#09090b" />
+    </linearGradient>
+    <radialGradient id="glow" cx="60%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#27272a" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#09090b" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)" />
+  <circle cx="700" cy="300" r="350" fill="url(#glow)" />
+  <g stroke="#27272a" stroke-width="1.5" opacity="0.4">
+    <line x1="100" y1="0" x2="100" y2="750" />
+    <line x1="300" y1="0" x2="300" y2="750" />
+    <line x1="500" y1="0" x2="500" y2="750" />
+    <line x1="700" y1="0" x2="700" y2="750" />
+    <line x1="900" y1="0" x2="900" y2="750" />
+    <line x1="1100" y1="0" x2="1100" y2="750" />
+  </g>
+  <rect x="80" y="80" width="1040" height="590" fill="none" stroke="#3f3f46" stroke-width="2" />
+  <text x="140" y="240" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="72" fill="#ffffff" letter-spacing="-2">SUMMER LIVE</text>
+  <text x="140" y="320" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="72" fill="#a1a1aa" letter-spacing="-2">CONCERT 2026</text>
+  <text x="140" y="400" font-family="monospace" font-size="24" fill="#71717a" letter-spacing="4">BANGKOK ARENA HALL • OCT 2026</text>
+  <circle cx="950" cy="380" r="120" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="8 6" opacity="0.6" />
+  <text x="950" y="390" font-family="monospace" font-weight="bold" font-size="28" fill="#ffffff" text-anchor="middle">LIVE EVENT</text>
+</svg>

@@ -1,0 +1,326 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import {
+  CalendarIcon,
+  MapPinIcon,
+  TicketIcon,
+  FlameIcon,
+  SearchIcon,
+  XIcon,
+  CheckIcon,
+  ArrowRightIcon,
+} from "./icons";
+
+export interface CatalogEvent {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  imageUrl: string;
+  eventDate: string;
+  startTime: string;
+  venue: string;
+  ticketPrice: string;
+  availableQuantity: number;
+}
+
+interface EventCatalogBrowserProps {
+  events: CatalogEvent[];
+}
+
+export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+
+  // Determine the soonest upcoming event for the Hero Banner
+  const soonestEvent = useMemo(() => {
+    if (!events || events.length === 0) return null;
+    const sorted = [...events].sort(
+      (a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime(),
+    );
+    return sorted[0];
+  }, [events]);
+
+  // Extract unique categories
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      if (e.category) set.add(e.category);
+    });
+    return ["ทั้งหมด", ...Array.from(set)];
+  }, [events]);
+
+  // Filter events by search query and category
+  const filteredEvents = useMemo(() => {
+    return events.filter((e) => {
+      const matchesCategory =
+        selectedCategory === "ทั้งหมด" || e.category === selectedCategory;
+      const query = searchQuery.trim().toLowerCase();
+      const matchesSearch =
+        !query ||
+        e.name.toLowerCase().includes(query) ||
+        e.venue.toLowerCase().includes(query) ||
+        e.category.toLowerCase().includes(query) ||
+        e.description.toLowerCase().includes(query);
+      return matchesCategory && matchesSearch;
+    });
+  }, [events, selectedCategory, searchQuery]);
+
+  return (
+    <div className="space-y-12">
+      {/* 1. Upcoming Hero Banner */}
+      {soonestEvent && (
+        <section className="relative overflow-hidden rounded-xl border border-neutral-800 bg-gradient-to-br from-neutral-900 via-neutral-950 to-black p-6 sm:p-8">
+          <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Banner Left Details */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white text-black">
+                  <FlameIcon className="w-3.5 h-3.5 fill-black stroke-black" />
+                  <span>งานใกล้เข้ามาเร็วที่สุด</span>
+                </span>
+                <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-neutral-800 text-neutral-300 border border-neutral-700">
+                  {soonestEvent.category}
+                </span>
+                {soonestEvent.availableQuantity > 0 ? (
+                  <span className="text-xs text-neutral-400 font-medium">
+                    เหลือ {soonestEvent.availableQuantity} ใบ
+                  </span>
+                ) : (
+                  <span className="text-xs text-red-400 font-medium">
+                    บัตรหมดแล้ว
+                  </span>
+                )}
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+                {soonestEvent.name}
+              </h2>
+
+              <p className="text-sm text-neutral-300 line-clamp-2 leading-relaxed">
+                {soonestEvent.description}
+              </p>
+
+              <div className="flex flex-wrap gap-y-2 gap-x-6 text-xs text-neutral-400 pt-2 border-t border-neutral-800/80">
+                <span className="flex items-center gap-1.5">
+                  <CalendarIcon className="w-3.5 h-3.5 text-neutral-400" />
+                  <span className="text-neutral-200 font-medium">{soonestEvent.eventDate} • {soonestEvent.startTime} น.</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <MapPinIcon className="w-3.5 h-3.5 text-neutral-400" />
+                  <span className="text-neutral-200 font-medium">{soonestEvent.venue}</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <TicketIcon className="w-3.5 h-3.5 text-neutral-400" />
+                  <span className="text-neutral-200 font-bold">฿{soonestEvent.ticketPrice}</span>
+                </span>
+              </div>
+
+              <div className="pt-2">
+                <Link
+                  href={`/events/${soonestEvent.id}`}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-bold text-sm rounded hover:bg-neutral-200 transition-colors"
+                >
+                  <span>จองบัตรคอนเสิร์ตนี้ทันที</span>
+                  <ArrowRightIcon className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Banner Right Image */}
+            <div className="lg:col-span-5">
+              <Link href={`/events/${soonestEvent.id}`} className="block group">
+                <div className="relative aspect-[16/10] rounded-lg overflow-hidden border border-neutral-700/80 bg-neutral-900 shadow-2xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={soonestEvent.imageUrl}
+                    alt={soonestEvent.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
+                    <span className="font-mono bg-black/70 px-2 py-0.5 rounded backdrop-blur">
+                      ฿{soonestEvent.ticketPrice} / ใบ
+                    </span>
+                    <span className="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>ดูรายละเอียด</span>
+                      <ArrowRightIcon className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 2. Search & Category Filter Section */}
+      <section className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-900 pb-4">
+          <div className="space-y-1">
+            <h2 className="text-xl font-bold tracking-tight">คอนเสิร์ตและอีเวนต์ทั้งหมด</h2>
+            <p className="text-xs text-neutral-400">ค้นหาตามหมวดหมู่ ชื่อคอนเสิร์ต หรือสถานที่จัดงาน</p>
+          </div>
+
+          {/* Search Box */}
+          <div className="relative w-full md:w-72">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
+              <SearchIcon className="w-3.5 h-3.5" />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ค้นหาคอนเสิร์ต, สถานที่..."
+              className="w-full bg-neutral-900/90 border border-neutral-800 rounded pl-9 pr-8 py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-0.5"
+              >
+                <XIcon className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Category Pills */}
+        <div className="flex flex-wrap items-center gap-2">
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`text-xs px-3.5 py-1.5 rounded-full font-medium transition-colors ${
+                  isSelected
+                    ? "bg-white text-black font-bold"
+                    : "bg-neutral-900 text-neutral-400 hover:text-white hover:bg-neutral-800 border border-neutral-800"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+          <span className="ml-auto text-xs text-neutral-500 font-mono">
+            แสดง {filteredEvents.length} จาก {events.length} งาน
+          </span>
+        </div>
+
+        {/* 3. Event Cards Grid */}
+        {filteredEvents.length === 0 ? (
+          <div className="p-12 border border-dashed border-neutral-800 bg-neutral-950/40 rounded-lg text-center space-y-3">
+            <div className="w-10 h-10 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-400">
+              <SearchIcon className="w-5 h-5" />
+            </div>
+            <p className="text-neutral-300 font-medium">ไม่พบคอนเสิร์ตที่ตรงกับเงื่อนไขการค้นหา</p>
+            <p className="text-xs text-neutral-500">
+              ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่น
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("ทั้งหมด");
+              }}
+              className="text-xs px-3 py-1.5 bg-neutral-800 text-white rounded hover:bg-neutral-700 transition-colors"
+            >
+              ล้างตัวกรอง
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {filteredEvents.map((event) => {
+              const isSoldOut = event.availableQuantity <= 0;
+              return (
+                <article
+                  key={event.id}
+                  className="border border-neutral-800 bg-neutral-950 rounded-lg overflow-hidden flex flex-col hover:border-neutral-700 transition-colors group"
+                >
+                  {/* Artwork Container */}
+                  <div className="relative aspect-[16/9] bg-neutral-900 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={event.imageUrl}
+                      alt={`โปสเตอร์งาน ${event.name}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="px-2.5 py-1 text-xs font-mono font-bold rounded bg-black/80 text-white border border-neutral-700 backdrop-blur">
+                        {event.category}
+                      </span>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      {isSoldOut ? (
+                        <span className="px-2.5 py-1 text-xs font-semibold rounded bg-neutral-800 text-neutral-400 border border-neutral-700">
+                          บัตรหมด
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-white text-black font-bold">
+                          <CheckIcon className="w-3 h-3 stroke-[3]" />
+                          <span>เปิดขายบัตร</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-bold tracking-tight text-white line-clamp-1">
+                        {event.name}
+                      </h3>
+                      <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed">
+                        {event.description}
+                      </p>
+                      <div className="text-xs text-neutral-400 space-y-1.5 pt-1">
+                        <p className="flex items-center gap-1.5">
+                          <CalendarIcon className="w-3.5 h-3.5 text-neutral-500" />
+                          <span>{event.eventDate} • {event.startTime} น.</span>
+                        </p>
+                        <p className="flex items-center gap-1.5">
+                          <MapPinIcon className="w-3.5 h-3.5 text-neutral-500" />
+                          <span className="line-clamp-1">{event.venue}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Price and CTA */}
+                    <div className="pt-4 border-t border-neutral-900 flex items-center justify-between">
+                      <div>
+                        <p className="text-[11px] text-neutral-500">ราคาบัตร</p>
+                        <p className="text-lg font-black text-white">
+                          ฿{event.ticketPrice}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[11px] text-neutral-500">
+                          {isSoldOut ? "บัตรจำหน่ายหมดแล้ว" : `เหลือ ${event.availableQuantity} ใบ`}
+                        </p>
+                        <Link
+                          href={`/events/${event.id}`}
+                          className={`inline-flex items-center gap-1 mt-1 text-xs font-semibold px-4 py-2 rounded transition-colors ${
+                            isSoldOut
+                              ? "bg-neutral-800 text-neutral-400 pointer-events-none"
+                              : "bg-white text-black hover:bg-neutral-200"
+                          }`}
+                        >
+                          <span>{isSoldOut ? "บัตรหมด" : "ดูรายละเอียด & ซื้อบัตร"}</span>
+                          {!isSoldOut && <ArrowRightIcon className="w-3.5 h-3.5" />}
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
