@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summer Live Concert - รายละเอียดและซื้อบัตร</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-prototype-page="event" data-prototype-id="event-v1">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span>Page: <strong>Event Detail & Selection</strong></span>
+      <span>ID: <strong>event-v1</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v1">1. Home <small>home-v1</small></a>
+      <a href="event-detail.html" class="active" data-prototype-target="event-v1">2. Event Detail <small>event-v1</small></a>
+      <a href="checkout.html" data-prototype-target="checkout-v1">3. Checkout (15m) <small>checkout-v1</small></a>
+      <a href="tickets.html" data-prototype-target="tickets-v1">4. My Tickets <small>tickets-v1</small></a>
+      <a href="admin-verifications.html" data-prototype-target="admin-v1">5. Admin Verify <small>admin-v1</small></a>
+      <a href="organizer-checkin.html" data-prototype-target="scanner-v1">6. Scanner (Re-entry) <small>scanner-v1</small></a>
+    </nav>
+  </div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <span>TICKETBOX</span>
+        <span class="brand-badge">MVP</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">&larr; ย้อนกลับไปหน้ารวมงาน</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px;">
+      
+      <!-- Event Information Section -->
+      <section>
+        <div style="height: 280px; background: linear-gradient(135deg, #27272a 0%, #09090b 100%); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); display:flex; align-items:center; justify-content:center; color:#a1a1aa; font-size:24px; font-weight:800; margin-bottom: 24px;">
+          SUMMER LIVE CONCERT 2026
+        </div>
+
+        <span class="badge badge-success" style="margin-bottom: 12px;">เปิดจำหน่ายบัตร</span>
+        <h1 style="font-size: 34px; margin-bottom: 12px;">Summer Live Concert</h1>
+        <p class="lead" style="margin-bottom: 20px;">
+          สัมผัสค่ำคืนดนตรีสดอะคูสติกริมแม่น้ำ บรรยากาศสุดชิลล์ พบกับ 4 ศิลปินอินดี้ท้องถิ่น พร้อมเครื่องดื่มและอาหารสตรีทฟู้ดตลอดงาน
+        </p>
+
+        <div style="background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+          <h3 style="margin-bottom: 16px;">ข้อมูลการจัดงาน</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px;">
+            <div>
+              <span style="color:var(--text-muted); display:block;">วันที่จัดงาน</span>
+              <strong style="color:var(--text-primary);">วันเสาร์ที่ 24 ตุลาคม 2026</strong>
+            </div>
+            <div>
+              <span style="color:var(--text-muted); display:block;">เวลาประตูเปิด</span>
+              <strong style="color:var(--text-primary);">18:00 - 23:30 น.</strong>
+            </div>
+            <div>
+              <span style="color:var(--text-muted); display:block;">สถานที่จัดงาน</span>
+              <strong style="color:var(--text-primary);">The Riverfront Warehouse (เจริญกรุง)</strong>
+            </div>
+            <div>
+              <span style="color:var(--text-muted); display:block;">ผู้จัดงาน</span>
+              <strong style="color:var(--text-primary);">Indie Music Club Bangkok</strong>
+            </div>
+          </div>
+        </div>
+
+        <div style="background-color: var(--bg-secondary); border-left: 3px solid var(--accent-white); padding: 16px; border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary);">
+          <strong>ข้อกำหนดการเข้างาน:</strong> นำ QR Code ใน E-Ticket มาสแกนที่จุดลงทะเบียนหน้างาน ระบบรองรับการเข้า-ออกชั่วคราว (Re-entry) โดยต้องสแกน Check-out ทุกครั้งก่อนออกจากงาน
+        </div>
+      </section>
+
+      <!-- Booking / Checkout Form Box -->
+      <aside>
+        <div style="background-color: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; position: sticky; top: 100px;">
+          <h2 style="font-size: 20px; margin-bottom: 20px;">ซื้อบัตรเข้างาน</h2>
+
+          <form action="checkout.html" method="GET">
+            <!-- Quantity Selector -->
+            <div class="form-group">
+              <label class="form-label" for="ticket-quantity">จำนวนบัตรที่ต้องการ (สูงสุด 10 ใบต่อคำสั่งซื้อ)</label>
+              <select id="ticket-quantity" class="form-select" data-price="399">
+                <option value="1">1 ใบ (399 THB)</option>
+                <option value="2">2 ใบ (798 THB)</option>
+                <option value="3" selected>3 ใบ (1,197 THB) - ตัวอย่างในโจทย์</option>
+                <option value="4">4 ใบ (1,596 THB)</option>
+                <option value="5">5 ใบ (1,995 THB)</option>
+              </select>
+            </div>
+
+            <!-- Guest Customer Information -->
+            <h3 style="font-size: 15px; margin: 20px 0 12px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">ข้อมูลผู้สั่งซื้อ (ไม่ต้องสมัครสมาชิก)</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-name">ชื่อ - นามสกุล *</label>
+              <input type="text" id="cust-name" class="form-input" value="John Doe" required placeholder="เช่น สมชาย ใจดี">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-email">อีเมลสำหรับรับบัตร E-Ticket *</label>
+              <input type="email" id="cust-email" class="form-input" value="john@example.com" required placeholder="john@example.com">
+              <small style="color:var(--text-muted); font-size:11px;">ระบบจะส่ง E-Ticket และ QR Code ไปยังอีเมลนี้หลังแอดมินยืนยันยอด</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-phone">เบอร์โทรศัพท์ติดต่อ *</label>
+              <input type="tel" id="cust-phone" class="form-input" value="081-234-5678" required placeholder="08X-XXX-XXXX">
+            </div>
+
+            <!-- Price Breakdown Summary -->
+            <div style="background-color: var(--bg-secondary); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
+              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size:14px;">
+                <span style="color:var(--text-secondary);">ราคาบัตรรวม:</span>
+                <span id="subtotal-display" style="font-weight:600;">1,197 THB</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 12px;">
+                <span>Platform Fee (5%):</span>
+                <span id="fee-display">(59.85 THB รวมอยู่ในราคาแล้ว)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border-subtle); padding-top:10px; font-size:16px;">
+                <strong style="color:var(--accent-white);">ยอดรวมสุทธิ:</strong>
+                <strong id="total-display" style="color:var(--accent-white); font-size:20px;">1,197 THB</strong>
+              </div>
+            </div>
+
+            <a href="checkout.html" class="btn btn-primary btn-block" data-prototype-target="checkout-v1" style="font-size:16px; padding:12px;">
+              ยืนยันคำสั่งซื้อ &rarr;
+            </a>
+
+            <p style="text-align:center; font-size:12px; color:var(--text-muted); margin-top:12px;">
+              🔒 ระบบจะล็อกจองบัตรให้ท่านเป็นเวลา 15 นาทีหลังจากกดยืนยัน
+            </p>
+          </form>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
+    TICKETBOX Prototype MVP &copy; 2026
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

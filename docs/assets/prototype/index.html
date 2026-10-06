@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Ticketing Platform - คอนเสิร์ตและอีเวนต์ดนตรี</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-prototype-page="home" data-prototype-id="home-v1">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span>Page: <strong>Home (Event Catalog)</strong></span>
+      <span>ID: <strong>home-v1</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" class="active" data-prototype-target="home-v1">1. Home <small>home-v1</small></a>
+      <a href="event-detail.html" data-prototype-target="event-v1">2. Event Detail <small>event-v1</small></a>
+      <a href="checkout.html" data-prototype-target="checkout-v1">3. Checkout (15m) <small>checkout-v1</small></a>
+      <a href="tickets.html" data-prototype-target="tickets-v1">4. My Tickets <small>tickets-v1</small></a>
+      <a href="admin-verifications.html" data-prototype-target="admin-v1">5. Admin Verify <small>admin-v1</small></a>
+      <a href="organizer-checkin.html" data-prototype-target="scanner-v1">6. Scanner (Re-entry) <small>scanner-v1</small></a>
+    </nav>
+  </div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <span>TICKETBOX</span>
+        <span class="brand-badge">MVP</span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" style="color:#ffffff;">สำรวจงานแสดง</a>
+        <a href="tickets.html">ดูบัตรของฉัน</a>
+        <a href="organizer-checkin.html">สำหรับผู้จัดงาน</a>
+        <a href="admin-verifications.html">แอดมิน</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section style="margin-bottom: 48px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 32px;">
+      <span class="badge badge-outline" style="margin-bottom: 12px;">LOCAL CONCERTS & MUSIC EVENTS</span>
+      <h1 style="font-size: 40px; max-width: 700px;">แพลตฟอร์มจำหน่ายบัตรคอนเสิร์ตขนาดเล็ก</h1>
+      <p class="lead" style="max-width: 650px;">
+        ระบบจองบัตรง่ายและรวดเร็ว ไม่ต้องลงทะเบียนหรือจำรหัสผ่าน พร้อมระบบตรวจรับสลิปธนาคารและ E-Ticket พร้อม QR Code
+      </p>
+    </section>
+
+    <section>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+        <h2>คอนเสิร์ตและอีเวนต์ที่เปิดจำหน่าย</h2>
+        <span class="badge badge-outline">3 งานล่าสุด</span>
+      </div>
+
+      <div class="grid-cards">
+        <!-- Event 1 (Active) -->
+        <article class="card">
+          <div class="card-image-wrap">
+            <div style="width:100%; height:100%; background: linear-gradient(135deg, #27272a 0%, #09090b 100%); display:flex; align-items:center; justify-content:center; color:#71717a; font-weight:700;">
+              SUMMER LIVE CONCERT 2026
+            </div>
+            <span class="badge badge-success" style="position:absolute; top:12px; right:12px;">เปิดขายบัตร</span>
+          </div>
+          <div class="card-content">
+            <h3>Summer Live Concert</h3>
+            <p>งานแสดงดนตรีสดอะคูสติกริมแม่น้ำ บรรยากาศสุดชิลล์ รวมศิลปินอินดี้ท้องถิ่น</p>
+            <div class="card-meta">
+              <span>📅 วันเสาร์ที่ 24 ตุลาคม 2026</span>
+              <span>⏰ ประตูเปิด 18:00 น.</span>
+              <span>📍 The Riverfront Warehouse, กรุงเทพฯ</span>
+              <span>🎟️ เหลือบัตร 173 / 500 ใบ</span>
+            </div>
+            <div class="card-footer">
+              <div class="price-tag">
+                399 <small>THB / ใบ</small>
+              </div>
+              <a href="event-detail.html" class="btn btn-primary" data-prototype-target="event-v1">ซื้อบัตร</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Event 2 -->
+        <article class="card">
+          <div class="card-image-wrap">
+            <div style="width:100%; height:100%; background: linear-gradient(135deg, #18181b 0%, #27272a 100%); display:flex; align-items:center; justify-content:center; color:#71717a; font-weight:700;">
+              INDIE NIGHT UNDERGROUND
+            </div>
+            <span class="badge badge-success" style="position:absolute; top:12px; right:12px;">เปิดขายบัตร</span>
+          </div>
+          <div class="card-content">
+            <h3>Indie Night Underground</h3>
+            <p>รวมวงดนตรีร็อกและอินดี้หน้าใหม่ 5 วง ในคลับใต้ดินใจกลางทองหล่อ</p>
+            <div class="card-meta">
+              <span>📅 วันศุกร์ที่ 6 พฤศจิกายน 2026</span>
+              <span>⏰ ประตูเปิด 19:30 น.</span>
+              <span>📍 The Basement Club, ทองหล่อ</span>
+              <span>🎟️ เหลือบัตร 42 / 200 ใบ</span>
+            </div>
+            <div class="card-footer">
+              <div class="price-tag">
+                250 <small>THB / ใบ</small>
+              </div>
+              <a href="event-detail.html" class="btn btn-primary" data-prototype-target="event-v1">ซื้อบัตร</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Event 3 -->
+        <article class="card">
+          <div class="card-image-wrap">
+            <div style="width:100%; height:100%; background: linear-gradient(135deg, #09090b 0%, #18181b 100%); display:flex; align-items:center; justify-content:center; color:#71717a; font-weight:700;">
+              CAMPUS JAZZ FESTIVAL
+            </div>
+            <span class="badge badge-outline" style="position:absolute; top:12px; right:12px;">เร็วๆ นี้</span>
+          </div>
+          <div class="card-content">
+            <h3>Campus Jazz Festival</h3>
+            <p>เทศกาลดนตรีแจ๊สของชมรมดนตรีสากลนักศึกษา บรรยากาศสวนร่มรื่น</p>
+            <div class="card-meta">
+              <span>📅 วันเสาร์ที่ 14 พฤศจิกายน 2026</span>
+              <span>⏰ ประตูเปิด 17:00 น.</span>
+              <span>📍 ลานกิจกรรมมหาวิทยาลัย</span>
+              <span>🎟️ เปิดจอง 10 ต.ค. นี้</span>
+            </div>
+            <div class="card-footer">
+              <div class="price-tag">
+                150 <small>THB / ใบ</small>
+              </div>
+              <button class="btn btn-secondary" disabled style="opacity: 0.6; cursor:not-allowed;">ยังไม่เปิดขาย</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
+    TICKETBOX Prototype MVP &copy; 2026 &bull; High-Contrast Monochromatic UI
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
