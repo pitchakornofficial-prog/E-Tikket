@@ -646,3 +646,21 @@ Private order access still enforces the original order status and 15-minute rese
 ### Design direction
 
 Existing agreed design constraints D-01 through D-08 apply to news feature pages. No additional design discovery was requested. The dark monochrome base, semantic status colors, and original-color event/article imagery exceptions remain active.
+
+## Confirmed Ticket Lookup & Download Decisions
+
+- Scope: Add ticket-number search to the existing ticket lookup page and PDF download capability to the ticket view page.
+- Status: Agreed
+- Source: explicit user answers in `$grill-workflow` on 2026-10-07 (Asia/Bangkok).
+- These decisions add new capabilities to the existing ticket access journey without altering the current purchase, entry, or security behavior.
+
+| ID | Selected option | State | Confirmed decision |
+| --- | --- | --- | --- |
+| P1 | A | Agreed | Customers can search by ticket number (e.g. `TK-abc123-01`) on the existing `/my-tickets` page. Results show order, event, and ticket status information but do NOT display QR codes. The view_token gate per [ADR-0002](adr/0002-ticket-artifacts-guest-access-and-scan-audit.md) is preserved. |
+| P2 | A | Agreed | Download tickets as PDF. Each ticket renders as one page containing the QR code, event details, and ticket number. Suitable for printing. |
+| P3 | A | Agreed | Download is available only from the `/tickets?token=xxx` page (accessed via view_token from email). This preserves the security boundary of [ADR-0002](adr/0002-ticket-artifacts-guest-access-and-scan-audit.md). |
+| P4 | A | Agreed | Both individual ticket download and a "Download All" button that combines all tickets from the order into a single multi-page PDF. |
+
+### Security note
+
+Ticket-number search intentionally does not expose QR codes or view_token access. It serves as a status-check tool only. QR access and PDF download require the view_token delivered by email, maintaining the existing [Separate Guest Capabilities](../CONTEXT.md) invariant (rule 10).

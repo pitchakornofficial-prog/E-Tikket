@@ -41,7 +41,11 @@ interface TicketOrder {
 }
 
 export default function MyTicketsPage() {
+  const [searchMode, setSearchMode] = useState<"email" | "ticketNumber">("email");
   const [email, setEmail] = useState("");
+  const [ticketNumber, setTicketNumber] = useState("");
+  const [searchedQuery, setSearchedQuery] = useState("");
+  const [searchedMode, setSearchedMode] = useState<"email" | "ticketNumber">("email");
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,21 +53,36 @@ export default function MyTicketsPage() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (searchMode === "email" && !email.trim()) return;
+    if (searchMode === "ticketNumber" && !ticketNumber.trim()) return;
 
     setLoading(true);
     setError(null);
 
+    const queryParam =
+      searchMode === "email"
+        ? `email=${encodeURIComponent(email.trim())}`
+        : `ticketNumber=${encodeURIComponent(ticketNumber.trim())}`;
+
     try {
-      const res = await fetch(`/api/tickets/lookup?email=${encodeURIComponent(email.trim())}`);
+      const res = await fetch(`/api/tickets/lookup?${queryParam}`);
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error?.message || "ไม่สามารถค้นหาตั๋วได้ กรุณาลองใหม่อีกครั้ง");
-        setOrders([]);
+        if (res.status === 404 && searchMode === "ticketNumber") {
+          setOrders([]);
+          setSearched(true);
+          setSearchedQuery(ticketNumber.trim());
+          setSearchedMode(searchMode);
+        } else {
+          setError(data.error?.message || "ไม่สามารถค้นหาตั๋วได้ กรุณาลองใหม่อีกครั้ง");
+          setOrders([]);
+        }
       } else {
         setOrders(data.orders || []);
         setSearched(true);
+        setSearchedQuery(searchMode === "email" ? email.trim() : ticketNumber.trim());
+        setSearchedMode(searchMode);
       }
     } catch {
       setError("เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
@@ -101,49 +120,95 @@ export default function MyTicketsPage() {
         <div className="space-y-2 text-center max-w-xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight">ตรวจสอบสถานะบัตรคอนเสิร์ต</h1>
           <p className="text-sm text-neutral-400">
-            กรอกอีเมลที่คุณใช้ตอนสั่งซื้อ เพื่อตรวจสอบสถานะคำสั่งซื้อ (รอตรวจสอบสลิป หรือ อนุมัติออกตั๋วแล้ว) • บัตร E-Ticket และ QR Code เข้างานจะถูกจัดส่งให้ทางอีเมลของคุณโดยตรงเพื่อความปลอดภัย
+            ค้นหาด้วยอีเมลที่ใช้สั่งซื้อ หรือเลขที่บัตรของคุณ เพื่อตรวจสอบสถานะคำสั่งซื้อและบัตรเข้างาน • บัตร E-Ticket และ QR Code เข้างานจะถูกจัดส่งให้ทางอีเมลของคุณโดยตรงเพื่อความปลอดภัย
           </p>
         </div>
 
-        {/* Search Form */}
-        <form onSubmit={handleSearch} className="max-w-md mx-auto space-y-3">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
-                <SearchIcon className="w-4 h-4" />
-              </div>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="กรอกอีเมลของคุณ เช่น name@example.com"
-                required
-                className="w-full bg-neutral-900 border border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
-              />
-            </div>
+        {/* Search Mode Toggle & Form */}
+        <div className="max-w-md mx-auto space-y-4">
+          {/* Mode Tabs */}
+          <div className="flex rounded-lg bg-neutral-900 p-1 border border-neutral-800">
             <button
-              type="submit"
-              disabled={loading}
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-black text-sm font-bold rounded hover:bg-neutral-200 transition-colors disabled:opacity-50 whitespace-nowrap"
+              type="button"
+              onClick={() => {
+                setSearchMode("email");
+                setError(null);
+              }}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded transition-colors ${
+                searchMode === "email"
+                  ? "bg-white text-black shadow"
+                  : "text-neutral-400 hover:text-white"
+              }`}
             >
-              <span>{loading ? "กำลังค้นหา..." : "ค้นหาตั๋ว"}</span>
-              {!loading && <ArrowRightIcon className="w-3.5 h-3.5" />}
+              ค้นหาด้วยอีเมล
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchMode("ticketNumber");
+                setError(null);
+              }}
+              className={`flex-1 py-1.5 text-xs font-semibold rounded transition-colors ${
+                searchMode === "ticketNumber"
+                  ? "bg-white text-black shadow"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              ค้นหาด้วยเลขที่บัตร
             </button>
           </div>
-          {error && (
-            <p className="text-xs text-red-400 text-center">{error}</p>
-          )}
-        </form>
+
+          <form onSubmit={handleSearch} className="space-y-3">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
+                  <SearchIcon className="w-4 h-4" />
+                </div>
+                {searchMode === "email" ? (
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="กรอกอีเมลของคุณ เช่น name@example.com"
+                    required
+                    className="w-full bg-neutral-900 border border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={ticketNumber}
+                    onChange={(e) => setTicketNumber(e.target.value)}
+                    placeholder="กรอกเลขที่บัตร เช่น TK-abc123-01"
+                    required
+                    className="w-full bg-neutral-900 border border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-white font-mono placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors uppercase"
+                  />
+                )}
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-black text-sm font-bold rounded hover:bg-neutral-200 transition-colors disabled:opacity-50 whitespace-nowrap"
+              >
+                <span>{loading ? "กำลังค้นหา..." : "ค้นหาตั๋ว"}</span>
+                {!loading && <ArrowRightIcon className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+            {error && (
+              <p className="text-xs text-red-400 text-center">{error}</p>
+            )}
+          </form>
+        </div>
 
         {/* Results Section */}
         {searched && (
           <div className="space-y-8 pt-4">
             <div className="flex items-center justify-between border-b border-neutral-900 pb-3">
               <h2 className="text-sm sm:text-base font-bold text-neutral-200">
-                ผลการค้นหาสำหรับ: <span className="text-white font-mono">{email}</span>
+                ผลการค้นหาสำหรับ{searchedMode === "email" ? "อีเมล" : "เลขที่บัตร"}:{" "}
+                <span className="text-white font-mono">{searchedQuery}</span>
               </h2>
               <span className="text-xs px-2.5 py-1 rounded-full border border-neutral-800 bg-neutral-950 text-neutral-400">
-                พบ {orders.length} รายการ ({eventGroups.length} คอนเสิร์ต)
+                พบ {orders.length} รายการ {orders.length > 0 && `(${eventGroups.length} คอนเสิร์ต)`}
               </span>
             </div>
 
@@ -152,9 +217,15 @@ export default function MyTicketsPage() {
                 <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-400">
                   <TicketIcon className="w-6 h-6" />
                 </div>
-                <p className="text-neutral-300 font-medium">ไม่พบประวัติการสั่งซื้อสำหรับอีเมลนี้</p>
+                <p className="text-neutral-300 font-medium">
+                  {searchedMode === "email"
+                    ? "ไม่พบประวัติการสั่งซื้อสำหรับอีเมลนี้"
+                    : "ไม่พบบัตรที่ตรงกับเลขที่นี้"}
+                </p>
                 <p className="text-xs text-neutral-500 max-w-sm mx-auto leading-relaxed">
-                  กรุณาตรวจสอบว่าสะกดอีเมลถูกต้อง หรือหากเพิ่งสั่งซื้อและแนบสลิป ระบบอาจใช้เวลาสักครู่ในการประมวลผล
+                  {searchedMode === "email"
+                    ? "กรุณาตรวจสอบว่าสะกดอีเมลถูกต้อง หรือหากเพิ่งสั่งซื้อและแนบสลิป ระบบอาจใช้เวลาสักครู่ในการประมวลผล"
+                    : "กรุณาตรวจสอบว่ากรอกเลขที่บัตรถูกต้องครบถ้วน หรือลองค้นหาด้วยอีเมลที่คุณใช้สั่งซื้อ"}
                 </p>
               </div>
             ) : (
