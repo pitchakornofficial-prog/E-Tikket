@@ -101,29 +101,30 @@ export function ArticleEditor({
     }
   }, [categories, categoryId]);
 
-  const generateSlug = (text: string) => {
-    return text
+  const generateSlug = (val: string) => {
+    return val
       .trim()
       .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]+/g, "-")
+      .replace(/[\s\W-]+/g, "-")
       .replace(/^-+|-+$/g, "");
   };
 
   const handleTitleChange = (val: string) => {
     setTitle(val);
     if (autoSlug) {
-      setSlug(generateSlug(val));
+      const generated = generateSlug(val);
+      if (generated) setSlug(generated);
     }
   };
 
   const handleAddTag = (tagToAdd?: string) => {
     const raw = tagToAdd || tagInput;
-    const trimmed = raw.trim();
-    if (trimmed && !tagNames.includes(trimmed)) {
-      setTagNames([...tagNames, trimmed]);
-      setTagInput("");
+    const clean = raw.trim().replace(/^#/, "");
+    if (!clean) return;
+    if (!tagNames.includes(clean)) {
+      setTagNames([...tagNames, clean]);
     }
+    setTagInput("");
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -138,15 +139,23 @@ export function ArticleEditor({
     }
   };
 
-  // Image upload
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadingCover(true);
-    setLocalError(null);
+    if (file.size > 5 * 1024 * 1024) {
+      setLocalError("ขนาดไฟล์รูปภาพต้องไม่เกิน 5 MB");
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setLocalError("รองรับเฉพาะไฟล์รูปภาพ JPEG, PNG, WebP เท่านั้น");
+      return;
+    }
 
     try {
+      setUploadingCover(true);
+      setLocalError(null);
       const formData = new FormData();
       formData.append("file", file);
 
@@ -174,10 +183,19 @@ export function ArticleEditor({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadingInline(true);
-    setLocalError(null);
+    if (file.size > 5 * 1024 * 1024) {
+      setLocalError("ขนาดไฟล์รูปภาพต้องไม่เกิน 5 MB");
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setLocalError("รองรับเฉพาะไฟล์รูปภาพ JPEG, PNG, WebP เท่านั้น");
+      return;
+    }
 
     try {
+      setUploadingInline(true);
+      setLocalError(null);
       const formData = new FormData();
       formData.append("file", file);
 
@@ -191,11 +209,11 @@ export function ArticleEditor({
         throw new Error(data.error?.message || "อัปโหลดรูปภาพไม่สำเร็จ");
       }
 
-      const imgMarkdown = `\n![${file.name}](${data.url})\n`;
-      insertTextAtCursor(imgMarkdown);
+      const markdownImage = `\n![${file.name.replace(/\.[^/.]+$/, "")}](${data.url})\n`;
+      insertTextAtCursor(markdownImage);
     } catch (err: unknown) {
       const error = err as { message?: string };
-      setLocalError(error.message || "เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+      setLocalError(error.message || "เกิดข้อผิดพลาดในการอัปโหลดรูปภาพแทรก");
     } finally {
       setUploadingInline(false);
       if (inlineFileInputRef.current) inlineFileInputRef.current.value = "";
@@ -203,30 +221,39 @@ export function ArticleEditor({
   };
 
   const insertTextAtCursor = (textToInsert: string) => {
-    if (!textareaRef.current) {
+    const textarea = textareaRef.current;
+    if (!textarea) {
       setContent((prev) => prev + textToInsert);
       return;
     }
-    const start = textareaRef.current.selectionStart;
-    const end = textareaRef.current.selectionEnd;
-    const before = content.substring(0, start);
-    const after = content.substring(end);
-    setContent(before + textToInsert + after);
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const newContent = content.substring(0, start) + textToInsert + content.substring(end);
+    setContent(newContent);
+
     setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-        textareaRef.current.setSelectionRange(start + textToInsert.length, start + textToInsert.length);
-      }
-    }, 0);
+      textarea.focus();
+      textarea.setSelectionRange(start + textToInsert.length, start + textToInsert.length);
+    }, 10);
   };
 
   const applyFormatting = (prefix: string, suffix = "") => {
-    if (!textareaRef.current) return;
-    const start = textareaRef.current.selectionStart;
-    const end = textareaRef.current.selectionEnd;
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
     const selected = content.substring(start, end);
-    const formatted = `${prefix}${selected || "ข้อความ"}${suffix}`;
-    insertTextAtCursor(formatted);
+    const replacement = prefix + (selected || "ข้อความ") + suffix;
+
+    const newContent = content.substring(0, start) + replacement + content.substring(end);
+    setContent(newContent);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, start + prefix.length + (selected ? selected.length : 6));
+    }, 10);
   };
 
   const getFormData = (): ArticleFormData => ({
@@ -296,10 +323,10 @@ export function ArticleEditor({
   return (
     <div className="space-y-6">
       {/* Top Bar with actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200 dark:border-neutral-800">
         <Link
           href={backHref}
-          className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           <span>ย้อนกลับไปหน้ารายการ</span>
@@ -310,7 +337,7 @@ export function ArticleEditor({
             type="button"
             onClick={handleSubmitDraft}
             disabled={isSaving}
-            className="px-4 py-2 bg-neutral-800 text-white font-medium rounded text-xs sm:text-sm hover:bg-neutral-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white border border-neutral-300 dark:border-neutral-700 font-medium rounded text-xs sm:text-sm transition-colors disabled:opacity-50"
           >
             {isSaving ? "กำลังบันทึก..." : "บันทึกร่าง (Save Draft)"}
           </button>
@@ -320,7 +347,7 @@ export function ArticleEditor({
               type="button"
               onClick={handlePublish}
               disabled={isSaving}
-              className="px-4 py-2 bg-white text-black font-semibold rounded text-xs sm:text-sm hover:bg-neutral-200 transition-colors disabled:opacity-50 shadow-sm"
+              className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black font-semibold rounded text-xs sm:text-sm transition-colors disabled:opacity-50 shadow-sm"
             >
               {isSaving ? "กำลังบันทึก..." : "เผยแพร่ทันที (Publish)"}
             </button>
@@ -331,7 +358,7 @@ export function ArticleEditor({
               type="button"
               onClick={handleSubmitForReview}
               disabled={isSaving}
-              className="px-4 py-2 bg-white text-black font-semibold rounded text-xs sm:text-sm hover:bg-neutral-200 transition-colors disabled:opacity-50 shadow-sm"
+              className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black font-semibold rounded text-xs sm:text-sm transition-colors disabled:opacity-50 shadow-sm"
             >
               {isSaving ? "กำลังส่ง..." : "ส่งให้อนุมัติ (Submit for Review)"}
             </button>
@@ -341,12 +368,12 @@ export function ArticleEditor({
 
       {/* Notifications */}
       {(errorMsg || localError) && (
-        <div className="p-4 rounded bg-red-950/50 border border-red-800 text-red-200 flex items-start gap-3 text-sm">
-          <AlertTriangleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+        <div className="p-4 rounded bg-rose-50 dark:bg-red-950/50 border border-rose-300 dark:border-red-800 text-rose-900 dark:text-red-200 flex items-start gap-3 text-sm">
+          <AlertTriangleIcon className="w-5 h-5 text-rose-500 dark:text-red-400 shrink-0 mt-0.5" />
           <div className="flex-1">{errorMsg || localError}</div>
           <button
             onClick={() => setLocalError(null)}
-            className="text-red-400 hover:text-white"
+            className="text-rose-600 dark:text-red-400 hover:text-rose-900 dark:hover:text-white"
           >
             <XIcon className="w-4 h-4" />
           </button>
@@ -354,8 +381,8 @@ export function ArticleEditor({
       )}
 
       {successMsg && (
-        <div className="p-4 rounded bg-emerald-950/50 border border-emerald-800 text-emerald-200 flex items-start gap-3 text-sm">
-          <CheckIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+        <div className="p-4 rounded bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 flex items-start gap-3 text-sm">
+          <CheckIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
           <div className="flex-1">{successMsg}</div>
         </div>
       )}
@@ -366,8 +393,8 @@ export function ArticleEditor({
         <div className="lg:col-span-2 space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1.5">
-              หัวข้อบทความ <span className="text-red-400">*</span>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-400 mb-1.5">
+              หัวข้อบทความ <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <input
               type="text"
@@ -375,28 +402,28 @@ export function ArticleEditor({
               onChange={(e) => handleTitleChange(e.target.value)}
               placeholder="เช่น เจาะลึกกระแสดนตรีอินดี้ไทยปี 2026..."
               required
-              className="w-full px-4 py-2.5 bg-neutral-900 border border-neutral-800 rounded text-base font-semibold text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500"
+              className="w-full px-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded text-base font-semibold text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500 transition-colors"
             />
           </div>
 
           {/* Slug */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                Slug (URL Identifier) <span className="text-red-400">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-400">
+                Slug (URL Identifier) <span className="text-red-500 dark:text-red-400">*</span>
               </label>
-              <label className="flex items-center gap-1.5 text-xs text-neutral-400 cursor-pointer">
+              <label className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={autoSlug}
                   onChange={(e) => setAutoSlug(e.target.checked)}
-                  className="rounded bg-neutral-900 border-neutral-800 text-white"
+                  className="rounded bg-neutral-100 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-white"
                 />
                 <span>Auto-generate จากชื่อ</span>
               </label>
             </div>
-            <div className="flex items-center rounded border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm">
-              <span className="text-neutral-500 font-mono text-xs mr-1">/news/</span>
+            <div className="flex items-center rounded border border-neutral-300 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 px-3 py-2 text-sm transition-colors">
+              <span className="text-neutral-500 dark:text-neutral-500 font-mono text-xs mr-1">/news/</span>
               <input
                 type="text"
                 value={slug}
@@ -406,10 +433,10 @@ export function ArticleEditor({
                 }}
                 placeholder="thai-indie-music-2026"
                 required
-                className="w-full bg-transparent font-mono text-xs text-white placeholder-neutral-600 focus:outline-none"
+                className="w-full bg-transparent font-mono text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none"
               />
             </div>
-            <p className="text-[11px] text-neutral-500 mt-1">
+            <p className="text-[11px] text-neutral-500 dark:text-neutral-500 mt-1">
               ต้องไม่ซ้ำกับบทความอื่นในระบบ (AC-22)
             </p>
           </div>
@@ -417,17 +444,17 @@ export function ArticleEditor({
           {/* Rich Content Editor */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                เนื้อหาบทความ <span className="text-red-400">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-400">
+                เนื้อหาบทความ <span className="text-red-500 dark:text-red-400">*</span>
               </label>
-              <div className="flex items-center gap-1 bg-neutral-900 p-0.5 rounded border border-neutral-800 text-xs">
+              <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-900 p-0.5 rounded border border-neutral-200 dark:border-neutral-800 text-xs">
                 <button
                   type="button"
                   onClick={() => setActiveTab("edit")}
                   className={`px-3 py-1 rounded transition-colors ${
                     activeTab === "edit"
-                      ? "bg-neutral-800 text-white font-medium"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium shadow-sm"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
                   }`}
                 >
                   เขียน (Editor)
@@ -437,8 +464,8 @@ export function ArticleEditor({
                   onClick={() => setActiveTab("preview")}
                   className={`px-3 py-1 rounded transition-colors ${
                     activeTab === "preview"
-                      ? "bg-neutral-800 text-white font-medium"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white font-medium shadow-sm"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
                   }`}
                 >
                   ดูตัวอย่าง (Preview)
@@ -447,13 +474,13 @@ export function ArticleEditor({
             </div>
 
             {activeTab === "edit" ? (
-              <div className="border border-neutral-800 rounded bg-neutral-900 overflow-hidden">
+              <div className="border border-neutral-300 dark:border-neutral-800 rounded bg-white dark:bg-neutral-900 overflow-hidden shadow-sm transition-colors">
                 {/* Toolbar */}
-                <div className="flex flex-wrap items-center gap-1 p-2 bg-neutral-950/60 border-b border-neutral-800 text-xs">
+                <div className="flex flex-wrap items-center gap-1 p-2 bg-neutral-50 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 text-xs transition-colors">
                   <button
                     type="button"
                     onClick={() => applyFormatting("**", "**")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 font-bold text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 font-bold text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Bold"
                   >
                     B
@@ -461,7 +488,7 @@ export function ArticleEditor({
                   <button
                     type="button"
                     onClick={() => applyFormatting("*", "*")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 italic text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 italic text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Italic"
                   >
                     I
@@ -469,7 +496,7 @@ export function ArticleEditor({
                   <button
                     type="button"
                     onClick={() => applyFormatting("## ")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 font-semibold text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 font-semibold text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Heading 2"
                   >
                     H2
@@ -477,16 +504,16 @@ export function ArticleEditor({
                   <button
                     type="button"
                     onClick={() => applyFormatting("### ")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 font-semibold text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 font-semibold text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Heading 3"
                   >
                     H3
                   </button>
-                  <div className="w-[1px] h-4 bg-neutral-800 mx-1" />
+                  <div className="w-[1px] h-4 bg-neutral-200 dark:bg-neutral-800 mx-1" />
                   <button
                     type="button"
                     onClick={() => applyFormatting("- ")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Bullet list"
                   >
                     • รายการ
@@ -494,7 +521,7 @@ export function ArticleEditor({
                   <button
                     type="button"
                     onClick={() => applyFormatting("> ")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Quote"
                   >
                     &ldquo; อ้างอิง
@@ -502,12 +529,12 @@ export function ArticleEditor({
                   <button
                     type="button"
                     onClick={() => applyFormatting("[ข้อความลิงก์](", ")")}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 text-neutral-300 hover:text-white"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white"
                     title="Link"
                   >
                     ลิงก์
                   </button>
-                  <div className="w-[1px] h-4 bg-neutral-800 mx-1" />
+                  <div className="w-[1px] h-4 bg-neutral-200 dark:bg-neutral-800 mx-1" />
                   <input
                     type="file"
                     ref={inlineFileInputRef}
@@ -519,7 +546,7 @@ export function ArticleEditor({
                     type="button"
                     onClick={() => inlineFileInputRef.current?.click()}
                     disabled={uploadingInline}
-                    className="p-1.5 px-2 rounded hover:bg-neutral-800 text-neutral-300 hover:text-white disabled:opacity-50"
+                    className="p-1.5 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white disabled:opacity-50"
                     title="แทรกรูปภาพ"
                   >
                     {uploadingInline ? "กำลังอัปโหลด..." : "🖼️ แทรกรูปภาพ"}
@@ -533,13 +560,13 @@ export function ArticleEditor({
                   onChange={(e) => setContent(e.target.value)}
                   rows={16}
                   placeholder="เขียนเนื้อหาบทความที่นี่... รองรับการจัดรูปแบบ Markdown และแทรกรูปภาพ"
-                  className="w-full p-4 bg-transparent text-sm text-neutral-100 placeholder-neutral-600 focus:outline-none resize-y font-mono leading-relaxed"
+                  className="w-full p-4 bg-transparent text-sm text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none resize-y font-mono leading-relaxed"
                 />
               </div>
             ) : (
-              <div className="border border-neutral-800 rounded bg-neutral-900 p-6 min-h-[400px] prose prose-invert max-w-none text-sm">
+              <div className="border border-neutral-300 dark:border-neutral-800 rounded bg-white dark:bg-neutral-900 p-6 min-h-[400px] text-sm shadow-sm transition-colors">
                 {content ? (
-                  <div className="space-y-4 whitespace-pre-wrap leading-relaxed text-neutral-200">
+                  <div className="space-y-4 whitespace-pre-wrap leading-relaxed text-neutral-800 dark:text-neutral-200">
                     {content}
                   </div>
                 ) : (
@@ -551,7 +578,7 @@ export function ArticleEditor({
 
           {/* Excerpt */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-400 mb-1.5">
               คำโปรยย่อ (Excerpt)
             </label>
             <textarea
@@ -559,7 +586,7 @@ export function ArticleEditor({
               onChange={(e) => setExcerpt(e.target.value)}
               rows={3}
               placeholder="คำอธิบายสรุปสั้นๆ สำหรับแสดงบนการ์ดในหน้ารวมบทความ (หากไม่ระบุ ระบบจะใช้ย่อหน้าแรกโดยอัตโนมัติ)"
-              className="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 rounded text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500"
+              className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500 transition-colors"
             />
           </div>
         </div>
@@ -567,15 +594,15 @@ export function ArticleEditor({
         {/* Right Column: Metadata & Settings (1 col) */}
         <div className="space-y-6">
           {/* Category Select */}
-          <div className="p-4 rounded-lg bg-neutral-900 border border-neutral-800 space-y-3">
+          <div className="p-4 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3 shadow-sm transition-colors">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300">
-                หมวดหมู่บทความ <span className="text-red-400">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-300">
+                หมวดหมู่บทความ <span className="text-red-500 dark:text-red-400">*</span>
               </label>
               {role === "ADMIN" && (
                 <Link
                   href="/admin/categories"
-                  className="text-[11px] text-neutral-400 hover:text-white underline"
+                  className="text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white underline"
                 >
                   จัดการหมวดหมู่
                 </Link>
@@ -585,7 +612,7 @@ export function ArticleEditor({
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded text-sm text-white focus:outline-none focus:border-neutral-500"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-sm text-neutral-900 dark:text-white focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500 transition-colors"
             >
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -596,14 +623,14 @@ export function ArticleEditor({
           </div>
 
           {/* Cover Image Upload */}
-          <div className="p-4 rounded-lg bg-neutral-900 border border-neutral-800 space-y-3">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300">
+          <div className="p-4 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3 shadow-sm transition-colors">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-300">
               รูปภาพหน้าปก (Cover Image)
             </label>
 
             {coverImageUrl ? (
               <div className="space-y-2">
-                <div className="relative aspect-video rounded overflow-hidden border border-neutral-800 bg-black">
+                <div className="relative aspect-video rounded overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-black">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={coverImageUrl}
@@ -622,7 +649,7 @@ export function ArticleEditor({
                   type="text"
                   value={coverImageUrl}
                   onChange={(e) => setCoverImageUrl(e.target.value)}
-                  className="w-full px-2.5 py-1 bg-neutral-950 border border-neutral-800 rounded text-xs text-neutral-400 font-mono"
+                  className="w-full px-2.5 py-1 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-xs text-neutral-700 dark:text-neutral-400 font-mono"
                 />
               </div>
             ) : (
@@ -638,9 +665,9 @@ export function ArticleEditor({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadingCover}
-                  className="w-full py-8 border border-dashed border-neutral-700 hover:border-neutral-500 rounded flex flex-col items-center justify-center gap-2 text-neutral-400 hover:text-white transition-colors"
+                  className="w-full py-8 border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-500 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800/40 rounded flex flex-col items-center justify-center gap-2 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
                 >
-                  <FileTextIcon className="w-6 h-6" />
+                  <FileTextIcon className="w-6 h-6 text-neutral-400" />
                   <span className="text-xs font-medium">
                     {uploadingCover ? "กำลังอัปโหลด..." : "คลิกเพื่อเลือกไฟล์รูปภาพ (JPEG, PNG, WebP)"}
                   </span>
@@ -651,8 +678,8 @@ export function ArticleEditor({
           </div>
 
           {/* Tags */}
-          <div className="p-4 rounded-lg bg-neutral-900 border border-neutral-800 space-y-3">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300">
+          <div className="p-4 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3 shadow-sm transition-colors">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-300">
               แท็ก (Tags)
             </label>
 
@@ -660,13 +687,13 @@ export function ArticleEditor({
               {tagNames.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-800 text-xs text-neutral-200 border border-neutral-700"
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-xs text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 font-medium"
                 >
                   #{tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="hover:text-red-400"
+                    className="hover:text-red-500 dark:hover:text-red-400"
                   >
                     <XIcon className="w-3 h-3" />
                   </button>
@@ -686,12 +713,12 @@ export function ArticleEditor({
                   }
                 }}
                 placeholder="พิมพ์แท็กแล้วกดเพิ่ม..."
-                className="flex-1 px-3 py-1.5 bg-neutral-950 border border-neutral-800 rounded text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500"
+                className="flex-1 px-3 py-1.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500"
               />
               <button
                 type="button"
                 onClick={() => handleAddTag()}
-                className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded text-xs font-medium"
+                className="px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-white rounded text-xs font-medium transition-colors"
               >
                 เพิ่ม
               </button>
@@ -706,7 +733,7 @@ export function ArticleEditor({
                     key={sug}
                     type="button"
                     onClick={() => handleAddTag(sug)}
-                    className="text-[11px] px-2 py-0.5 rounded bg-neutral-950 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800"
+                    className="text-[11px] px-2 py-0.5 rounded bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-950 dark:hover:bg-neutral-800 text-neutral-600 hover:text-black dark:text-neutral-400 dark:hover:text-white border border-neutral-200 dark:border-neutral-800 transition-colors"
                   >
                     +{sug}
                   </button>
@@ -716,23 +743,23 @@ export function ArticleEditor({
           </div>
 
           {/* Linked Events */}
-          <div className="p-4 rounded-lg bg-neutral-900 border border-neutral-800 space-y-3">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-300">
+          <div className="p-4 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3 shadow-sm transition-colors">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-300">
               เชื่อมโยงคอนเสิร์ต / อีเวนต์ (AC-25)
             </label>
 
             <div className="relative">
-              <SearchIcon className="w-3.5 h-3.5 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <SearchIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={eventSearch}
                 onChange={(e) => setEventSearch(e.target.value)}
                 placeholder="ค้นหาคอนเสิร์ต..."
-                className="w-full pl-8 pr-3 py-1.5 bg-neutral-950 border border-neutral-800 rounded text-xs text-white placeholder-neutral-600 focus:outline-none"
+                className="w-full pl-8 pr-3 py-1.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500"
               />
             </div>
 
-            <div className="max-h-40 overflow-y-auto space-y-1 divide-y divide-neutral-800/40">
+            <div className="max-h-40 overflow-y-auto space-y-1 divide-y divide-neutral-100 dark:divide-neutral-800/40">
               {filteredEvents.length === 0 ? (
                 <p className="text-xs text-neutral-500 py-2 text-center">ไม่พบคอนเสิร์ต</p>
               ) : (
@@ -741,15 +768,15 @@ export function ArticleEditor({
                   return (
                     <label
                       key={ev.id}
-                      className="flex items-center gap-2 py-1.5 px-1 hover:bg-neutral-800/40 rounded cursor-pointer text-xs"
+                      className="flex items-center gap-2 py-1.5 px-1 hover:bg-neutral-100 dark:hover:bg-neutral-800/40 rounded cursor-pointer text-xs transition-colors"
                     >
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => handleToggleEvent(ev.id)}
-                        className="rounded bg-neutral-950 border-neutral-700 text-white"
+                        className="rounded bg-neutral-100 dark:bg-neutral-950 border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white"
                       />
-                      <span className="flex-1 truncate text-neutral-200">{ev.name}</span>
+                      <span className="flex-1 truncate text-neutral-800 dark:text-neutral-200">{ev.name}</span>
                       <span className="text-[10px] text-neutral-500 font-mono">{ev.eventDate}</span>
                     </label>
                   );
@@ -759,53 +786,53 @@ export function ArticleEditor({
           </div>
 
           {/* SEO Metadata Section (Collapsible) */}
-          <div className="p-4 rounded-lg bg-neutral-900 border border-neutral-800">
+          <div className="p-4 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm transition-colors">
             <button
               type="button"
               onClick={() => setSeoCollapsed(!seoCollapsed)}
-              className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-neutral-300"
+              className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors"
             >
               <span className="flex items-center gap-1.5">
-                <TargetIcon className="w-4 h-4 text-neutral-400" />
+                <TargetIcon className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
                 <span>SEO & Social Metadata (AC-23, AC-24)</span>
               </span>
               <span>{seoCollapsed ? "+" : "-"}</span>
             </button>
 
             {!seoCollapsed && (
-              <div className="space-y-4 pt-4 mt-3 border-t border-neutral-800 text-xs">
+              <div className="space-y-4 pt-4 mt-3 border-t border-neutral-200 dark:border-neutral-800 text-xs">
                 <div>
-                  <label className="block text-neutral-400 mb-1">Custom SEO Title</label>
+                  <label className="block text-neutral-700 dark:text-neutral-400 mb-1">Custom SEO Title</label>
                   <input
                     type="text"
                     value={seoTitle}
                     onChange={(e) => setSeoTitle(e.target.value)}
                     placeholder={title || "ค่าเริ่มต้นใช้หัวข้อบทความ"}
-                    className="w-full px-3 py-1.5 bg-neutral-950 border border-neutral-800 rounded text-white placeholder-neutral-600 focus:outline-none"
+                    className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500"
                   />
                   <p className="text-[10px] text-neutral-500 mt-1">Fallback: {title || "หัวข้อบทความ"}</p>
                 </div>
 
                 <div>
-                  <label className="block text-neutral-400 mb-1">Meta Description</label>
+                  <label className="block text-neutral-700 dark:text-neutral-400 mb-1">Meta Description</label>
                   <textarea
                     value={seoDescription}
                     onChange={(e) => setSeoDescription(e.target.value)}
                     rows={2}
                     placeholder={excerpt || "ค่าเริ่มต้นใช้คำโปรยหรือย่อหน้าแรก"}
-                    className="w-full px-3 py-1.5 bg-neutral-950 border border-neutral-800 rounded text-white placeholder-neutral-600 focus:outline-none"
+                    className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500"
                   />
                   <p className="text-[10px] text-neutral-500 mt-1">Fallback: {excerpt || "ย่อหน้าแรกของเนื้อหา"}</p>
                 </div>
 
                 <div>
-                  <label className="block text-neutral-400 mb-1">Open Graph Image URL</label>
+                  <label className="block text-neutral-700 dark:text-neutral-400 mb-1">Open Graph Image URL</label>
                   <input
                     type="text"
                     value={ogImageUrl}
                     onChange={(e) => setOgImageUrl(e.target.value)}
                     placeholder={coverImageUrl || "ค่าเริ่มต้นใช้รูปหน้าปก"}
-                    className="w-full px-3 py-1.5 bg-neutral-950 border border-neutral-800 rounded text-white placeholder-neutral-600 focus:outline-none font-mono text-[11px]"
+                    className="w-full px-3 py-1.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-500 font-mono text-[11px]"
                   />
                   <p className="text-[10px] text-neutral-500 mt-1">Fallback: {coverImageUrl || "รูปหน้าปกบทความ"}</p>
                 </div>

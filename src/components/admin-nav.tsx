@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "./logout-button";
-import { ClipboardCheckIcon, MusicIcon, FileTextIcon, SlidersIcon } from "./icons";
+import { ClipboardCheckIcon, MusicIcon, FileTextIcon, SlidersIcon, UsersIcon } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
 
 export function AdminNav() {
@@ -11,6 +11,7 @@ export function AdminNav() {
 
   const isVerifications = pathname.startsWith("/admin/verifications");
   const isEvents = pathname.startsWith("/admin/events");
+  const isOrganizers = pathname.startsWith("/admin/organizers");
   const isArticles = pathname.startsWith("/admin/articles");
   const isCategories = pathname.startsWith("/admin/categories");
 
@@ -51,6 +52,17 @@ export function AdminNav() {
             >
               <MusicIcon className="w-3.5 h-3.5" />
               <span>จัดการคอนเสิร์ต</span>
+            </Link>
+            <Link
+              href="/admin/organizers"
+              className={`px-2.5 py-1.5 rounded transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                isOrganizers
+                  ? "bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white font-bold"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900"
+              }`}
+            >
+              <UsersIcon className="w-3.5 h-3.5" />
+              <span>จัดการผู้ดูแลคอนเสิร์ต</span>
             </Link>
             <Link
               href="/admin/articles"

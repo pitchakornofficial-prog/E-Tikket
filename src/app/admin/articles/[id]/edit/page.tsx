@@ -125,18 +125,18 @@ export default function AdminEditArticlePage({ params }: EditPageProps) {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
             แก้ไขบทความ
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
             แก้ไขเนื้อหา ข้อมูลหมวดหมู่ และ SEO metadata
           </p>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-sm text-neutral-400">กำลังโหลดข้อมูล...</div>
+          <div className="p-12 text-center text-sm text-neutral-500 dark:text-neutral-400">กำลังโหลดข้อมูล...</div>
         ) : !article ? (
-          <div className="p-12 text-center text-sm text-neutral-400 bg-neutral-900 border border-neutral-800 rounded">
+          <div className="p-12 text-center text-sm text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded">
             {errorMsg || "ไม่พบบทความ"}
           </div>
         ) : (

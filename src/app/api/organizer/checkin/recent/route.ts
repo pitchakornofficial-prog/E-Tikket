@@ -22,7 +22,58 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const eventId = searchParams.get("eventId");
 
-  // If eventId is provided, verify ownership and return recent scans for that event
+  // Case 1: eventId === "ALL" -> Return recent scans across ALL events owned by this organizer
+  if (eventId === "ALL") {
+    const myEvents = await prisma.event.findMany({
+      where: { organizerId: auth.session.sub },
+      select: { id: true, name: true },
+    });
+
+    const eventIds = myEvents.map((e) => e.id);
+
+    const recentScans = await prisma.ticketScan.findMany({
+      where: { eventId: { in: eventIds } },
+      orderBy: { scannedAt: "desc" },
+      take: 50,
+      include: {
+        event: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        ticket: {
+          select: {
+            ticketNumber: true,
+          },
+        },
+        staff: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return jsonResponse(
+      {
+        scans: recentScans.map((s) => ({
+          id: s.id,
+          eventId: s.event.id,
+          eventName: s.event.name,
+          action: s.action,
+          result: s.result,
+          scannedAt: s.scannedAt.toISOString(),
+          ticketNumber: s.ticket?.ticketNumber || null,
+          staffName: s.checkerName || s.staff.name,
+          checkerName: s.checkerName || null,
+        })),
+      },
+      { status: 200 },
+    );
+  }
+
+  // Case 2: Specific eventId provided -> Verify ownership and return recent scans for that event
   if (eventId) {
     const event = await prisma.event.findUnique({
       where: { id: eventId },
@@ -82,18 +133,21 @@ export async function GET(request: Request) {
         },
         scans: recentScans.map((s) => ({
           id: s.id,
+          eventId: event.id,
+          eventName: event.name,
           action: s.action,
           result: s.result,
           scannedAt: s.scannedAt.toISOString(),
           ticketNumber: s.ticket?.ticketNumber || null,
-          staffName: s.staff.name,
+          staffName: s.checkerName || s.staff.name,
+          checkerName: s.checkerName || null,
         })),
       },
       { status: 200 },
     );
   }
 
-  // If eventId is not provided, list all events owned by this organizer
+  // Case 3: If eventId is not provided, list all events owned by this organizer
   const events = await prisma.event.findMany({
     where: { organizerId: auth.session.sub },
     orderBy: { eventDate: "asc" },

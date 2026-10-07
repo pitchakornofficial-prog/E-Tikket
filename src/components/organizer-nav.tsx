@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "./logout-button";
-import { CameraIcon, FileTextIcon } from "./icons";
+import { FileTextIcon, UsersIcon, CalendarIcon } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
 
 export function OrganizerNav() {
   const pathname = usePathname();
 
   const isScanner = pathname === "/organizer" || pathname.startsWith("/organizer/scanner");
+  const isEvents = pathname.startsWith("/organizer/events");
   const isArticles = pathname.startsWith("/organizer/articles");
 
   return (
@@ -36,8 +37,19 @@ export function OrganizerNav() {
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900"
               }`}
             >
-              <CameraIcon className="w-3.5 h-3.5" />
-              <span>สแกนเนอร์หน้างาน</span>
+              <UsersIcon className="w-3.5 h-3.5" />
+              <span>ผู้ตรวจบัตร & ประวัติสแกน</span>
+            </Link>
+            <Link
+              href="/organizer/events"
+              className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                isEvents
+                  ? "bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white font-bold"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900"
+              }`}
+            >
+              <CalendarIcon className="w-3.5 h-3.5" />
+              <span>จัดการคอนเสิร์ต</span>
             </Link>
             <Link
               href="/organizer/articles"

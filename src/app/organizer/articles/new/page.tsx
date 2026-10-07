@@ -130,16 +130,16 @@ export default function OrganizerNewArticlePage() {
 
       <main className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
         <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
             เขียนบทความใหม่
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
             สร้างบทความใหม่เพื่อโปรโมตงานของคุณ (ต้องผ่านการอนุมัติจาก Admin ก่อนเผยแพร่สู่สาธารณะ)
           </p>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-sm text-neutral-400">กำลังโหลดข้อมูล...</div>
+          <div className="p-12 text-center text-sm text-neutral-500 dark:text-neutral-400">กำลังโหลดข้อมูล...</div>
         ) : (
           <ArticleEditor
             role="ORGANIZER"

@@ -136,21 +136,21 @@ export default function OrganizerEditArticlePage({ params }: EditPageProps) {
 
       <main className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
         <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
             แก้ไขบทความ
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
             แก้ไขเนื้อหาและข้อมูลบทความของคุณ
           </p>
         </div>
 
         {/* AC-19 Warning Banner for Published articles */}
         {isPublished && (
-          <div className="mb-6 p-4 rounded bg-yellow-950/40 border border-yellow-700 text-yellow-200 flex items-start gap-3 text-xs sm:text-sm">
-            <AlertTriangleIcon className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-amber-50 dark:bg-yellow-950/40 border border-amber-300 dark:border-yellow-700 text-amber-900 dark:text-yellow-200 flex items-start gap-3 text-xs sm:text-sm">
+            <AlertTriangleIcon className="w-5 h-5 text-amber-600 dark:text-yellow-400 shrink-0 mt-0.5" />
             <div>
               <p className="font-bold mb-1">คำเตือน: บทความนี้ได้รับการเผยแพร่แล้ว</p>
-              <p className="text-yellow-300/90 leading-relaxed">
+              <p className="text-amber-800 dark:text-yellow-300/90 leading-relaxed">
                 การแก้ไขและบันทึกจะทำให้สถานะของบทความเปลี่ยนเป็น <strong>รอตรวจสอบ (Pending Review)</strong> โดยอัตโนมัติ
                 และจะไม่แสดงบนหน้าเว็บสาธารณะจนกว่าผู้ดูแลระบบจะอนุมัติอีกครั้ง (AC-19)
               </p>
@@ -159,9 +159,9 @@ export default function OrganizerEditArticlePage({ params }: EditPageProps) {
         )}
 
         {loading ? (
-          <div className="p-12 text-center text-sm text-neutral-400">กำลังโหลดข้อมูล...</div>
+          <div className="p-12 text-center text-sm text-neutral-500 dark:text-neutral-400">กำลังโหลดข้อมูล...</div>
         ) : !article ? (
-          <div className="p-12 text-center text-sm text-neutral-400 bg-neutral-900 border border-neutral-800 rounded">
+          <div className="p-12 text-center text-sm text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded">
             {errorMsg || "ไม่พบบทความ"}
           </div>
         ) : (

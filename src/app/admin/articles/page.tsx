@@ -415,25 +415,25 @@ export default function AdminArticlesPage() {
 
       {/* Delete Confirmation Modal */}
       {deletingArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-3 text-red-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl space-y-4">
+            <div className="flex items-center gap-3 text-red-500 dark:text-red-400">
               <AlertTriangleIcon className="w-6 h-6 shrink-0" />
-              <h2 className="text-lg font-bold text-white">ยืนยันการลบบทความ</h2>
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">ยืนยันการลบบทความ</h2>
             </div>
 
-            <p className="text-sm text-neutral-300">
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
               คุณแน่ใจหรือไม่ว่าต้องการลบบทความ{" "}
-              <span className="font-bold text-white">&quot;{deletingArticle.title}&quot;</span>?
+              <span className="font-bold text-black dark:text-white">&quot;{deletingArticle.title}&quot;</span>?
             </p>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
               การกระทำนี้จะลบบทความออกจากระบบอย่างถาวร (AC-14)
             </p>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setDeletingArticle(null)}
-                className="px-4 py-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                className="px-4 py-2 text-sm text-neutral-600 hover:text-black dark:text-neutral-400 dark:hover:text-white transition-colors"
               >
                 ยกเลิก
               </button>

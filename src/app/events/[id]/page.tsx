@@ -229,12 +229,12 @@ export default async function EventDetailPage({ params }: PageProps) {
                   </span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-neutral-400">จำนวนที่เปิดขายทั้งหมด</span>
-                  <span className="text-neutral-300">{event.totalTickets} ใบ</span>
+                  <span className="text-neutral-600 dark:text-neutral-400">จำนวนที่เปิดขายทั้งหมด</span>
+                  <span className="text-neutral-900 dark:text-neutral-300 font-medium">{event.totalTickets} ใบ</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-neutral-400">คงเหลือ</span>
-                  <span className="text-neutral-200 font-bold">{availableQuantity} ใบ</span>
+                  <span className="text-neutral-600 dark:text-neutral-400">คงเหลือ</span>
+                  <span className="text-neutral-900 dark:text-neutral-200 font-bold">{availableQuantity} ใบ</span>
                 </div>
               </div>
 
@@ -250,7 +250,7 @@ export default async function EventDetailPage({ params }: PageProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 py-8 text-center text-xs text-neutral-600">
+      <footer className="border-t border-neutral-200 dark:border-neutral-900 py-8 text-center text-xs text-neutral-500 dark:text-neutral-600">
         <p>E-Tikket Ticketing Platform • MVP</p>
       </footer>
     </div>

@@ -125,20 +125,20 @@ export default function AdminNewArticlePage() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
             เขียนบทความใหม่
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
             สร้างบทความใหม่สำหรับเผยแพร่ในหน้า News & Blog
           </p>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-sm text-neutral-400">กำลังโหลดข้อมูล...</div>
+          <div className="p-12 text-center text-sm text-neutral-500 dark:text-neutral-400">กำลังโหลดข้อมูล...</div>
         ) : categories.length === 0 ? (
-          <div className="p-12 text-center text-sm text-neutral-400 bg-neutral-900 border border-neutral-800 rounded">
+          <div className="p-12 text-center text-sm text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded">
             ยังไม่มีหมวดหมู่บทความ กรุณาไปสร้างหมวดหมู่ก่อน{" "}
-            <a href="/admin/categories" className="text-white underline font-semibold">
+            <a href="/admin/categories" className="text-black dark:text-white underline font-semibold">
               สร้างหมวดหมู่
             </a>
           </div>

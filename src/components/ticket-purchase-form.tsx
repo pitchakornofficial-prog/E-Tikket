@@ -138,23 +138,23 @@ export function TicketPurchaseForm({
               }
             }}
             disabled={isSubmitting}
-            className="w-24 px-3 py-2 bg-neutral-900 border border-neutral-700 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-white text-center font-bold"
+            className="w-24 px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-neutral-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white text-center font-bold"
           />
-          <span className="text-xs text-neutral-400">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
             เหลือ {availableQuantity} ใบ
           </span>
         </div>
       </div>
 
-      <div className="border-t border-neutral-800 pt-3">
-        <p className="text-xs font-semibold text-neutral-300 mb-3">
+      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-3">
+        <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-300 mb-3">
           ข้อมูลผู้สั่งซื้อ (ไม่ต้องสมัครสมาชิก)
         </p>
 
         {/* Customer Name */}
         <div className="space-y-1.5 mb-3">
-          <label htmlFor="cust-name" className="block text-xs text-neutral-400">
-            ชื่อ - นามสกุล <span className="text-red-400">*</span>
+          <label htmlFor="cust-name" className="block text-xs text-neutral-600 dark:text-neutral-400">
+            ชื่อ - นามสกุล <span className="text-red-500">*</span>
           </label>
           <input
             id="cust-name"
@@ -165,14 +165,14 @@ export function TicketPurchaseForm({
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-700 rounded text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-white min-h-[40px]"
+            className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-neutral-900 dark:text-white text-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white min-h-[40px]"
           />
         </div>
 
         {/* Customer Email */}
         <div className="space-y-1.5 mb-3">
-          <label htmlFor="cust-email" className="block text-xs text-neutral-400">
-            อีเมลสำหรับรับบัตร E-Ticket <span className="text-red-400">*</span>
+          <label htmlFor="cust-email" className="block text-xs text-neutral-600 dark:text-neutral-400">
+            อีเมลสำหรับรับบัตร E-Ticket <span className="text-red-500">*</span>
           </label>
           <input
             id="cust-email"
@@ -183,17 +183,17 @@ export function TicketPurchaseForm({
             value={customerEmail}
             onChange={(e) => setCustomerEmail(e.target.value)}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-700 rounded text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-white min-h-[40px]"
+            className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-neutral-900 dark:text-white text-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white min-h-[40px]"
           />
-          <p className="text-[11px] text-neutral-500">
+          <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
             ระบบจะส่ง E-Ticket และ QR Code ไปยังอีเมลนี้หลังยืนยันการชำระเงิน
           </p>
         </div>
 
         {/* Customer Phone */}
         <div className="space-y-1.5 mb-3">
-          <label htmlFor="cust-phone" className="block text-xs text-neutral-400">
-            เบอร์โทรศัพท์ติดต่อ <span className="text-red-400">*</span>
+          <label htmlFor="cust-phone" className="block text-xs text-neutral-600 dark:text-neutral-400">
+            เบอร์โทรศัพท์ติดต่อ <span className="text-red-500">*</span>
           </label>
           <input
             id="cust-phone"
@@ -204,20 +204,20 @@ export function TicketPurchaseForm({
             value={customerPhone}
             onChange={(e) => setCustomerPhone(e.target.value)}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 bg-neutral-900 border border-neutral-700 rounded text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-white min-h-[40px]"
+            className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-neutral-900 dark:text-white text-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white min-h-[40px]"
           />
         </div>
       </div>
 
       {/* Summary Box */}
-      <div className="p-3 bg-neutral-900 border border-neutral-800 rounded space-y-2">
-        <div className="flex justify-between text-xs text-neutral-400">
+      <div className="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded space-y-2">
+        <div className="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
           <span>ราคาบัตรรวม ({quantity} ใบ)</span>
-          <span className="font-mono text-neutral-200">฿{formatPrice(subtotal, true)}</span>
+          <span className="font-mono text-neutral-900 dark:text-neutral-200">฿{formatPrice(subtotal, true)}</span>
         </div>
-        <div className="flex justify-between items-baseline pt-2 border-t border-neutral-800">
-          <span className="text-xs font-bold text-white">ยอดรวมสุทธิ</span>
-          <span className="text-lg font-black text-white font-mono">฿{formatPrice(subtotal, true)}</span>
+        <div className="flex justify-between items-baseline pt-2 border-t border-neutral-200 dark:border-neutral-800">
+          <span className="text-xs font-bold text-neutral-900 dark:text-white">ยอดรวมสุทธิ</span>
+          <span className="text-lg font-black text-neutral-900 dark:text-white font-mono">฿{formatPrice(subtotal, true)}</span>
         </div>
       </div>
 

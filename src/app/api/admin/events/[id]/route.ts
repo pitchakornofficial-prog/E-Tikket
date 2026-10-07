@@ -111,3 +111,121 @@ export async function PUT(request: Request, { params }: RouteParams) {
     );
   }
 }
+
+export async function PATCH(request: Request, { params }: RouteParams) {
+  // 1. Authorize ADMIN role
+  const auth = await requireStaff(request, ["ADMIN"]);
+  if (auth.response) {
+    return auth.response;
+  }
+
+  const { id } = await params;
+
+  try {
+    const existingEvent = await prisma.event.findUnique({
+      where: { id },
+    });
+
+    if (!existingEvent) {
+      return NextResponse.json(
+        { error: { message: "ไม่พบคอนเสิร์ตที่ระบุ" } },
+        { status: 404 },
+      );
+    }
+
+    const body = await request.json();
+    const { status } = body;
+
+    if (!status || !["PUBLISHED", "DRAFT", "ARCHIVED"].includes(status)) {
+      return NextResponse.json(
+        { error: { message: "สถานะไม่ถูกต้อง (ต้องเป็น PUBLISHED, DRAFT หรือ ARCHIVED)" } },
+        { status: 400 },
+      );
+    }
+
+    const updatedEvent = await prisma.event.update({
+      where: { id },
+      data: { status },
+      include: {
+        organizer: {
+          select: { id: true, name: true, email: true },
+        },
+      },
+    });
+
+    return NextResponse.json(
+      { success: true, event: updatedEvent, message: status === "ARCHIVED" ? "จัดเก็บคอนเสิร์ตเรียบร้อยแล้ว" : "อัปเดตสถานะคอนเสิร์ตเรียบร้อยแล้ว" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Failed to patch event status:", error);
+    return NextResponse.json(
+      { error: { message: "ไม่สามารถเปลี่ยนสถานะคอนเสิร์ตได้ กรุณาลองใหม่อีกครั้ง" } },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(request: Request, { params }: RouteParams) {
+  // 1. Authorize ADMIN role
+  const auth = await requireStaff(request, ["ADMIN"]);
+  if (auth.response) {
+    return auth.response;
+  }
+
+  const { id } = await params;
+
+  try {
+    const existingEvent = await prisma.event.findUnique({
+      where: { id },
+    });
+
+    if (!existingEvent) {
+      return NextResponse.json(
+        { error: { message: "ไม่พบคอนเสิร์ตที่ต้องการลบ" } },
+        { status: 404 },
+      );
+    }
+
+    // Check if event has associated orders or tickets
+    const orderCount = await prisma.order.count({
+      where: { eventId: id },
+    });
+    const ticketCount = await prisma.ticket.count({
+      where: { eventId: id },
+    });
+
+    if (orderCount > 0 || ticketCount > 0) {
+      return NextResponse.json(
+        {
+          error: {
+            message: `ไม่สามารถลบคอนเสิร์ต "${existingEvent.name}" ได้ เนื่องจากมีคำสั่งซื้อหรือตั๋วที่ออกไปแล้ว (${orderCount} คำสั่งซื้อ, ${ticketCount} ใบ) กรุณาใช้การ "จัดเก็บ (Archive)" แทน เพื่อรักษาประวัติข้อมูล`,
+            canArchive: true,
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    // Delete scans if any
+    await prisma.ticketScan.deleteMany({
+      where: { eventId: id },
+    });
+
+    // Delete the event
+    await prisma.event.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(
+      { success: true, message: `ลบคอนเสิร์ต "${existingEvent.name}" ออกจากระบบเรียบร้อยแล้ว` },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Failed to delete event:", error);
+    return NextResponse.json(
+      { error: { message: "ไม่สามารถลบคอนเสิร์ตได้ กรุณาลองใหม่อีกครั้ง" } },
+      { status: 500 },
+    );
+  }
+}

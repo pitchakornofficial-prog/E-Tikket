@@ -320,15 +320,15 @@ export default function AdminCategoriesPage() {
 
       {/* Create / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">
                 {editingCategory ? "แก้ไขหมวดหมู่" : "สร้างหมวดหมู่ใหม่"}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-neutral-400 hover:text-white"
+                className="text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white"
               >
                 <XIcon className="w-5 h-5" />
               </button>
@@ -336,8 +336,8 @@ export default function AdminCategoriesPage() {
 
             <form onSubmit={handleSaveCategory} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1.5">
-                  ชื่อหมวดหมู่ <span className="text-red-400">*</span>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 mb-1.5">
+                  ชื่อหมวดหมู่ <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -345,22 +345,22 @@ export default function AdminCategoriesPage() {
                   onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="เช่น ข่าวสารคอนเสิร์ต, สัมภาษณ์ศิลปิน"
                   required
-                  className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-black dark:focus:border-neutral-500"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                    Slug (URL Identifier) <span className="text-red-400">*</span>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                    Slug (URL Identifier) <span className="text-red-500">*</span>
                   </label>
                   {!editingCategory && (
-                    <label className="flex items-center gap-1.5 text-xs text-neutral-400 cursor-pointer">
+                    <label className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={autoSlug}
                         onChange={(e) => setAutoSlug(e.target.checked)}
-                        className="rounded bg-neutral-950 border-neutral-800 text-white"
+                        className="rounded bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
                       />
                       <span>Auto</span>
                     </label>
@@ -375,24 +375,24 @@ export default function AdminCategoriesPage() {
                   }}
                   placeholder="concert-news"
                   required
-                  className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded text-sm font-mono text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500"
+                  className="w-full px-3 py-2 bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded text-sm font-mono text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-black dark:focus:border-neutral-500"
                 />
                 <p className="text-[11px] text-neutral-500 mt-1">
                   ใช้เป็นตัวกรองใน URL เช่น /news?category={categorySlug || "slug"}
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                  className="px-4 py-2 text-sm text-neutral-600 hover:text-black dark:text-neutral-400 dark:hover:text-white transition-colors"
                 >
                   ยกเลิก
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-white text-black font-semibold rounded text-sm hover:bg-neutral-200 transition-colors"
+                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-semibold rounded text-sm hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                 >
                   {editingCategory ? "บันทึกการแก้ไข" : "สร้างหมวดหมู่"}
                 </button>
@@ -404,26 +404,26 @@ export default function AdminCategoriesPage() {
 
       {/* Delete Confirmation Modal */}
       {deletingCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl">
-            <div className="flex items-center gap-3 mb-4 text-red-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl">
+            <div className="flex items-center gap-3 mb-4 text-red-500 dark:text-red-400">
               <AlertTriangleIcon className="w-6 h-6 shrink-0" />
-              <h2 className="text-lg font-bold text-white">ยืนยันการลบหมวดหมู่</h2>
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">ยืนยันการลบหมวดหมู่</h2>
             </div>
 
             {deletingCategory.articleCount > 0 ? (
               <div className="space-y-4">
-                <p className="text-sm text-neutral-300">
-                  ไม่สามารถลบหมวดหมู่ <span className="font-bold text-white">&quot;{deletingCategory.name}&quot;</span> ได้
-                  เนื่องจากมีบทความที่เชื่อมโยงอยู่ <span className="font-bold text-white">{deletingCategory.articleCount} บทความ</span>
+                <p className="text-sm text-neutral-700 dark:text-neutral-300">
+                  ไม่สามารถลบหมวดหมู่ <span className="font-bold text-black dark:text-white">&quot;{deletingCategory.name}&quot;</span> ได้
+                  เนื่องจากมีบทความที่เชื่อมโยงอยู่ <span className="font-bold text-black dark:text-white">{deletingCategory.articleCount} บทความ</span>
                 </p>
-                <p className="text-xs text-neutral-400 bg-neutral-950 p-3 rounded border border-neutral-800">
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-950 p-3 rounded border border-neutral-200 dark:border-neutral-800">
                   กรุณาแก้ไขบทความเหล่านั้นให้ไปอยู่หมวดหมู่อื่นก่อน จึงจะสามารถลบหมวดหมู่นี้ได้ (AC-16)
                 </p>
                 <div className="flex justify-end pt-2">
                   <button
                     onClick={() => setDeletingCategory(null)}
-                    className="px-4 py-2 bg-neutral-800 text-white rounded text-sm hover:bg-neutral-700 transition-colors"
+                    className="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white rounded text-sm hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
                   >
                     รับทราบ
                   </button>
