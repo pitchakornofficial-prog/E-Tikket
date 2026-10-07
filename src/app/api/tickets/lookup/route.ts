@@ -25,7 +25,6 @@ export async function GET(request: Request) {
         where: {
           ticketNumber: {
             equals: ticketNumber,
-            mode: "insensitive",
           },
         },
         include: {
@@ -110,7 +109,7 @@ export async function GET(request: Request) {
 
       const orders = await prisma.order.findMany({
         where: {
-          customerEmail: { equals: email, mode: "insensitive" },
+          customerEmail: { equals: email },
           status: { in: ["PAID", "WAITING_FOR_VERIFY", "REJECTED", "PENDING_PAYMENT"] },
         },
         include: {

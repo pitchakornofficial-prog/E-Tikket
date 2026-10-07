@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { AdminNav } from "@/components/admin-nav";
 import {
   CalendarIcon,
@@ -16,6 +16,7 @@ import {
   ClockIcon,
   UserIcon,
   SearchIcon,
+  MusicIcon,
 } from "@/components/icons";
 
 interface VerificationOrder {
@@ -64,6 +65,8 @@ export default function AdminVerificationsPage() {
   const [counts, setCounts] = useState<OrderCounts>({ waiting: 0, paid: 0, rejected: 0, all: 0 });
   const [currentTab, setCurrentTab] = useState<TabType>("WAITING_FOR_VERIFY");
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+  const [allEvents, setAllEvents] = useState<{ id: string; name: string }[]>([]);
+  const [selectedEventId, setSelectedEventId] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -79,6 +82,28 @@ export default function AdminVerificationsPage() {
   const [rejectReason, setRejectReason] = useState("");
   const [submittingAction, setSubmittingAction] = useState(false);
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchEventsList() {
+      try {
+        const res = await fetch("/api/admin/events");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.events)) {
+            setAllEvents(
+              data.events.map((e: { id: string; name: string }) => ({
+                id: e.id,
+                name: e.name,
+              }))
+            );
+          }
+        }
+      } catch {
+        // Fallback to distinct events from orders
+      }
+    }
+    fetchEventsList();
+  }, []);
 
   const fetchOrders = useCallback(async (tab: TabType = currentTab) => {
     setLoading(true);
@@ -106,6 +131,18 @@ export default function AdminVerificationsPage() {
     }
   }, [currentTab]);
 
+  // Extract distinct concert options from allEvents & current loaded orders
+  const concertOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    allEvents.forEach((e) => map.set(e.id, e.name));
+    orders.forEach((o) => {
+      if (o.event?.id && o.event?.name) {
+        map.set(o.event.id, o.event.name);
+      }
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [allEvents, orders]);
+
   // Extract distinct event categories
   const categories = [
     "ทั้งหมด",
@@ -117,13 +154,18 @@ export default function AdminVerificationsPage() {
   ];
 
   const filteredOrders = orders.filter((order) => {
-    // 1. Filter by category
+    // 1. Filter by concert/event
+    if (selectedEventId !== "ALL" && order.event.id !== selectedEventId) {
+      return false;
+    }
+
+    // 2. Filter by category
     const cat = order.event.category || "Concert";
     if (selectedCategory !== "ทั้งหมด" && cat !== selectedCategory) {
       return false;
     }
 
-    // 2. Filter by search query
+    // 3. Filter by search query
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase().trim();
     return (
@@ -362,8 +404,77 @@ export default function AdminVerificationsPage() {
           </button>
         </div>
 
-        {/* Category Filter & Search Section */}
-        <div className="space-y-3">
+        {/* Concert Filter Pill Tabs & Category Filter Section */}
+        <div className="space-y-4">
+          <div className="space-y-2 bg-neutral-950/80 p-3.5 rounded-2xl border border-neutral-900">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2 text-xs font-semibold text-neutral-300">
+                <MusicIcon className="w-4 h-4 text-emerald-400" />
+                <span>เลือกคอนเสิร์ตที่ต้องการตรวจสอบ:</span>
+              </div>
+              {selectedEventId !== "ALL" && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedEventId("ALL")}
+                  className="text-xs text-neutral-400 hover:text-white underline font-mono transition-colors"
+                >
+                  เลือกทั้งหมด
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full pt-1">
+              <button
+                type="button"
+                onClick={() => setSelectedEventId("ALL")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-2 shrink-0 ${
+                  selectedEventId === "ALL"
+                    ? "bg-emerald-400 text-black font-bold shadow-lg shadow-emerald-950/50"
+                    : "bg-neutral-900/90 text-neutral-400 hover:text-white border border-neutral-800 hover:border-neutral-700"
+                }`}
+              >
+                <span>คอนเสิร์ตทั้งหมด</span>
+                <span
+                  className={`px-2 py-0.5 rounded-full font-mono text-[10px] ${
+                    selectedEventId === "ALL"
+                      ? "bg-black/20 text-black font-bold"
+                      : "bg-neutral-800 text-neutral-400"
+                  }`}
+                >
+                  {orders.length}
+                </span>
+              </button>
+
+              {concertOptions.map((evt) => {
+                const isSelected = selectedEventId === evt.id;
+                const countForEvent = orders.filter((o) => o.event?.id === evt.id).length;
+                return (
+                  <button
+                    key={evt.id}
+                    type="button"
+                    onClick={() => setSelectedEventId(evt.id)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-2 shrink-0 ${
+                      isSelected
+                        ? "bg-white text-black font-bold shadow-lg shadow-white/10"
+                        : "bg-neutral-900/90 text-neutral-400 hover:text-white border border-neutral-800 hover:border-neutral-700"
+                    }`}
+                  >
+                    <span>🎵 {evt.name}</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-full font-mono text-[10px] ${
+                        isSelected
+                          ? "bg-neutral-200 text-black font-bold"
+                          : "bg-neutral-800 text-neutral-400"
+                      }`}
+                    >
+                      {countForEvent}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {categories.length > 1 && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs text-neutral-500 font-medium mr-1">หมวดหมู่คอนเสิร์ต:</span>

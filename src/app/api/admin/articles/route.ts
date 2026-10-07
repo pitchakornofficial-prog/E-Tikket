@@ -31,8 +31,8 @@ export async function GET(request: Request) {
 
     if (searchParam) {
       whereClause.OR = [
-        { title: { contains: searchParam, mode: "insensitive" } },
-        { slug: { contains: searchParam, mode: "insensitive" } },
+        { title: { contains: searchParam } },
+        { slug: { contains: searchParam } },
       ];
     }
 

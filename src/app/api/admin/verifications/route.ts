@@ -44,11 +44,11 @@ export async function GET(request: Request) {
           statusFilter,
           {
             OR: [
-              { id: { contains: search, mode: "insensitive" } },
-              { customerName: { contains: search, mode: "insensitive" } },
-              { customerEmail: { contains: search, mode: "insensitive" } },
+              { id: { contains: search } },
+              { customerName: { contains: search } },
+              { customerEmail: { contains: search } },
               { customerPhone: { contains: search } },
-              { event: { name: { contains: search, mode: "insensitive" } } },
+              { event: { name: { contains: search } } },
             ],
           },
         ],

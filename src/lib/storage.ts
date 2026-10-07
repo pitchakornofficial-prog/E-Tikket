@@ -111,12 +111,25 @@ export function getMockStorage(): Map<string, { data: Buffer; contentType: strin
 }
 
 export function isStorageConfigured(): boolean {
-  return Boolean(
-    process.env.R2_ACCOUNT_ID &&
-      process.env.R2_ACCESS_KEY_ID &&
-      process.env.R2_SECRET_ACCESS_KEY &&
-      process.env.R2_BUCKET_NAME,
-  );
+  const accountId = process.env.R2_ACCOUNT_ID;
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+  const bucketName = process.env.R2_BUCKET_NAME;
+
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucketName) {
+    return false;
+  }
+
+  if (
+    accountId.includes("replace-with") ||
+    accessKeyId.includes("replace-with") ||
+    secretAccessKey.includes("replace-with") ||
+    bucketName.includes("replace-with")
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 function getR2BucketName(): string {
