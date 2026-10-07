@@ -120,7 +120,7 @@ export default function AdminEditArticlePage({ params }: EditPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100">
+    <div className="min-h-screen bg-black text-white">
       <AdminNav />
 
       <main className="max-w-6xl mx-auto px-4 py-8">
