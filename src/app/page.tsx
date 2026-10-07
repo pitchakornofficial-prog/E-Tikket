@@ -54,7 +54,7 @@ export default async function HomePage() {
   const { events, error } = await getPublishedEvents();
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
       {/* Header */}
       <PublicNavbar />
 
@@ -62,29 +62,29 @@ export default async function HomePage() {
       <main className="flex-1 max-w-6xl mx-auto px-4 py-10 w-full space-y-10">
         {/* Intro */}
         <section className="space-y-3 max-w-2xl">
-          <p className="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
+          <p className="text-xs font-semibold tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">
             LOCAL CONCERTS / BANGKOK
           </p>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight text-neutral-900 dark:text-white">
             ค่ำคืนถัดไป<br />เริ่มที่นี่
           </h1>
-          <p className="text-neutral-400 text-sm sm:text-base leading-relaxed">
+          <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base leading-relaxed">
             ค้นพบดนตรีสดใกล้คุณ เลือกงาน ซื้อบัตร และรับ QR Code เข้างานได้ทันทีโดยไม่ต้องสมัครสมาชิก
           </p>
         </section>
 
         {/* Error State */}
         {error && (
-          <div className="p-8 border border-neutral-800 bg-neutral-950 rounded-lg text-center space-y-3">
-            <p className="text-red-400 font-medium">ไม่สามารถโหลดข้อมูลงานแสดงได้ในขณะนี้</p>
+          <div className="p-8 border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-lg text-center space-y-3 shadow-sm">
+            <p className="text-red-500 dark:text-red-400 font-medium">ไม่สามารถโหลดข้อมูลงานแสดงได้ในขณะนี้</p>
             <p className="text-xs text-neutral-500">กรุณาลองรีเฟรชหน้าเว็บใหม่อีกครั้ง</p>
           </div>
         )}
 
         {/* Empty State */}
         {!error && events && events.length === 0 && (
-          <div className="p-12 border border-dashed border-neutral-800 bg-neutral-950/50 rounded-lg text-center space-y-2">
-            <p className="text-neutral-300 font-medium">ยังไม่มีงานแสดงที่เปิดจำหน่ายในขณะนี้</p>
+          <div className="p-12 border border-dashed border-neutral-300 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/50 rounded-lg text-center space-y-2">
+            <p className="text-neutral-700 dark:text-neutral-300 font-medium">ยังไม่มีงานแสดงที่เปิดจำหน่ายในขณะนี้</p>
             <p className="text-xs text-neutral-500">โปรดติดตามรอบการจำหน่ายบัตรคอนเสิร์ตเร็วๆ นี้</p>
           </div>
         )}
@@ -96,12 +96,12 @@ export default async function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 py-8 text-center text-xs text-neutral-600 space-y-2">
+      <footer className="border-t border-neutral-200 dark:border-neutral-900 py-8 text-center text-xs text-neutral-500 dark:text-neutral-600 space-y-2">
         <p>E-Tikket Ticketing Platform • MVP</p>
         <p>
           <Link
             href="/login"
-            className="text-neutral-700 hover:text-neutral-400 text-[11px] transition-colors"
+            className="text-neutral-600 dark:text-neutral-700 hover:text-black dark:hover:text-neutral-400 text-[11px] transition-colors"
           >
             เจ้าหน้าที่ / ผู้จัดงานเข้าสู่ระบบ
           </Link>

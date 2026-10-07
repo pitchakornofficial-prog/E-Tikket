@@ -202,17 +202,17 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
 
       {/* 2. Search & Category Filter Section */}
       <section className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-900 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 dark:border-neutral-900 pb-4">
           <div className="space-y-1">
-            <h2 className="text-xl font-bold tracking-tight">คอนเสิร์ตและอีเวนต์ทั้งหมด</h2>
-            <p className="text-xs text-neutral-400">ค้นหาตามหมวดหมู่ ชื่อคอนเสิร์ต หรือสถานที่จัดงาน</p>
+            <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">คอนเสิร์ตและอีเวนต์ทั้งหมด</h2>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">ค้นหาตามหมวดหมู่ ชื่อคอนเสิร์ต หรือสถานที่จัดงาน</p>
           </div>
 
           {/* Search Box & Sort Controls */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
             {/* Search Box */}
             <div className="relative w-full sm:w-64">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500 pointer-events-none">
                 <SearchIcon className="w-3.5 h-3.5" />
               </div>
               <input
@@ -220,12 +220,12 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ค้นหาคอนเสิร์ต, สถานที่..."
-                className="w-full bg-neutral-900/90 border border-neutral-800 rounded pl-9 pr-8 py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+                className="w-full bg-white dark:bg-neutral-900/90 border border-neutral-300 dark:border-neutral-800 rounded pl-9 pr-8 py-2 text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white focus:ring-1 focus:ring-black dark:focus:ring-white transition-colors"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-0.5"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black dark:hover:text-white p-0.5"
                 >
                   <XIcon className="w-3 h-3" />
                 </button>
@@ -240,7 +240,7 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="w-full sm:w-auto bg-neutral-900 border border-neutral-800 text-white rounded pl-8 pr-4 py-2 text-xs focus:outline-none focus:border-white transition-colors cursor-pointer appearance-none"
+                className="w-full sm:w-auto bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 text-neutral-800 dark:text-white rounded pl-8 pr-4 py-2 text-xs focus:outline-none focus:border-black dark:focus:border-white transition-colors cursor-pointer appearance-none"
               >
                 <option value="date_asc">วันที่: เร็วสุด - ช้าสุด</option>
                 <option value="date_desc">วันที่: ช้าสุด - เร็วสุด</option>
@@ -262,8 +262,8 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                 onClick={() => setSelectedCategory(cat)}
                 className={`text-xs px-3.5 py-1.5 rounded-full font-medium transition-colors ${
                   isSelected
-                    ? "bg-white text-black font-bold"
-                    : "bg-neutral-900 text-neutral-400 hover:text-white hover:bg-neutral-800 border border-neutral-800"
+                    ? "bg-black dark:bg-white text-white dark:text-black font-bold shadow-sm"
+                    : "bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-800"
                 }`}
               >
                 {cat}
@@ -277,11 +277,11 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
 
         {/* 3. Event Cards Grid */}
         {paginatedEvents.length === 0 ? (
-          <div className="p-12 border border-dashed border-neutral-800 bg-neutral-950/40 rounded-lg text-center space-y-3">
-            <div className="w-10 h-10 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-400">
+          <div className="p-12 border border-dashed border-neutral-300 dark:border-neutral-800 bg-white/40 dark:bg-neutral-950/40 rounded-lg text-center space-y-3">
+            <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 flex items-center justify-center mx-auto text-neutral-500 dark:text-neutral-400">
               <SearchIcon className="w-5 h-5" />
             </div>
-            <p className="text-neutral-300 font-medium">ไม่พบคอนเสิร์ตที่ตรงกับเงื่อนไขการค้นหา</p>
+            <p className="text-neutral-700 dark:text-neutral-300 font-medium">ไม่พบคอนเสิร์ตที่ตรงกับเงื่อนไขการค้นหา</p>
             <p className="text-xs text-neutral-500">
               ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่น
             </p>
@@ -291,7 +291,7 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                 setSelectedCategory("ทั้งหมด");
                 setSortBy("date_asc");
               }}
-              className="text-xs px-3 py-1.5 bg-neutral-800 text-white rounded hover:bg-neutral-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-white rounded hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
             >
               ล้างตัวกรอง
             </button>
@@ -304,10 +304,10 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                 return (
                   <article
                     key={event.id}
-                    className="border border-neutral-800 bg-neutral-950 rounded-lg overflow-hidden flex flex-col hover:border-neutral-700 transition-colors group"
+                    className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-lg overflow-hidden flex flex-col hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors group shadow-sm hover:shadow-md"
                   >
                     {/* Artwork Container */}
-                    <div className="relative aspect-[16/9] bg-neutral-900 overflow-hidden">
+                    <div className="relative aspect-[16/9] bg-neutral-100 dark:bg-neutral-900 overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={event.imageUrl}
@@ -321,11 +321,11 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                       </div>
                       <div className="absolute top-3 right-3">
                         {isSoldOut ? (
-                          <span className="px-2.5 py-1 text-xs font-semibold rounded bg-neutral-800 text-neutral-400 border border-neutral-700">
+                          <span className="px-2.5 py-1 text-xs font-semibold rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">
                             บัตรหมด
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-white text-black font-bold">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded bg-white text-black font-bold shadow-md">
                             <CheckIcon className="w-3 h-3 stroke-[3]" />
                             <span>เปิดขายบัตร</span>
                           </span>
@@ -336,29 +336,29 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                     {/* Card Content */}
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                       <div className="space-y-2">
-                        <h3 className="text-xl font-bold tracking-tight text-white line-clamp-1">
+                        <h3 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white line-clamp-1">
                           {event.name}
                         </h3>
-                        <p className="text-xs text-neutral-400 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2 leading-relaxed">
                           {event.description}
                         </p>
-                        <div className="text-xs text-neutral-400 space-y-1.5 pt-1">
+                        <div className="text-xs text-neutral-500 dark:text-neutral-400 space-y-1.5 pt-1">
                           <p className="flex items-center gap-1.5">
-                            <CalendarIcon className="w-3.5 h-3.5 text-neutral-500" />
+                            <CalendarIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
                             <span>{event.eventDate} • {event.startTime} น.</span>
                           </p>
                           <p className="flex items-center gap-1.5">
-                            <MapPinIcon className="w-3.5 h-3.5 text-neutral-500" />
+                            <MapPinIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
                             <span className="line-clamp-1">{event.venue}</span>
                           </p>
                         </div>
                       </div>
 
                       {/* Price and CTA */}
-                      <div className="pt-4 border-t border-neutral-900 flex items-center justify-between">
+                      <div className="pt-4 border-t border-neutral-200 dark:border-neutral-900 flex items-center justify-between">
                         <div>
                           <p className="text-[11px] text-neutral-500">ราคาบัตร</p>
-                          <p className="text-lg font-black text-white font-mono">
+                          <p className="text-lg font-black text-neutral-900 dark:text-white font-mono">
                             ฿{formatPrice(event.ticketPrice)}
                           </p>
                         </div>
@@ -370,8 +370,8 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                             href={`/events/${event.id}`}
                             className={`inline-flex items-center gap-1 mt-1 text-xs font-semibold px-4 py-2 rounded transition-colors ${
                               isSoldOut
-                                ? "bg-neutral-800 text-neutral-400 pointer-events-none"
-                                : "bg-white text-black hover:bg-neutral-200"
+                                ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 pointer-events-none"
+                                : "bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200"
                             }`}
                           >
                             <span>{isSoldOut ? "บัตรหมด" : "ดูรายละเอียด & ซื้อบัตร"}</span>
@@ -387,8 +387,8 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-neutral-900">
-                <span className="text-xs text-neutral-400 font-mono">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-neutral-200 dark:border-neutral-900">
+                <span className="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
                   แสดง {startIndex + 1} - {Math.min(startIndex + ITEMS_PER_PAGE, totalItems)} จากทั้งหมด {totalItems} รายการ
                 </span>
 
@@ -396,7 +396,7 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="p-2 rounded bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                    className="p-2 rounded bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-800 text-neutral-800 dark:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
                     title="หน้าก่อนหน้า"
                   >
                     <ChevronLeftIcon className="w-4 h-4" />
@@ -410,8 +410,8 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                         onClick={() => setCurrentPage(pageNum)}
                         className={`w-8 h-8 rounded text-xs font-mono font-bold transition-colors ${
                           isActive
-                            ? "bg-white text-black"
-                            : "bg-neutral-900 text-neutral-400 hover:text-white hover:bg-neutral-800 border border-neutral-800"
+                            ? "bg-black dark:bg-white text-white dark:text-black"
+                            : "bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-800"
                         }`}
                       >
                         {pageNum}
@@ -422,7 +422,7 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="p-2 rounded bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                    className="p-2 rounded bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-800 text-neutral-800 dark:text-white disabled:opacity-30 disabled:pointer-events-none transition-colors"
                     title="หน้าถัดไป"
                   >
                     <ChevronRightIcon className="w-4 h-4" />

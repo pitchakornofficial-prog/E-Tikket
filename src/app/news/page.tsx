@@ -75,19 +75,19 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   const totalPages = Math.ceil(totalArticles / limit) || 1;
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col selection:bg-white selection:text-black">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white font-sans flex flex-col transition-colors duration-200">
       <PublicNavbar />
 
       <main className="flex-1 max-w-6xl mx-auto px-4 py-8 sm:py-12 w-full">
         {/* Hero Section */}
         <div className="mb-10 text-center max-w-2xl mx-auto space-y-2">
-          <p className="text-xs font-mono tracking-widest text-neutral-400 uppercase">
+          <p className="text-xs font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">
             News & Music Stories
           </p>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-neutral-900 dark:text-white uppercase">
             ข่าวสารและเรื่องราวดนตรี
           </h1>
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
             เจาะลึกบทความ รีวิวคอนเสิร์ต และเกร็ดดนตรีอินดี้จากผู้จัดงานและทีมงาน TICKETBOX
           </p>
         </div>
@@ -100,8 +100,8 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
               href="/news"
               className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 !categorySlug
-                  ? "bg-white text-black font-semibold"
-                  : "bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:bg-neutral-800"
+                  ? "bg-black dark:bg-white text-white dark:text-black font-semibold shadow-sm"
+                  : "bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
               }`}
             >
               ทั้งหมด
@@ -114,8 +114,8 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                   href={`/news?category=${cat.slug}${tagSlug ? `&tag=${tagSlug}` : ""}`}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     isSelected
-                      ? "bg-white text-black font-semibold"
-                      : "bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white hover:bg-neutral-800"
+                      ? "bg-black dark:bg-white text-white dark:text-black font-semibold shadow-sm"
+                      : "bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
                   }`}
                 >
                   {cat.name}
@@ -127,12 +127,12 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
           {/* Active Tag filter indicator */}
           {tagSlug && (
             <div className="flex items-center justify-center gap-2 text-xs">
-              <span className="text-neutral-400">กำลังกรองตามแท็ก:</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-800 text-white font-mono border border-neutral-700">
+              <span className="text-neutral-500 dark:text-neutral-400">กำลังกรองตามแท็ก:</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white font-mono border border-neutral-300 dark:border-neutral-700">
                 #{tagSlug}
                 <Link
                   href={`/news${categorySlug ? `?category=${categorySlug}` : ""}`}
-                  className="hover:text-red-400"
+                  className="hover:text-red-500"
                   title="ยกเลิกการกรองแท็ก"
                 >
                   <XIcon className="w-3.5 h-3.5" />
@@ -144,9 +144,9 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
 
         {/* Article Grid (AC-02) */}
         {articles.length === 0 ? (
-          <div className="py-20 text-center space-y-3 bg-neutral-950/60 border border-neutral-900 rounded-lg">
-            <SlidersIcon className="w-8 h-8 text-neutral-600 mx-auto" />
-            <p className="text-base text-neutral-300 font-semibold">ไม่พบบทความที่ตรงกับการค้นหา</p>
+          <div className="py-20 text-center space-y-3 bg-white/60 dark:bg-neutral-950/60 border border-neutral-300 dark:border-neutral-900 rounded-lg">
+            <SlidersIcon className="w-8 h-8 text-neutral-400 dark:text-neutral-600 mx-auto" />
+            <p className="text-base text-neutral-800 dark:text-neutral-300 font-semibold">ไม่พบบทความที่ตรงกับการค้นหา</p>
             <p className="text-xs text-neutral-500 max-w-sm mx-auto">
               {categorySlug || tagSlug
                 ? "ลองเปลี่ยนตัวกรองหมวดหมู่หรือแท็กเพื่อค้นหาบทความอื่น"
@@ -155,7 +155,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             {(categorySlug || tagSlug) && (
               <Link
                 href="/news"
-                className="inline-block mt-2 px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-medium rounded transition-colors"
+                className="inline-block mt-2 px-4 py-2 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-800 dark:text-white text-xs font-medium rounded transition-colors"
               >
                 ล้างตัวกรองทั้งหมด
               </Link>
@@ -166,10 +166,10 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             {articles.map((art) => (
               <article
                 key={art.id}
-                className="flex flex-col rounded-lg bg-neutral-950 border border-neutral-900 overflow-hidden hover:border-neutral-700 transition-colors group"
+                className="flex flex-col rounded-lg bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-900 overflow-hidden hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors group shadow-sm hover:shadow-md"
               >
                 {/* Cover Image */}
-                <Link href={`/news/${art.slug}`} className="block relative aspect-video bg-neutral-900 overflow-hidden">
+                <Link href={`/news/${art.slug}`} className="block relative aspect-video bg-neutral-100 dark:bg-neutral-900 overflow-hidden">
                   {art.coverImageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -178,12 +178,12 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-900 to-neutral-950 text-neutral-700 font-mono text-xs">
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-900 dark:to-neutral-950 text-neutral-500 dark:text-neutral-700 font-mono text-xs">
                       TICKETBOX NEWS
                     </div>
                   )}
                   {/* Category Pill */}
-                  <span className="absolute top-3 left-3 px-2 py-0.5 rounded text-[11px] font-semibold bg-black/80 backdrop-blur text-white border border-neutral-800">
+                  <span className="absolute top-3 left-3 px-2 py-0.5 rounded text-[11px] font-semibold bg-white/90 dark:bg-black/80 backdrop-blur text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-800 shadow-sm">
                     {art.category.name}
                   </span>
                 </Link>
@@ -192,9 +192,9 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
                     {/* Date and Author */}
-                    <div className="flex items-center gap-3 text-[11px] text-neutral-400 font-mono">
+                    <div className="flex items-center gap-3 text-[11px] text-neutral-500 dark:text-neutral-400 font-mono">
                       <span className="flex items-center gap-1">
-                        <CalendarIcon className="w-3 h-3 text-neutral-500" />
+                        <CalendarIcon className="w-3 h-3 text-neutral-400 dark:text-neutral-500" />
                         {new Date(art.publishedAt || art.createdAt).toLocaleDateString("th-TH", {
                           year: "numeric",
                           month: "short",
@@ -203,30 +203,30 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1 truncate max-w-[120px]">
-                        <UserIcon className="w-3 h-3 text-neutral-500" />
+                        <UserIcon className="w-3 h-3 text-neutral-400 dark:text-neutral-500" />
                         {art.author.name}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-base font-bold text-white group-hover:text-neutral-200 line-clamp-2 leading-snug">
+                    <h2 className="text-base font-bold text-neutral-900 dark:text-white group-hover:text-black dark:group-hover:text-neutral-200 line-clamp-2 leading-snug">
                       <Link href={`/news/${art.slug}`}>{art.title}</Link>
                     </h2>
 
                     {/* Excerpt */}
-                    <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed">
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-3 leading-relaxed">
                       {art.excerpt || art.content.slice(0, 140) + "..."}
                     </p>
                   </div>
 
                   {/* Tags (AC-30) */}
                   {art.tags.length > 0 && (
-                    <div className="pt-3 border-t border-neutral-900 flex flex-wrap gap-1.5">
+                    <div className="pt-3 border-t border-neutral-200 dark:border-neutral-900 flex flex-wrap gap-1.5">
                       {art.tags.slice(0, 3).map((tag) => (
                         <Link
                           key={tag.id}
                           href={`/news?tag=${tag.slug}`}
-                          className="text-[10px] font-mono text-neutral-500 hover:text-white transition-colors"
+                          className="text-[10px] font-mono text-neutral-500 hover:text-black dark:hover:text-white transition-colors"
                         >
                           #{tag.name}
                         </Link>

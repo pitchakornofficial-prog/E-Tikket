@@ -111,15 +111,15 @@ export default function MyTicketsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
       {/* Header - Shared Public Navbar */}
       <PublicNavbar />
 
       {/* Main Container */}
       <main className="flex-1 max-w-5xl mx-auto px-4 py-12 w-full space-y-10">
         <div className="space-y-2 text-center max-w-xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight">ตรวจสอบสถานะบัตรคอนเสิร์ต</h1>
-          <p className="text-sm text-neutral-400">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-neutral-900 dark:text-white">ตรวจสอบสถานะบัตรคอนเสิร์ต</h1>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
             ค้นหาด้วยอีเมลที่ใช้สั่งซื้อ หรือเลขที่บัตรของคุณ เพื่อตรวจสอบสถานะคำสั่งซื้อและบัตรเข้างาน • บัตร E-Ticket และ QR Code เข้างานจะถูกจัดส่งให้ทางอีเมลของคุณโดยตรงเพื่อความปลอดภัย
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function MyTicketsPage() {
         {/* Search Mode Toggle & Form */}
         <div className="max-w-md mx-auto space-y-4">
           {/* Mode Tabs */}
-          <div className="flex rounded-lg bg-neutral-900 p-1 border border-neutral-800">
+          <div className="flex rounded-lg bg-neutral-200 dark:bg-neutral-900 p-1 border border-neutral-300 dark:border-neutral-800">
             <button
               type="button"
               onClick={() => {
@@ -136,8 +136,8 @@ export default function MyTicketsPage() {
               }}
               className={`flex-1 py-1.5 text-xs font-semibold rounded transition-colors ${
                 searchMode === "email"
-                  ? "bg-white text-black shadow"
-                  : "text-neutral-400 hover:text-white"
+                  ? "bg-white text-black shadow-sm"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
               ค้นหาด้วยอีเมล
@@ -150,8 +150,8 @@ export default function MyTicketsPage() {
               }}
               className={`flex-1 py-1.5 text-xs font-semibold rounded transition-colors ${
                 searchMode === "ticketNumber"
-                  ? "bg-white text-black shadow"
-                  : "text-neutral-400 hover:text-white"
+                  ? "bg-white text-black shadow-sm"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
               ค้นหาด้วยเลขที่บัตร
@@ -161,7 +161,7 @@ export default function MyTicketsPage() {
           <form onSubmit={handleSearch} className="space-y-3">
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500 pointer-events-none">
                   <SearchIcon className="w-4 h-4" />
                 </div>
                 {searchMode === "email" ? (
@@ -171,7 +171,7 @@ export default function MyTicketsPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="กรอกอีเมลของคุณ เช่น name@example.com"
                     required
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white focus:ring-1 focus:ring-black dark:focus:ring-white transition-colors"
                   />
                 ) : (
                   <input
@@ -180,21 +180,21 @@ export default function MyTicketsPage() {
                     onChange={(e) => setTicketNumber(e.target.value)}
                     placeholder="กรอกเลขที่บัตร เช่น TK-abc123-01"
                     required
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-white font-mono placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors uppercase"
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded pl-10 pr-4 py-2.5 text-sm text-neutral-900 dark:text-white font-mono placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white focus:ring-1 focus:ring-black dark:focus:ring-white transition-colors uppercase"
                   />
                 )}
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-black text-sm font-bold rounded hover:bg-neutral-200 transition-colors disabled:opacity-50 whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black text-sm font-bold rounded hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 whitespace-nowrap shadow-sm"
               >
                 <span>{loading ? "กำลังค้นหา..." : "ค้นหาตั๋ว"}</span>
                 {!loading && <ArrowRightIcon className="w-3.5 h-3.5" />}
               </button>
             </div>
             {error && (
-              <p className="text-xs text-red-400 text-center">{error}</p>
+              <p className="text-xs text-red-500 dark:text-red-400 text-center">{error}</p>
             )}
           </form>
         </div>
@@ -202,22 +202,22 @@ export default function MyTicketsPage() {
         {/* Results Section */}
         {searched && (
           <div className="space-y-8 pt-4">
-            <div className="flex items-center justify-between border-b border-neutral-900 pb-3">
-              <h2 className="text-sm sm:text-base font-bold text-neutral-200">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-900 pb-3">
+              <h2 className="text-sm sm:text-base font-bold text-neutral-800 dark:text-neutral-200">
                 ผลการค้นหาสำหรับ{searchedMode === "email" ? "อีเมล" : "เลขที่บัตร"}:{" "}
-                <span className="text-white font-mono">{searchedQuery}</span>
+                <span className="text-neutral-900 dark:text-white font-mono">{searchedQuery}</span>
               </h2>
-              <span className="text-xs px-2.5 py-1 rounded-full border border-neutral-800 bg-neutral-950 text-neutral-400">
+              <span className="text-xs px-2.5 py-1 rounded-full border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400">
                 พบ {orders.length} รายการ {orders.length > 0 && `(${eventGroups.length} คอนเสิร์ต)`}
               </span>
             </div>
 
             {orders.length === 0 ? (
-              <div className="p-12 border border-dashed border-neutral-800 bg-neutral-950/40 rounded-xl text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-400">
+              <div className="p-12 border border-dashed border-neutral-300 dark:border-neutral-800 bg-white/40 dark:bg-neutral-950/40 rounded-xl text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 flex items-center justify-center mx-auto text-neutral-500 dark:text-neutral-400">
                   <TicketIcon className="w-6 h-6" />
                 </div>
-                <p className="text-neutral-300 font-medium">
+                <p className="text-neutral-700 dark:text-neutral-300 font-medium">
                   {searchedMode === "email"
                     ? "ไม่พบประวัติการสั่งซื้อสำหรับอีเมลนี้"
                     : "ไม่พบบัตรที่ตรงกับเลขที่นี้"}
@@ -236,10 +236,10 @@ export default function MyTicketsPage() {
                     {groupIdx > 0 && (
                       <div className="relative pt-6 pb-2">
                         <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-neutral-800" />
+                          <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
                         </div>
                         <div className="relative flex justify-center text-xs">
-                          <span className="bg-black px-4 text-neutral-500 font-mono tracking-wider flex items-center gap-1.5">
+                          <span className="bg-neutral-50 dark:bg-black px-4 text-neutral-500 font-mono tracking-wider flex items-center gap-1.5">
                             <MusicIcon className="w-3.5 h-3.5" /> คอนเสิร์ตถัดไป
                           </span>
                         </div>
@@ -247,33 +247,33 @@ export default function MyTicketsPage() {
                     )}
 
                     {/* Concert Header Group */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-neutral-950 border border-neutral-800/80 rounded-xl">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800/80 rounded-xl shadow-sm">
                       <div className="flex items-center gap-3">
                         {group.event.imageUrl && (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={group.event.imageUrl}
                             alt={group.event.name}
-                            className="w-12 h-12 rounded-lg object-cover border border-neutral-800 shrink-0"
+                            className="w-12 h-12 rounded-lg object-cover border border-neutral-200 dark:border-neutral-800 shrink-0"
                           />
                         )}
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-neutral-900 text-neutral-300 border border-neutral-800">
+                            <span className="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-800">
                               {group.event.category}
                             </span>
-                            <span className="text-xs text-neutral-400 flex items-center gap-1">
-                              <CalendarIcon className="w-3 h-3 text-neutral-500" />
+                            <span className="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1">
+                              <CalendarIcon className="w-3 h-3 text-neutral-400 dark:text-neutral-500" />
                               {group.event.eventDate}
                             </span>
                           </div>
-                          <h3 className="text-base sm:text-lg font-extrabold text-white mt-0.5">
+                          <h3 className="text-base sm:text-lg font-extrabold text-neutral-900 dark:text-white mt-0.5">
                             {group.event.name}
                           </h3>
                         </div>
                       </div>
 
-                      <div className="text-xs text-neutral-400 sm:text-right font-mono">
+                      <div className="text-xs text-neutral-500 dark:text-neutral-400 sm:text-right font-mono">
                         {group.orders.length} คำสั่งซื้อ • รวม {group.orders.reduce((acc, o) => acc + o.quantity, 0)} ใบ
                       </div>
                     </div>
@@ -283,7 +283,7 @@ export default function MyTicketsPage() {
                       {group.orders.map((order) => (
                         <div
                           key={order.orderId}
-                          className="relative flex flex-col md:flex-row bg-neutral-950 border border-neutral-800 rounded-2xl overflow-hidden hover:border-neutral-700 transition-colors shadow-lg group"
+                          className="relative flex flex-col md:flex-row bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors shadow-md group"
                         >
                           {/* Left Section: Main Ticket Body */}
                           <div className="flex-1 p-5 md:p-6 space-y-4">
@@ -367,26 +367,26 @@ export default function MyTicketsPage() {
                           {/* Perforation / Tear-off Seam */}
                           <div className="relative md:w-0 flex md:flex-col justify-between items-center bg-transparent">
                             {/* Top & Bottom notches for desktop */}
-                            <div className="hidden md:block absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-black border border-neutral-800 z-10" />
-                            <div className="hidden md:block w-px border-r-2 border-dashed border-neutral-800 h-full my-3" />
-                            <div className="hidden md:block absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-black border border-neutral-800 z-10" />
+                            <div className="hidden md:block absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 z-10" />
+                            <div className="hidden md:block w-px border-r-2 border-dashed border-neutral-300 dark:border-neutral-800 h-full my-3" />
+                            <div className="hidden md:block absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 z-10" />
 
                             {/* Left & Right notches for mobile */}
-                            <div className="md:hidden absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black border border-neutral-800 z-10" />
-                            <div className="md:hidden w-full border-b-2 border-dashed border-neutral-800" />
-                            <div className="md:hidden absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black border border-neutral-800 z-10" />
+                            <div className="md:hidden absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 z-10" />
+                            <div className="md:hidden w-full border-b-2 border-dashed border-neutral-300 dark:border-neutral-800" />
+                            <div className="md:hidden absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 z-10" />
                           </div>
 
                           {/* Right Section: Long Ticket Stub */}
-                          <div className="w-full md:w-64 p-5 md:p-6 bg-neutral-900/40 flex flex-col justify-between items-center text-center gap-4 border-t md:border-t-0 md:border-l border-neutral-900">
+                          <div className="w-full md:w-64 p-5 md:p-6 bg-neutral-100/60 dark:bg-neutral-900/40 flex flex-col justify-between items-center text-center gap-4 border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-900">
                             <div className="space-y-1 w-full">
                               <span className="font-mono text-[10px] tracking-widest uppercase text-neutral-500 block">
                                 CONCERT PASS
                               </span>
-                              <p className="font-mono text-base font-black text-white">
+                              <p className="font-mono text-base font-black text-neutral-900 dark:text-white">
                                 {order.quantity} {order.quantity > 1 ? "TICKETS" : "TICKET"}
                               </p>
-                              <span className="text-[10px] text-neutral-400 block font-mono">
+                              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 block font-mono">
                                 {order.event.eventDate}
                               </span>
                             </div>
