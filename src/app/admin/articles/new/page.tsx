@@ -120,7 +120,7 @@ export default function AdminNewArticlePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white transition-colors duration-200">
       <AdminNav />
 
       <main className="max-w-6xl mx-auto px-4 py-8">

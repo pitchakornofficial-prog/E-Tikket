@@ -318,7 +318,7 @@ export default function AdminVerificationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
       <AdminNav />
 
       <main className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full space-y-6">

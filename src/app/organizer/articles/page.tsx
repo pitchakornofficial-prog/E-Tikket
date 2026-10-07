@@ -155,7 +155,7 @@ export default function OrganizerArticlesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white font-sans flex flex-col transition-colors duration-200">
       <OrganizerNav />
 
       <main className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">

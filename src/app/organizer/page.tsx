@@ -4,7 +4,7 @@ import { OrganizerScanner } from "@/components/organizer-scanner";
 
 export default function OrganizerPage() {
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col selection:bg-white selection:text-black">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white font-sans flex flex-col transition-colors duration-200 selection:bg-white selection:text-black">
       {/* Header */}
       <header className="border-b border-neutral-900 bg-neutral-950/80 backdrop-blur sticky top-0 z-20">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">

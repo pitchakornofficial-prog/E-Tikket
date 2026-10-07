@@ -133,7 +133,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col justify-center items-center px-4 py-12">
+    <main className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col transition-colors duration-200 justify-center items-center px-4 py-12">
       <div className="w-full max-w-sm space-y-8">
         <header className="text-center space-y-2">
           <h1 className="text-2xl font-bold tracking-tight text-white uppercase">

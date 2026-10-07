@@ -201,7 +201,7 @@ function CheckoutContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col transition-colors duration-200 items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
           <p className="text-sm text-neutral-400">กำลังโหลดข้อมูลคำสั่งซื้อ...</p>
@@ -212,7 +212,7 @@ function CheckoutContent() {
 
   if (errorStatus === 404 || !order) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 font-sans">
+      <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col transition-colors duration-200 items-center justify-center p-4 font-sans">
         <div className="max-w-md w-full p-8 border border-neutral-800 bg-neutral-950 rounded-lg text-center space-y-4">
           <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
             <AlertTriangleIcon className="w-6 h-6" />
@@ -236,7 +236,7 @@ function CheckoutContent() {
 
   if (errorStatus === 503) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 font-sans">
+      <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col transition-colors duration-200 items-center justify-center p-4 font-sans">
         <div className="max-w-md w-full p-8 border border-neutral-800 bg-neutral-950 rounded-lg text-center space-y-4">
           <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto text-red-400">
             <ServerCrashIcon className="w-6 h-6" />
@@ -269,7 +269,7 @@ function CheckoutContent() {
   const isExpired = order.orderStatus === "EXPIRED" || (order.orderStatus === "PENDING_PAYMENT" && (timeRemaining ?? 0) <= 0);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
       {/* Header */}
       <header className="border-b border-neutral-900 bg-neutral-950/90 backdrop-blur sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -570,7 +570,7 @@ export default function CheckoutPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col transition-colors duration-200 items-center justify-center p-4">
           <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
         </div>
       }
