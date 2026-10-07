@@ -163,25 +163,25 @@ export default function AdminArticlesPage() {
     switch (status) {
       case "PUBLISHED":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-white text-black font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-black dark:bg-white text-white dark:text-black font-mono shadow-sm">
             PUBLISHED
           </span>
         );
       case "PENDING_REVIEW":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-yellow-400 text-black font-mono animate-pulse">
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-400 text-black font-mono animate-pulse">
             PENDING REVIEW
           </span>
         );
       case "DRAFT":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-mono">
             DRAFT
           </span>
         );
       case "ARCHIVED":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-900 text-neutral-500 font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-100 dark:bg-neutral-900 text-neutral-500 font-mono">
             ARCHIVED
           </span>
         );
@@ -197,12 +197,12 @@ export default function AdminArticlesPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <FileTextIcon className="w-5 h-5 text-neutral-400" />
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+              <FileTextIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
                 จัดการบทความ (News & Blog)
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-neutral-400">
+            <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
               สร้าง เผยแพร่ และตรวจสอบบทความสำหรับ SEO ของแพลตฟอร์ม
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function AdminArticlesPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/admin/categories"
-              className="flex items-center gap-1.5 px-3 py-2 bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-300 hover:text-white rounded text-xs sm:text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded text-xs sm:text-sm transition-colors shadow-sm"
             >
               <SlidersIcon className="w-4 h-4" />
               <span>จัดการหมวดหมู่</span>
@@ -218,7 +218,7 @@ export default function AdminArticlesPage() {
 
             <Link
               href="/admin/articles/new"
-              className="flex items-center gap-1.5 px-4 py-2 bg-white text-black font-semibold rounded text-xs sm:text-sm hover:bg-neutral-200 transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-semibold rounded text-xs sm:text-sm hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shadow-sm"
             >
               <PlusIcon className="w-4 h-4" />
               <span>เขียนบทความใหม่</span>
@@ -228,20 +228,20 @@ export default function AdminArticlesPage() {
 
         {/* Notifications */}
         {errorMsg && (
-          <div className="mb-6 p-4 rounded bg-red-950/50 border border-red-800 text-red-200 flex items-start gap-3 text-sm">
-            <AlertTriangleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-red-100 dark:bg-red-950/50 border border-red-300 dark:border-red-800 text-red-800 dark:text-red-200 flex items-start gap-3 text-sm">
+            <AlertTriangleIcon className="w-5 h-5 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
             <div className="flex-1">{errorMsg}</div>
-            <button onClick={() => setErrorMsg(null)} className="text-red-400 hover:text-white">
+            <button onClick={() => setErrorMsg(null)} className="text-red-500 dark:text-red-400 hover:text-black dark:hover:text-white">
               <XIcon className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {successMsg && (
-          <div className="mb-6 p-4 rounded bg-emerald-950/50 border border-emerald-800 text-emerald-200 flex items-start gap-3 text-sm">
-            <CheckIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 flex items-start gap-3 text-sm">
+            <CheckIcon className="w-5 h-5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
             <div className="flex-1">{successMsg}</div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-white">
+            <button onClick={() => setSuccessMsg(null)} className="text-emerald-500 dark:text-emerald-400 hover:text-black dark:hover:text-white">
               <XIcon className="w-4 h-4" />
             </button>
           </div>
@@ -249,7 +249,7 @@ export default function AdminArticlesPage() {
 
         {/* Filters and Search (AC-10) */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
-          <div className="flex flex-wrap items-center gap-1 p-1 bg-neutral-900 border border-neutral-800 rounded text-xs">
+          <div className="flex flex-wrap items-center gap-1 p-1 bg-neutral-200 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded text-xs">
             {[
               { id: "ALL", label: "ทั้งหมด" },
               { id: "PENDING_REVIEW", label: "รอตรวจสอบ", count: pendingReviewCount },
@@ -262,13 +262,13 @@ export default function AdminArticlesPage() {
                 onClick={() => setActiveStatusTab(tab.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded transition-colors ${
                   activeStatusTab === tab.id
-                    ? "bg-neutral-800 text-white font-semibold"
-                    : "text-neutral-400 hover:text-white hover:bg-neutral-850"
+                    ? "bg-white dark:bg-neutral-800 text-black dark:text-white font-semibold shadow-sm"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-300 dark:hover:bg-neutral-850"
                 }`}
               >
                 <span>{tab.label}</span>
                 {tab.count !== undefined && tab.count > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-yellow-400 text-black">
+                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-400 text-black">
                     {tab.count}
                   </span>
                 )}
@@ -277,19 +277,19 @@ export default function AdminArticlesPage() {
           </div>
 
           <div className="relative sm:w-64">
-            <SearchIcon className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <SearchIcon className="w-4 h-4 text-neutral-400 dark:text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="ค้นหาชื่อ, ผู้เขียน..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 bg-neutral-900 border border-neutral-800 rounded text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600"
+              className="w-full pl-9 pr-4 py-1.5 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-neutral-600"
             />
           </div>
         </div>
 
         {/* Articles Table */}
-        <div className="bg-neutral-900/60 border border-neutral-800 rounded overflow-hidden">
+        <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded overflow-hidden shadow-sm">
           {loading ? (
             <div className="p-8 text-center text-sm text-neutral-400">กำลังโหลดรายการบทความ...</div>
           ) : filteredArticles.length === 0 ? (
@@ -299,7 +299,7 @@ export default function AdminArticlesPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-neutral-900/90 text-xs uppercase tracking-wider text-neutral-400 border-b border-neutral-800">
+                <thead className="bg-neutral-100 dark:bg-neutral-900/90 text-xs uppercase tracking-wider text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                   <tr>
                     <th className="py-3 px-4 font-semibold">หัวข้อบทความ</th>
                     <th className="py-3 px-4 font-semibold">หมวดหมู่</th>
@@ -309,25 +309,25 @@ export default function AdminArticlesPage() {
                     <th className="py-3 px-4 font-semibold text-right">การจัดการ</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-800/60">
+                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800/60">
                   {filteredArticles.map((art) => (
                     <tr
                       key={art.id}
-                      className={`hover:bg-neutral-800/30 transition-colors ${
-                        art.status === "PENDING_REVIEW" ? "bg-yellow-950/10" : ""
+                      className={`hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors ${
+                        art.status === "PENDING_REVIEW" ? "bg-amber-50 dark:bg-yellow-950/10" : ""
                       }`}
                     >
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-white max-w-sm truncate">{art.title}</div>
+                        <div className="font-medium text-neutral-900 dark:text-white max-w-sm truncate">{art.title}</div>
                         <div className="text-[11px] font-mono text-neutral-500 truncate">
                           /news/{art.slug}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-xs text-neutral-300">
+                      <td className="py-3.5 px-4 text-xs text-neutral-600 dark:text-neutral-300">
                         {art.category.name}
                       </td>
                       <td className="py-3.5 px-4">
-                        <div className="text-xs text-neutral-200">{art.author.name}</div>
+                        <div className="text-xs text-neutral-800 dark:text-neutral-200">{art.author.name}</div>
                         <div className="text-[10px] text-neutral-500 font-mono">
                           {art.author.role}
                         </div>
@@ -335,7 +335,7 @@ export default function AdminArticlesPage() {
                       <td className="py-3.5 px-4 text-center">
                         {getStatusBadge(art.status)}
                       </td>
-                      <td className="py-3.5 px-4 text-xs font-mono text-neutral-400">
+                      <td className="py-3.5 px-4 text-xs font-mono text-neutral-500 dark:text-neutral-400">
                         {new Date(art.createdAt).toLocaleDateString("th-TH")}
                       </td>
                       <td className="py-3.5 px-4 text-right">

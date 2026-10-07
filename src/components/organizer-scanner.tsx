@@ -317,20 +317,20 @@ export function OrganizerScanner() {
   return (
     <div className="space-y-6 max-w-xl mx-auto w-full">
       {/* 1. Event & Action Selector Card */}
-      <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-5 space-y-4">
+      <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 space-y-4">
         {loadingEvents ? (
-          <div className="text-center py-4 text-xs text-neutral-400 font-mono">
+          <div className="text-center py-4 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
             กำลังโหลดรายชื่องานแสดง...
           </div>
         ) : events.length === 0 ? (
-          <div className="flex items-center gap-2 text-center py-4 text-xs text-amber-400 bg-amber-950/20 border border-amber-900 rounded p-3">
-            <AlertTriangleIcon className="w-4 h-4 text-amber-400 shrink-0" />
+          <div className="flex items-center gap-2 text-center py-4 text-xs text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-900 rounded p-3">
+            <AlertTriangleIcon className="w-4 h-4 text-amber-500 shrink-0" />
             <span>ยังไม่มีงานแสดงที่คุณเป็นผู้จัด กรุณาสร้างงานแสดงก่อนเริ่มใช้งานระบบสแกน</span>
           </div>
         ) : (
           <>
             <div>
-              <label htmlFor="event-select" className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
+              <label htmlFor="event-select" className="block text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-2">
                 เลือกงานแสดง (Selected Event):
               </label>
               <select
@@ -340,7 +340,7 @@ export function OrganizerScanner() {
                   setSelectedEventId(e.target.value);
                 }}
                 disabled={scanControlsDisabled}
-                className="w-full bg-neutral-900 border border-neutral-700 text-white text-sm rounded-lg p-3 font-semibold focus:outline-none focus:border-white transition-colors"
+                className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white text-sm rounded-lg p-3 font-semibold focus:outline-none focus:border-neutral-900 dark:focus:border-white transition-colors"
               >
                 {events.map((ev) => (
                   <option key={ev.id} value={ev.id}>
@@ -351,7 +351,7 @@ export function OrganizerScanner() {
             </div>
 
             <div>
-              <label htmlFor="action-select" className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
+              <label htmlFor="action-select" className="block text-xs font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-2">
                 โหมดการสแกนบัตร (Scan Action):
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -362,8 +362,8 @@ export function OrganizerScanner() {
                   disabled={scanControlsDisabled}
                   className={`py-3 px-4 rounded-lg font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
                     action === "CHECK_IN"
-                      ? "bg-white text-black shadow-lg shadow-white/10"
-                      : "bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-white"
+                      ? "bg-neutral-900 text-white dark:bg-white dark:text-black shadow-lg shadow-neutral-900/10 dark:shadow-white/10"
+                      : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-800 hover:text-neutral-900 dark:hover:text-white"
                   }`}
                 >
                   <span>↘ เข้างาน</span>
@@ -376,8 +376,8 @@ export function OrganizerScanner() {
                   disabled={scanControlsDisabled}
                   className={`py-3 px-4 rounded-lg font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
                     action === "CHECK_OUT"
-                      ? "bg-white text-black shadow-lg shadow-white/10"
-                      : "bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-white"
+                      ? "bg-neutral-900 text-white dark:bg-white dark:text-black shadow-lg shadow-neutral-900/10 dark:shadow-white/10"
+                      : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-800 hover:text-neutral-900 dark:hover:text-white"
                   }`}
                 >
                   <span>↗ ออกชั่วคราว</span>
@@ -395,7 +395,7 @@ export function OrganizerScanner() {
       </div>
 
       {/* 2. Real Camera Viewfinder */}
-      <div className="bg-neutral-950 border border-neutral-800 rounded-xl overflow-hidden relative shadow-2xl">
+      <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden relative shadow-lg dark:shadow-2xl">
         <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden">
           {/* Video display */}
           <video
@@ -440,7 +440,7 @@ export function OrganizerScanner() {
               <button
                 type="button"
                 onClick={startCamera}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-black font-bold text-xs rounded hover:bg-neutral-200 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-neutral-900 text-white dark:bg-white dark:text-black font-bold text-xs rounded hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
               >
                 <RefreshCwIcon className="w-3.5 h-3.5" />
                 <span>ลองขอสิทธิ์อีกครั้ง</span>
@@ -455,7 +455,7 @@ export function OrganizerScanner() {
               <button
                 type="button"
                 onClick={startCamera}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-neutral-900 border border-neutral-700 text-white font-bold text-xs rounded hover:bg-neutral-800 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white font-bold text-xs rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
               >
                 <RefreshCwIcon className="w-3.5 h-3.5" />
                 <span>ลองใหม่อีกครั้ง</span>
@@ -473,8 +473,8 @@ export function OrganizerScanner() {
         </div>
 
         {/* Viewfinder footer note */}
-        <div className="p-3 bg-neutral-900/60 border-t border-neutral-900 flex justify-between items-center text-xs">
-          <span className="text-neutral-400 font-mono">
+        <div className="p-3 bg-neutral-50 dark:bg-neutral-900/60 border-t border-neutral-200 dark:border-neutral-900 flex justify-between items-center text-xs">
+          <span className="text-neutral-600 dark:text-neutral-400 font-mono">
             {selectedEvent ? `งาน: ${selectedEvent.name}` : "ยังไม่ได้เลือกงาน"}
           </span>
           <span className="font-mono text-[11px] text-neutral-500 inline-flex items-center gap-1">
@@ -499,39 +499,39 @@ export function OrganizerScanner() {
           id="scan-result-panel"
           role="status"
           aria-live="polite"
-          className={`p-6 rounded-xl border text-center space-y-4 shadow-2xl transition-all ${
+          className={`p-6 rounded-xl border text-center space-y-4 shadow-xl dark:shadow-2xl transition-all ${
             scanResult.result === "VALID"
-              ? "bg-emerald-950/40 border-emerald-500 text-emerald-200"
+              ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500 text-emerald-950 dark:text-emerald-200"
               : scanResult.result === "ALREADY_CHECKED_IN" || scanResult.result === "INVALID_ACTION"
-                ? "bg-amber-950/40 border-amber-500 text-amber-200"
-                : "bg-red-950/40 border-red-500 text-red-200"
+                ? "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-500 text-amber-950 dark:text-amber-200"
+                : "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-500 text-red-950 dark:text-red-200"
           }`}
         >
           {/* Result Icon */}
           <div className="flex justify-center">
             {scanResult.result === "VALID" &&
               (scanResult.action === "CHECK_IN" ? (
-                <CheckCircleIcon className="w-16 h-16 text-emerald-400" />
+                <CheckCircleIcon className="w-16 h-16 text-emerald-500 dark:text-emerald-400" />
               ) : (
-                <WalkIcon className="w-16 h-16 text-emerald-400" />
+                <WalkIcon className="w-16 h-16 text-emerald-500 dark:text-emerald-400" />
               ))}
             {(scanResult.result === "ALREADY_CHECKED_IN" || scanResult.result === "INVALID_ACTION") && (
-              <AlertTriangleIcon className="w-16 h-16 text-amber-400" />
+              <AlertTriangleIcon className="w-16 h-16 text-amber-500 dark:text-amber-400" />
             )}
             {(scanResult.result === "WRONG_EVENT" || scanResult.result === "UNPAID" || scanResult.result === "INVALID") && (
-              <XCircleIcon className="w-16 h-16 text-red-400" />
+              <XCircleIcon className="w-16 h-16 text-red-500 dark:text-red-400" />
             )}
             {scanResult.result === "CANCELLED" && (
-              <BanIcon className="w-16 h-16 text-red-400" />
+              <BanIcon className="w-16 h-16 text-red-500 dark:text-red-400" />
             )}
             {(scanResult.result === "SCAN_UNCONFIRMED" || scanResult.result === "ERROR") && (
-              <AlertCircleIcon className="w-16 h-16 text-amber-400" />
+              <AlertCircleIcon className="w-16 h-16 text-amber-500 dark:text-amber-400" />
             )}
           </div>
 
           {/* Result Title */}
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-neutral-900 dark:text-white">
               {scanResult.result === "VALID" &&
                 (scanResult.action === "CHECK_IN"
                   ? "ผ่าน • ตรวจสอบสิทธิ์สำเร็จ (VALID)"
@@ -548,16 +548,16 @@ export function OrganizerScanner() {
 
             {/* Additional details (Ticket number & Status) */}
             {scanResult.ticket && (
-              <div className="pt-2 text-sm text-neutral-300 font-mono">
-                เลขที่บัตร: <strong className="text-white text-base">{scanResult.ticket.ticketNumber}</strong>
-                <span className="ml-2 px-2 py-0.5 rounded text-xs font-bold border border-neutral-700 bg-neutral-900">
+              <div className="pt-2 text-sm text-neutral-700 dark:text-neutral-300 font-mono">
+                เลขที่บัตร: <strong className="text-neutral-900 dark:text-white text-base">{scanResult.ticket.ticketNumber}</strong>
+                <span className="ml-2 px-2 py-0.5 rounded text-xs font-bold border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
                   {scanResult.ticket.status}
                 </span>
               </div>
             )}
 
             {scanResult.errorMessage && (
-              <p className="text-xs text-neutral-300 pt-1">{scanResult.errorMessage}</p>
+              <p className="text-xs text-neutral-600 dark:text-neutral-300 pt-1">{scanResult.errorMessage}</p>
             )}
           </div>
 
@@ -568,7 +568,7 @@ export function OrganizerScanner() {
               type="button"
               onClick={handleAcknowledgeNext}
               autoFocus
-              className="inline-flex items-center justify-center gap-2 w-full py-4 bg-white text-black font-extrabold text-sm sm:text-base rounded-xl hover:bg-neutral-200 transition-all shadow-lg active:scale-98 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 w-full py-4 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-extrabold text-sm sm:text-base rounded-xl transition-all shadow-lg active:scale-98 cursor-pointer"
             >
               <span>สแกนคนถัดไป</span>
               <ArrowRightIcon className="w-5 h-5" />
@@ -578,17 +578,17 @@ export function OrganizerScanner() {
       )}
 
       {/* 4. Recent Scan Audit Table (AC-18) */}
-      <section className="bg-neutral-950 border border-neutral-800 rounded-xl overflow-hidden space-y-0">
-        <div className="p-4 border-b border-neutral-800 flex justify-between items-center">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-300">
+      <section className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden space-y-0 shadow-sm dark:shadow-none">
+        <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-300">
             ประวัติการสแกนล่าสุด (Scan Audit Trail)
           </h3>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400">
             {recentScans.length} รายการ
           </span>
         </div>
 
-        <div className="max-h-72 overflow-y-auto divide-y divide-neutral-900 text-xs font-sans">
+        <div className="max-h-72 overflow-y-auto divide-y divide-neutral-100 dark:divide-neutral-900 text-xs font-sans">
           {recentScans.length === 0 ? (
             <div className="p-8 text-center text-neutral-500 font-mono">
               ยังไม่มีประวัติการสแกนสำหรับงานนี้
@@ -596,37 +596,37 @@ export function OrganizerScanner() {
           ) : (
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-neutral-900/40 text-[10px] text-neutral-500 uppercase font-mono">
+                <tr className="bg-neutral-50 dark:bg-neutral-900/40 text-[10px] text-neutral-500 uppercase font-mono">
                   <th className="p-3">เวลา</th>
                   <th className="p-3">เลขที่บัตร</th>
                   <th className="p-3">Action</th>
                   <th className="p-3">ผลลัพธ์</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-900 font-mono text-xs">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-900 font-mono text-xs">
                 {recentScans.map((scan) => (
-                  <tr key={scan.id} className="hover:bg-neutral-900/30 transition-colors">
-                    <td className="p-3 text-neutral-400 whitespace-nowrap">
+                  <tr key={scan.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-900/30 transition-colors">
+                    <td className="p-3 text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
                       {new Date(scan.scannedAt).toLocaleTimeString("th-TH", {
                         hour: "2-digit",
                         minute: "2-digit",
                         second: "2-digit",
                       })}
                     </td>
-                    <td className="p-3 text-white font-bold">
-                      {scan.ticketNumber || <span className="text-neutral-600">-</span>}
+                    <td className="p-3 text-neutral-900 dark:text-white font-bold">
+                      {scan.ticketNumber || <span className="text-neutral-400 dark:text-neutral-600">-</span>}
                     </td>
-                    <td className="p-3 text-neutral-300">
+                    <td className="p-3 text-neutral-700 dark:text-neutral-300">
                       {scan.action}
                     </td>
                     <td className="p-3">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           scan.result === "VALID"
-                            ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                            ? "bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800"
                             : scan.result === "ALREADY_CHECKED_IN" || scan.result === "INVALID_ACTION"
-                              ? "bg-amber-950 text-amber-400 border border-amber-800"
-                              : "bg-red-950 text-red-400 border border-red-800"
+                              ? "bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800"
+                              : "bg-red-100 text-red-800 border border-red-300 dark:bg-red-950 dark:text-red-400 dark:border-red-800"
                         }`}
                       >
                         {scan.result}

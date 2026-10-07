@@ -200,19 +200,19 @@ export default function AdminCategoriesPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <SlidersIcon className="w-5 h-5 text-neutral-400" />
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+              <SlidersIcon className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
                 จัดการหมวดหมู่บทความ
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-neutral-400">
+            <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
               กำหนดหมวดหมู่บทความสำหรับระบบ News & Blog เพื่อการจัดระเบียบเนื้อหาและ SEO
             </p>
           </div>
 
           <button
             onClick={handleOpenCreateModal}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-black font-semibold rounded text-sm hover:bg-neutral-200 transition-colors shadow-sm"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-semibold rounded text-sm hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shadow-sm"
           >
             <PlusIcon className="w-4 h-4" />
             <span>สร้างหมวดหมู่ใหม่</span>
@@ -221,20 +221,20 @@ export default function AdminCategoriesPage() {
 
         {/* Notifications */}
         {errorMsg && (
-          <div className="mb-6 p-4 rounded bg-red-950/50 border border-red-800 text-red-200 flex items-start gap-3 text-sm">
-            <AlertTriangleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-red-100 dark:bg-red-950/50 border border-red-300 dark:border-red-800 text-red-800 dark:text-red-200 flex items-start gap-3 text-sm">
+            <AlertTriangleIcon className="w-5 h-5 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
             <div className="flex-1">{errorMsg}</div>
-            <button onClick={() => setErrorMsg(null)} className="text-red-400 hover:text-white">
+            <button onClick={() => setErrorMsg(null)} className="text-red-500 dark:text-red-400 hover:text-black dark:hover:text-white">
               <XIcon className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {successMsg && (
-          <div className="mb-6 p-4 rounded bg-emerald-950/50 border border-emerald-800 text-emerald-200 flex items-start gap-3 text-sm">
-            <CheckIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 flex items-start gap-3 text-sm">
+            <CheckIcon className="w-5 h-5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
             <div className="flex-1">{successMsg}</div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-white">
+            <button onClick={() => setSuccessMsg(null)} className="text-emerald-500 dark:text-emerald-400 hover:text-black dark:hover:text-white">
               <XIcon className="w-4 h-4" />
             </button>
           </div>
@@ -243,29 +243,29 @@ export default function AdminCategoriesPage() {
         {/* Controls */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="relative flex-1">
-            <SearchIcon className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <SearchIcon className="w-4 h-4 text-neutral-400 dark:text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="ค้นหาตามชื่อหรือ slug..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-neutral-900 border border-neutral-800 rounded text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-600"
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-neutral-600 shadow-sm"
             />
           </div>
         </div>
 
         {/* Categories Table */}
-        <div className="bg-neutral-900/60 border border-neutral-800 rounded overflow-hidden">
+        <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded overflow-hidden shadow-sm">
           {loading ? (
-            <div className="p-8 text-center text-sm text-neutral-400">กำลังโหลดหมวดหมู่...</div>
+            <div className="p-8 text-center text-sm text-neutral-500 dark:text-neutral-400">กำลังโหลดหมวดหมู่...</div>
           ) : filteredCategories.length === 0 ? (
-            <div className="p-8 text-center text-sm text-neutral-400">
+            <div className="p-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
               {searchQuery ? "ไม่พบหมวดหมู่ที่ตรงกับการค้นหา" : "ยังไม่มีหมวดหมู่บทความ"}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-neutral-900/90 text-xs uppercase tracking-wider text-neutral-400 border-b border-neutral-800">
+                <thead className="bg-neutral-100 dark:bg-neutral-900/90 text-xs uppercase tracking-wider text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                   <tr>
                     <th className="py-3 px-4 font-semibold">ชื่อหมวดหมู่</th>
                     <th className="py-3 px-4 font-semibold font-mono">Slug</th>
@@ -273,19 +273,19 @@ export default function AdminCategoriesPage() {
                     <th className="py-3 px-4 font-semibold text-right">การจัดการ</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-800/60">
+                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800/60">
                   {filteredCategories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-neutral-800/30 transition-colors">
-                      <td className="py-3.5 px-4 font-medium text-white">{cat.name}</td>
-                      <td className="py-3.5 px-4 font-mono text-xs text-neutral-400">
+                    <tr key={cat.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors">
+                      <td className="py-3.5 px-4 font-medium text-neutral-900 dark:text-white">{cat.name}</td>
+                      <td className="py-3.5 px-4 font-mono text-xs text-neutral-500 dark:text-neutral-400">
                         /{cat.slug}
                       </td>
                       <td className="py-3.5 px-4 text-center">
                         <span
                           className={`inline-block px-2 py-0.5 rounded text-xs font-mono font-medium ${
                             cat.articleCount > 0
-                              ? "bg-neutral-800 text-white"
-                              : "bg-neutral-900 text-neutral-500"
+                              ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-white"
+                              : "bg-neutral-100 dark:bg-neutral-900 text-neutral-500"
                           }`}
                         >
                           {cat.articleCount} บทความ
@@ -295,14 +295,14 @@ export default function AdminCategoriesPage() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleOpenEditModal(cat)}
-                            className="p-1.5 rounded hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                            className="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
                             title="แก้ไข"
                           >
                             <EditIcon className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => setDeletingCategory(cat)}
-                            className="p-1.5 rounded hover:bg-red-950/60 text-neutral-400 hover:text-red-400 transition-colors"
+                            className="p-1.5 rounded hover:bg-red-100 dark:hover:bg-red-950/60 text-neutral-500 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                             title="ลบ"
                           >
                             <TrashIcon className="w-4 h-4" />

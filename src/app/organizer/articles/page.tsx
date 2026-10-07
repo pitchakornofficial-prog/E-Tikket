@@ -129,25 +129,25 @@ export default function OrganizerArticlesPage() {
     switch (status) {
       case "PUBLISHED":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-white text-black font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-neutral-900 text-white dark:bg-white dark:text-black font-mono">
             PUBLISHED
           </span>
         );
       case "PENDING_REVIEW":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-yellow-400 text-black font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-900 dark:bg-yellow-400 dark:text-black font-mono">
             PENDING REVIEW
           </span>
         );
       case "DRAFT":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 font-mono">
             DRAFT
           </span>
         );
       case "ARCHIVED":
         return (
-          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-900 text-neutral-500 font-mono">
+          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-100 text-neutral-500 dark:bg-neutral-900 dark:text-neutral-500 font-mono">
             ARCHIVED
           </span>
         );
@@ -164,18 +164,18 @@ export default function OrganizerArticlesPage() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <FileTextIcon className="w-5 h-5 text-neutral-400" />
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
                 บทความของฉัน (My Articles)
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-neutral-400">
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
               สร้างบทความเพื่อโปรโมตอีเวนต์และดนตรีของคุณ เมื่อส่งตรวจสอบแล้ว แอดมินจะพิจารณาอนุมัติเพื่อเผยแพร่สู่สาธารณะ
             </p>
           </div>
 
           <Link
             href="/organizer/articles/new"
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-white text-black font-semibold rounded text-sm hover:bg-neutral-200 transition-colors shadow-sm"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold rounded text-sm hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shadow-sm"
           >
             <PlusIcon className="w-4 h-4" />
             <span>เขียนบทความใหม่</span>
@@ -184,35 +184,35 @@ export default function OrganizerArticlesPage() {
 
         {/* Notifications */}
         {errorMsg && (
-          <div className="mb-6 p-4 rounded bg-red-950/50 border border-red-800 text-red-200 flex items-start gap-3 text-sm">
-            <AlertTriangleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-red-100 dark:bg-red-950/50 border border-red-300 dark:border-red-800 text-red-900 dark:text-red-200 flex items-start gap-3 text-sm">
+            <AlertTriangleIcon className="w-5 h-5 text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
             <div className="flex-1">{errorMsg}</div>
-            <button onClick={() => setErrorMsg(null)} className="text-red-400 hover:text-white">
+            <button onClick={() => setErrorMsg(null)} className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-white">
               <XIcon className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {successMsg && (
-          <div className="mb-6 p-4 rounded bg-emerald-950/50 border border-emerald-800 text-emerald-200 flex items-start gap-3 text-sm">
-            <CheckIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 rounded bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 flex items-start gap-3 text-sm">
+            <CheckIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
             <div className="flex-1">{successMsg}</div>
-            <button onClick={() => setSuccessMsg(null)} className="text-emerald-400 hover:text-white">
+            <button onClick={() => setSuccessMsg(null)} className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-white">
               <XIcon className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {/* Articles Table */}
-        <div className="bg-neutral-900/60 border border-neutral-800 rounded overflow-hidden">
+        <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded overflow-hidden shadow-sm dark:shadow-none">
           {loading ? (
-            <div className="p-8 text-center text-sm text-neutral-400">กำลังโหลดบทความ...</div>
+            <div className="p-8 text-center text-sm text-neutral-500 dark:text-neutral-400">กำลังโหลดบทความ...</div>
           ) : articles.length === 0 ? (
             <div className="p-12 text-center space-y-3">
-              <p className="text-sm text-neutral-400">คุณยังไม่มีบทความในระบบ</p>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">คุณยังไม่มีบทความในระบบ</p>
               <Link
                 href="/organizer/articles/new"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black font-semibold rounded text-xs hover:bg-neutral-200"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold rounded text-xs hover:bg-neutral-800 dark:hover:bg-neutral-200"
               >
                 <PlusIcon className="w-3.5 h-3.5" />
                 <span>เริ่มเขียนบทความแรก</span>
@@ -221,7 +221,7 @@ export default function OrganizerArticlesPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-neutral-900/90 text-xs uppercase tracking-wider text-neutral-400 border-b border-neutral-800">
+                <thead className="bg-neutral-50 dark:bg-neutral-900/90 text-xs uppercase tracking-wider text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                   <tr>
                     <th className="py-3 px-4 font-semibold">หัวข้อบทความ</th>
                     <th className="py-3 px-4 font-semibold">หมวดหมู่</th>
@@ -230,22 +230,22 @@ export default function OrganizerArticlesPage() {
                     <th className="py-3 px-4 font-semibold text-right">การจัดการ</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-800/60">
+                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800/60">
                   {articles.map((art) => (
-                    <tr key={art.id} className="hover:bg-neutral-800/30 transition-colors">
+                    <tr key={art.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors">
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-white max-w-sm truncate">{art.title}</div>
+                        <div className="font-medium text-neutral-900 dark:text-white max-w-sm truncate">{art.title}</div>
                         <div className="text-[11px] font-mono text-neutral-500 truncate">
                           /news/{art.slug}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-xs text-neutral-300">
+                      <td className="py-3.5 px-4 text-xs text-neutral-700 dark:text-neutral-300">
                         {art.category.name}
                       </td>
                       <td className="py-3.5 px-4 text-center">
                         {getStatusBadge(art.status)}
                       </td>
-                      <td className="py-3.5 px-4 text-xs font-mono text-neutral-400">
+                      <td className="py-3.5 px-4 text-xs font-mono text-neutral-600 dark:text-neutral-400">
                         {new Date(art.createdAt).toLocaleDateString("th-TH")}
                       </td>
                       <td className="py-3.5 px-4 text-right">
@@ -254,7 +254,7 @@ export default function OrganizerArticlesPage() {
                           {art.status === "DRAFT" && (
                             <button
                               onClick={() => handleSubmitForReview(art.id, art.title)}
-                              className="px-2.5 py-1 bg-white text-black font-semibold rounded text-xs hover:bg-neutral-200 transition-colors"
+                              className="px-2.5 py-1 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold rounded text-xs hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                               title="ส่งให้แอดมินตรวจสอบ"
                             >
                               ส่งตรวจสอบ
@@ -264,7 +264,7 @@ export default function OrganizerArticlesPage() {
                           {/* Edit Link */}
                           <Link
                             href={`/organizer/articles/${art.id}/edit`}
-                            className="p-1.5 rounded hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                            className="p-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                             title="แก้ไข"
                           >
                             <EditIcon className="w-4 h-4" />
@@ -274,7 +274,7 @@ export default function OrganizerArticlesPage() {
                           {art.status === "DRAFT" && (
                             <button
                               onClick={() => setDeletingArticle(art)}
-                              className="p-1.5 rounded hover:bg-red-950/60 text-neutral-400 hover:text-red-400 transition-colors"
+                              className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-950/60 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                               title="ลบแบบร่าง"
                             >
                               <TrashIcon className="w-4 h-4" />
@@ -294,21 +294,21 @@ export default function OrganizerArticlesPage() {
       {/* Delete Confirmation Modal */}
       {deletingArticle && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-3 text-red-400">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg max-w-md w-full p-6 shadow-xl space-y-4">
+            <div className="flex items-center gap-3 text-red-500 dark:text-red-400">
               <AlertTriangleIcon className="w-6 h-6 shrink-0" />
-              <h2 className="text-lg font-bold text-white">ยืนยันการลบแบบร่าง</h2>
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">ยืนยันการลบแบบร่าง</h2>
             </div>
 
-            <p className="text-sm text-neutral-300">
+            <p className="text-sm text-neutral-600 dark:text-neutral-300">
               คุณแน่ใจหรือไม่ว่าต้องการลบแบบร่างบทความ{" "}
-              <span className="font-bold text-white">&quot;{deletingArticle.title}&quot;</span>?
+              <span className="font-bold text-neutral-900 dark:text-white">&quot;{deletingArticle.title}&quot;</span>?
             </p>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setDeletingArticle(null)}
-                className="px-4 py-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                className="px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
               >
                 ยกเลิก
               </button>

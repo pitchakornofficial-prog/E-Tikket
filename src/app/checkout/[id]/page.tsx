@@ -13,6 +13,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
 } from "@/components/icons";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface OrderData {
   orderId: string;
@@ -271,13 +272,16 @@ function CheckoutContent() {
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
       {/* Header */}
-      <header className="border-b border-neutral-900 bg-neutral-950/90 backdrop-blur sticky top-0 z-40">
+      <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-white font-bold tracking-wider text-lg uppercase">
+          <Link href="/" className="flex items-center gap-2 text-neutral-900 dark:text-white font-bold tracking-wider text-lg uppercase">
             <span>TICKETBOX</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-300 font-mono">MVP</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-300 font-mono">MVP</span>
           </Link>
-          <span className="text-xs text-neutral-500">Guest Checkout</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-neutral-500 hidden sm:inline">Guest Checkout</span>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -291,20 +295,20 @@ function CheckoutContent() {
         {order.orderStatus === "PENDING_PAYMENT" && !isExpired && (
           <div
             id="timer-banner"
-            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-amber-950/30 border border-amber-600/50 rounded-lg text-amber-200"
+            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-600/50 rounded-lg text-amber-900 dark:text-amber-200"
           >
             <div>
-              <strong className="text-sm font-bold flex items-center gap-1.5 text-amber-400">
-                <ClockIcon className="w-4 h-4 text-amber-400 shrink-0" />
+              <strong className="text-sm font-bold flex items-center gap-1.5 text-amber-700 dark:text-amber-400">
+                <ClockIcon className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                 เวลาในการล็อกบัตรและชำระเงิน
               </strong>
-              <span className="text-xs text-amber-200/80">
+              <span className="text-xs text-amber-800 dark:text-amber-200/80">
                 กรุณาโอนเงินและแนบสลิปก่อนหมดเวลา เพื่อรักษาสิทธิ์บัตรของท่าน
               </span>
             </div>
             <div
               id="reservation-timer"
-              className="font-mono text-2xl font-black text-amber-300 tracking-wider"
+              className="font-mono text-2xl font-black text-amber-900 dark:text-amber-300 tracking-wider"
               aria-live="polite"
             >
               {timeRemaining !== null ? formatTimer(timeRemaining) : "--:--"}
@@ -317,18 +321,18 @@ function CheckoutContent() {
           <div
             id="order-expired-msg"
             role="alert"
-            className="p-4 bg-red-950/40 border border-red-600 rounded-lg text-red-300 text-sm space-y-2"
+            className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-600 rounded-lg text-red-900 dark:text-red-300 text-sm space-y-2"
           >
             <p className="font-bold flex items-center gap-1.5">
-              <AlertTriangleIcon className="w-4 h-4 text-red-400 shrink-0" />
+              <AlertTriangleIcon className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
               คำสั่งซื้อนี้หมดเวลา 15 นาทีแล้ว
             </p>
-            <p className="text-xs text-red-300/80">
+            <p className="text-xs text-red-700 dark:text-red-300/80">
               ระบบได้ทำการคืนสต็อกบัตรเรียบร้อย กรุณากดทำรายการสั่งซื้อใหม่อีกครั้ง
             </p>
             <Link
               href={`/events/${order.event.id}`}
-              className="inline-flex items-center gap-1 mt-2 px-4 py-2 bg-red-900/60 hover:bg-red-800 text-white text-xs font-semibold rounded transition-colors"
+              className="inline-flex items-center gap-1 mt-2 px-4 py-2 bg-red-600 dark:bg-red-900/60 hover:bg-red-700 dark:hover:bg-red-800 text-white text-xs font-semibold rounded transition-colors"
             >
               ทำรายการสั่งซื้อใหม่ <ArrowRightIcon className="w-3.5 h-3.5" />
             </Link>
@@ -337,12 +341,12 @@ function CheckoutContent() {
 
         {/* Waiting For Verification Notice */}
         {order.orderStatus === "WAITING_FOR_VERIFY" && (
-          <div className="p-4 bg-blue-950/40 border border-blue-600 rounded-lg text-blue-200 text-sm space-y-1">
+          <div className="p-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-300 dark:border-blue-600 rounded-lg text-blue-900 dark:text-blue-200 text-sm space-y-1">
             <p className="font-bold flex items-center gap-1.5">
-              <ClockIcon className="w-4 h-4 text-blue-400 shrink-0" />
+              <ClockIcon className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
               แนบสลิปเรียบร้อยแล้ว — กำลังรอเจ้าหน้าที่ตรวจสอบยอดเงิน
             </p>
-            <p className="text-xs text-blue-300/80">
+            <p className="text-xs text-blue-700 dark:text-blue-300/80">
               เจ้าหน้าที่จะตรวจสอบหลักฐานการโอนเงินและออกตั๋ว E-Ticket ส่งไปยังอีเมล {order.customer.email} ของคุณ
             </p>
           </div>
@@ -350,12 +354,12 @@ function CheckoutContent() {
 
         {/* Paid Notice */}
         {order.orderStatus === "PAID" && (
-          <div className="p-4 bg-emerald-950/40 border border-emerald-600 rounded-lg text-emerald-200 text-sm space-y-1">
+          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-600 rounded-lg text-emerald-900 dark:text-emerald-200 text-sm space-y-1">
             <p className="font-bold flex items-center gap-1.5">
-              <CheckCircleIcon className="w-4 h-4 text-emerald-400 shrink-0" />
+              <CheckCircleIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               ชำระเงินเรียบร้อยแล้ว (PAID)
             </p>
-            <p className="text-xs text-emerald-300/80">
+            <p className="text-xs text-emerald-700 dark:text-emerald-300/80">
               ระบบได้จัดส่ง E-Ticket และ QR Code เข้างานไปยังอีเมล {order.customer.email} เรียบร้อยแล้ว
             </p>
           </div>
@@ -363,26 +367,26 @@ function CheckoutContent() {
 
         {/* Rejected Notice */}
         {order.orderStatus === "REJECTED" && (
-          <div className="p-4 bg-red-950/40 border border-red-600 rounded-lg text-red-200 text-sm space-y-1">
+          <div className="p-4 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-600 rounded-lg text-red-900 dark:text-red-200 text-sm space-y-1">
             <p className="font-bold flex items-center gap-1.5">
-              <XCircleIcon className="w-4 h-4 text-red-400 shrink-0" />
+              <XCircleIcon className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
               การชำระเงินไม่ผ่านการอนุมัติ (REJECTED)
             </p>
-            <p className="text-xs text-red-300/80">
+            <p className="text-xs text-red-700 dark:text-red-300/80">
               สลิปหลักฐานการโอนเงินไม่ถูกต้อง หรือยอดเงินไม่ตรงตามที่กำหนด บัตรได้รับการคืนเข้าสู่สต็อกแล้ว
             </p>
           </div>
         )}
 
         {/* Order Heading & Status */}
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-neutral-900">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-neutral-200 dark:border-neutral-900">
           <div>
             <span className="text-xs text-neutral-500 uppercase tracking-wider font-mono">คำสั่งซื้อเลขที่</span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white mt-1">
               Order #{order.orderId.slice(0, 8)}...
             </h1>
-            <p className="text-sm text-neutral-400 mt-1">
-              ผู้สั่งซื้อ: <strong className="text-white">{order.customer.name}</strong> ({order.customer.email}, {order.customer.phone})
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+              ผู้สั่งซื้อ: <strong className="text-neutral-900 dark:text-white">{order.customer.name}</strong> ({order.customer.email}, {order.customer.phone})
             </p>
           </div>
           <div className="text-left sm:text-right">
@@ -391,12 +395,12 @@ function CheckoutContent() {
               id="order-status-badge"
               className={`inline-block px-3 py-1 rounded text-xs font-bold font-mono ${
                 order.orderStatus === "PENDING_PAYMENT"
-                  ? "bg-amber-950 border border-amber-600 text-amber-300"
+                  ? "bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950 dark:border-amber-600 dark:text-amber-300"
                   : order.orderStatus === "WAITING_FOR_VERIFY"
-                  ? "bg-blue-950 border border-blue-600 text-blue-300"
+                  ? "bg-blue-100 text-blue-900 border border-blue-300 dark:bg-blue-950 dark:border-blue-600 dark:text-blue-300"
                   : order.orderStatus === "PAID"
-                  ? "bg-emerald-950 border border-emerald-600 text-emerald-300"
-                  : "bg-red-950 border border-red-600 text-red-300"
+                  ? "bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-950 dark:border-emerald-600 dark:text-emerald-300"
+                  : "bg-red-100 text-red-900 border border-red-300 dark:bg-red-950 dark:border-red-600 dark:text-red-300"
               }`}
             >
               {order.orderStatus}
@@ -405,13 +409,13 @@ function CheckoutContent() {
         </div>
 
         {/* Order Summary Details */}
-        <div className="p-6 bg-neutral-950 border border-neutral-800 rounded-lg space-y-4">
-          <h2 className="text-base font-bold text-white tracking-wide">
+        <div className="p-6 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg space-y-4 shadow-sm dark:shadow-none">
+          <h2 className="text-base font-bold text-neutral-900 dark:text-white tracking-wide">
             รายการบัตร
           </h2>
-          <div className="flex justify-between items-center text-sm text-neutral-300">
+          <div className="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300">
             <div>
-              <p className="font-semibold text-white">{order.event.name}</p>
+              <p className="font-semibold text-neutral-900 dark:text-white">{order.event.name}</p>
               <p className="text-xs text-neutral-500">
                 {order.event.venue} • บัตรทั่วไป (&times; {order.quantity} ใบ)
               </p>
@@ -420,17 +424,17 @@ function CheckoutContent() {
               ฿{order.totalAmount}
             </div>
           </div>
-          <div className="flex justify-between items-baseline pt-4 border-t border-neutral-900">
-            <span className="text-sm font-bold text-white">ยอดเงินที่ต้องชำระ:</span>
-            <span className="text-2xl font-black text-white font-mono">฿{order.totalAmount}</span>
+          <div className="flex justify-between items-baseline pt-4 border-t border-neutral-200 dark:border-neutral-900">
+            <span className="text-sm font-bold text-neutral-900 dark:text-white">ยอดเงินที่ต้องชำระ:</span>
+            <span className="text-2xl font-black text-neutral-900 dark:text-white font-mono">฿{order.totalAmount}</span>
           </div>
         </div>
 
         {/* Payment Transfer Instructions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-neutral-950 border border-neutral-800 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-sm dark:shadow-none">
           {/* Transfer QR */}
-          <div className="flex flex-col items-center justify-center p-4 border-b md:border-b-0 md:border-r border-neutral-900 text-center space-y-3">
-            <div className="bg-white p-3 rounded-lg border-2 border-black inline-block">
+          <div className="flex flex-col items-center justify-center p-4 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-900 text-center space-y-3">
+            <div className="bg-white p-3 rounded-lg border-2 border-neutral-200 dark:border-black inline-block">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={order.transferQr || "/qr-transfer-sample.svg"}
@@ -445,26 +449,26 @@ function CheckoutContent() {
 
           {/* Bank Account Info */}
           <div className="flex flex-col justify-center space-y-4 text-sm">
-            <span className="inline-block px-2.5 py-1 text-[11px] font-semibold bg-neutral-900 text-neutral-400 border border-neutral-800 rounded w-fit">
+            <span className="inline-block px-2.5 py-1 text-[11px] font-semibold bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-800 rounded w-fit">
               ข้อมูลบัญชีธนาคารสำหรับโอนเงิน
             </span>
             <div className="space-y-1">
               <span className="text-xs text-neutral-500 block">ธนาคาร:</span>
-              <p className="font-semibold text-white">{order.bankAccount.bank}</p>
+              <p className="font-semibold text-neutral-900 dark:text-white">{order.bankAccount.bank}</p>
             </div>
             <div className="space-y-1">
               <span className="text-xs text-neutral-500 block">ชื่อบัญชี:</span>
-              <p className="font-semibold text-white">{order.bankAccount.accountName}</p>
+              <p className="font-semibold text-neutral-900 dark:text-white">{order.bankAccount.accountName}</p>
             </div>
             <div className="space-y-1">
               <span className="text-xs text-neutral-500 block">เลขที่บัญชี:</span>
-              <p className="font-mono text-xl font-bold tracking-wider text-white">
+              <p className="font-mono text-xl font-bold tracking-wider text-neutral-900 dark:text-white">
                 {order.bankAccount.accountNumber}
               </p>
             </div>
-            <div className="space-y-1 pt-2 border-t border-neutral-900">
+            <div className="space-y-1 pt-2 border-t border-neutral-200 dark:border-neutral-900">
               <span className="text-xs text-neutral-500 block">ยอดเงินที่ต้องโอน (ยอดตรงเป๊ะ):</span>
-              <p className="font-mono text-lg font-black text-emerald-400">
+              <p className="font-mono text-lg font-black text-emerald-600 dark:text-emerald-400">
                 ฿{order.totalAmount}
               </p>
             </div>
@@ -472,12 +476,12 @@ function CheckoutContent() {
         </div>
 
         {/* Slip Upload Section */}
-        <section className="p-6 bg-neutral-950 border border-neutral-800 rounded-lg space-y-4">
+        <section className="p-6 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg space-y-4 shadow-sm dark:shadow-none">
           <div className="space-y-1">
-            <h2 className="text-base font-bold text-white">
+            <h2 className="text-base font-bold text-neutral-900 dark:text-white">
               แนบสลิปหลักฐานการโอนเงิน
             </h2>
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">
               รองรับไฟล์รูปภาพ JPEG และ PNG ขนาดไม่เกิน 5 MB
             </p>
           </div>
@@ -489,16 +493,16 @@ function CheckoutContent() {
                   id="upload-error"
                   role="alert"
                   aria-live="polite"
-                  className="p-3 bg-red-950/60 border border-red-700/80 rounded text-red-300 text-xs leading-relaxed flex items-center gap-2"
+                  className="p-3 bg-red-100 dark:bg-red-950/60 border border-red-300 dark:border-red-700/80 rounded text-red-900 dark:text-red-300 text-xs leading-relaxed flex items-center gap-2"
                 >
-                  <AlertTriangleIcon className="w-4 h-4 text-red-400 shrink-0" />
+                  <AlertTriangleIcon className="w-4 h-4 text-red-500 dark:text-red-400 shrink-0" />
                   <span>{uploadError}</span>
                 </div>
               )}
 
-              <div className="border-2 border-dashed border-neutral-800 rounded-lg p-6 sm:p-8 text-center bg-neutral-900/40 space-y-3">
-                <FileTextIcon className="w-8 h-8 text-neutral-500 mx-auto" />
-                <p className="text-xs text-neutral-300">
+              <div className="border-2 border-dashed border-neutral-300 dark:border-neutral-800 rounded-lg p-6 sm:p-8 text-center bg-neutral-50 dark:bg-neutral-900/40 space-y-3">
+                <FileTextIcon className="w-8 h-8 text-neutral-400 dark:text-neutral-500 mx-auto" />
+                <p className="text-xs text-neutral-600 dark:text-neutral-300">
                   เลือกไฟล์รูปสลิปที่ต้องการส่ง (JPEG / PNG ไม่เกิน 5 MB)
                 </p>
                 <input
@@ -508,20 +512,20 @@ function CheckoutContent() {
                   accept="image/jpeg,image/png"
                   onChange={handleFileChange}
                   disabled={uploading}
-                  className="text-xs text-neutral-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-white file:text-black hover:file:bg-neutral-200 file:cursor-pointer"
+                  className="text-xs text-neutral-500 dark:text-neutral-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-neutral-900 file:text-white hover:file:bg-neutral-800 dark:file:bg-white dark:file:text-black dark:hover:file:bg-neutral-200 file:cursor-pointer"
                 />
               </div>
 
               {/* Slip Preview */}
               {previewUrl && (
-                <div id="slip-preview-container" className="flex flex-col items-center p-3 bg-neutral-900 border border-neutral-800 rounded-lg space-y-2">
-                  <span className="text-xs text-neutral-400 font-medium">ภาพสลิปที่เลือก:</span>
+                <div id="slip-preview-container" className="flex flex-col items-center p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg space-y-2">
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">ภาพสลิปที่เลือก:</span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     id="slip-preview-img"
                     src={previewUrl}
                     alt="Slip Preview"
-                    className="max-h-56 object-contain rounded border border-neutral-700"
+                    className="max-h-56 object-contain rounded border border-neutral-300 dark:border-neutral-700"
                   />
                   {selectedFile && (
                     <span className="text-[11px] text-neutral-500 font-mono">
@@ -535,7 +539,7 @@ function CheckoutContent() {
                 type="submit"
                 id="submit-slip-btn"
                 disabled={uploading || !selectedFile}
-                className="w-full min-h-[44px] py-3 px-4 bg-white text-black font-bold rounded text-sm hover:bg-neutral-200 transition-colors flex items-center justify-center text-center focus:outline-none focus:ring-2 focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full min-h-[44px] py-3 px-4 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold rounded text-sm transition-colors flex items-center justify-center text-center focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {uploading ? (
                   "กำลังส่งสลิปหลักฐาน..."
@@ -547,19 +551,19 @@ function CheckoutContent() {
               </button>
             </form>
           ) : isExpired ? (
-            <div className="p-4 bg-neutral-900 border border-neutral-800 rounded text-center text-xs text-neutral-500">
+            <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded text-center text-xs text-neutral-500">
               คำสั่งซื้อหมดเวลาแล้ว ไม่สามารถแนบสลิปได้
             </div>
           ) : (
-            <div className="p-4 bg-neutral-900 border border-neutral-800 rounded text-center text-xs text-neutral-400">
-              สถานะคำสั่งซื้อปัจจุบันคือ <span className="font-mono font-bold text-white">{order.orderStatus}</span> ไม่จำเป็นต้องแนบสลิปซ้ำ
+            <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded text-center text-xs text-neutral-600 dark:text-neutral-400">
+              สถานะคำสั่งซื้อปัจจุบันคือ <span className="font-mono font-bold text-neutral-900 dark:text-white">{order.orderStatus}</span> ไม่จำเป็นต้องแนบสลิปซ้ำ
             </div>
           )}
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 py-6 text-center text-xs text-neutral-600">
+      <footer className="border-t border-neutral-200 dark:border-neutral-900 py-6 text-center text-xs text-neutral-500 dark:text-neutral-600">
         <p>E-Tikket Ticketing Platform • MVP</p>
       </footer>
     </div>

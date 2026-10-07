@@ -17,7 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               (function() {
                 try {
                   const saved = localStorage.getItem('theme');
-                  if (saved === 'light') {
+                  if (saved === 'light' || (!saved && window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.remove('dark');
                     document.documentElement.classList.add('light');
                   } else {

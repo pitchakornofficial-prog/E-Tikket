@@ -81,7 +81,7 @@ function LoginForm() {
       <div className="space-y-2">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-neutral-200"
+          className="block text-sm font-medium text-neutral-700 dark:text-neutral-200"
         >
           อีเมล
         </label>
@@ -95,14 +95,14 @@ function LoginForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="staff@example.com"
           disabled={isLoading}
-          className="w-full px-3 py-2.5 bg-neutral-900 border border-neutral-700 text-white placeholder-neutral-500 rounded focus:outline-none focus:ring-2 focus:ring-white focus:border-white disabled:opacity-50 text-sm transition-colors"
+          className="w-full px-3 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 rounded focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white disabled:opacity-50 text-sm transition-colors"
         />
       </div>
 
       <div className="space-y-2">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-neutral-200"
+          className="block text-sm font-medium text-neutral-700 dark:text-neutral-200"
         >
           รหัสผ่าน
         </label>
@@ -116,14 +116,14 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           disabled={isLoading}
-          className="w-full px-3 py-2.5 bg-neutral-900 border border-neutral-700 text-white placeholder-neutral-500 rounded focus:outline-none focus:ring-2 focus:ring-white focus:border-white disabled:opacity-50 text-sm transition-colors"
+          className="w-full px-3 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 rounded focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white disabled:opacity-50 text-sm transition-colors"
         />
       </div>
 
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full min-h-[44px] py-2.5 px-4 bg-white text-black font-semibold rounded hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 transition-colors text-sm"
+        className="w-full min-h-[44px] py-2.5 px-4 bg-black dark:bg-white text-white dark:text-black font-semibold rounded hover:bg-neutral-800 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-black disabled:opacity-50 transition-colors text-sm shadow-sm"
       >
         {isLoading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
       </button>
@@ -133,21 +133,21 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col transition-colors duration-200 justify-center items-center px-4 py-12">
+    <main className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200">
       <div className="w-full max-w-sm space-y-8">
         <header className="text-center space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight text-white uppercase">
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
             E-Tikket Staff
           </h1>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-neutral-600 dark:text-neutral-400">
             เข้าสู่ระบบสำหรับผู้ดูแลระบบและผู้จัดงาน
           </p>
         </header>
 
-        <div className="p-6 border border-neutral-800 bg-neutral-950 rounded-lg shadow-2xl">
+        <div className="p-6 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-lg shadow-xl">
           <Suspense
             fallback={
-              <div className="text-center py-8 text-neutral-400 text-sm">
+              <div className="text-center py-8 text-neutral-500 dark:text-neutral-400 text-sm">
                 กำลังโหลด...
               </div>
             }
@@ -156,7 +156,7 @@ export default function LoginPage() {
           </Suspense>
         </div>
 
-        <footer className="text-center text-xs text-neutral-600">
+        <footer className="text-center text-xs text-neutral-500 dark:text-neutral-600">
           E-Tikket Ticketing Platform
         </footer>
       </div>

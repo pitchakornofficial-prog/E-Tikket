@@ -325,17 +325,17 @@ export default function AdminVerificationsPage() {
         {/* Page Title & Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-black text-white tracking-tight">
+            <h1 className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight">
               ตรวจสอบการชำระเงิน (Slip Verifications)
             </h1>
-            <p className="text-xs text-neutral-400 mt-1">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
               ตรวจสอบสลิปการโอนเงิน อนุมัติออกตั๋ว หรือปฏิเสธพร้อมบันทึกประวัติการตรวจสอบ
             </p>
           </div>
           <button
             onClick={() => fetchOrders(currentTab)}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs rounded text-neutral-300 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-800 text-xs rounded text-neutral-700 dark:text-neutral-300 transition-colors"
           >
             <RefreshCwIcon className="w-3.5 h-3.5" />
             <span>รีเฟรชข้อมูล</span>
@@ -343,18 +343,18 @@ export default function AdminVerificationsPage() {
         </div>
 
         {/* Status Filter Tabs */}
-        <div className="flex flex-wrap gap-2 border-b border-neutral-800 pb-3">
+        <div className="flex flex-wrap gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-3">
           <button
             onClick={() => handleTabChange("WAITING_FOR_VERIFY")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 ${
               currentTab === "WAITING_FOR_VERIFY"
-                ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                : "bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800"
+                ? "bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40"
+                : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800"
             }`}
           >
             <ClockIcon className="w-3.5 h-3.5" />
             <span>ยังไม่ผ่าน (รอตรวจสอบ)</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-amber-950 text-amber-400 font-mono text-[10px] border border-amber-800">
+            <span className="px-1.5 py-0.2 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 font-mono text-[10px] border border-amber-300 dark:border-amber-800">
               {counts.waiting}
             </span>
           </button>
@@ -363,13 +363,13 @@ export default function AdminVerificationsPage() {
             onClick={() => handleTabChange("PAID")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 ${
               currentTab === "PAID"
-                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                : "bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800"
+                ? "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/40"
+                : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800"
             }`}
           >
             <CheckCircleIcon className="w-3.5 h-3.5" />
             <span>ผ่านไปแล้ว (อนุมัติแล้ว)</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-emerald-950 text-emerald-400 font-mono text-[10px] border border-emerald-800">
+            <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 font-mono text-[10px] border border-emerald-300 dark:border-emerald-800">
               {counts.paid}
             </span>
           </button>
@@ -378,13 +378,13 @@ export default function AdminVerificationsPage() {
             onClick={() => handleTabChange("REJECTED")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 ${
               currentTab === "REJECTED"
-                ? "bg-red-500/20 text-red-300 border border-red-500/40"
-                : "bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800"
+                ? "bg-red-100 dark:bg-red-500/20 text-red-900 dark:text-red-300 border border-red-300 dark:border-red-500/40"
+                : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800"
             }`}
           >
             <XCircleIcon className="w-3.5 h-3.5" />
             <span>ไม่ผ่าน (ปฏิเสธสลิป)</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-red-950 text-red-400 font-mono text-[10px] border border-red-800">
+            <span className="px-1.5 py-0.2 rounded-full bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-400 font-mono text-[10px] border border-red-300 dark:border-red-800">
               {counts.rejected}
             </span>
           </button>
@@ -393,12 +393,12 @@ export default function AdminVerificationsPage() {
             onClick={() => handleTabChange("ALL")}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-2 ${
               currentTab === "ALL"
-                ? "bg-white text-black font-bold"
-                : "bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800"
+                ? "bg-neutral-900 text-white dark:bg-white dark:text-black font-bold"
+                : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800"
             }`}
           >
             <span>ทั้งหมด</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-neutral-800 text-neutral-300 font-mono text-[10px]">
+            <span className="px-1.5 py-0.2 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-mono text-[10px]">
               {counts.all}
             </span>
           </button>
@@ -406,17 +406,17 @@ export default function AdminVerificationsPage() {
 
         {/* Concert Filter Pill Tabs & Category Filter Section */}
         <div className="space-y-4">
-          <div className="space-y-2 bg-neutral-950/80 p-3.5 rounded-2xl border border-neutral-900">
+          <div className="space-y-2 bg-white dark:bg-neutral-950/80 p-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-900 shadow-sm dark:shadow-none">
             <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2 text-xs font-semibold text-neutral-300">
-                <MusicIcon className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center gap-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                <MusicIcon className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                 <span>เลือกคอนเสิร์ตที่ต้องการตรวจสอบ:</span>
               </div>
               {selectedEventId !== "ALL" && (
                 <button
                   type="button"
                   onClick={() => setSelectedEventId("ALL")}
-                  className="text-xs text-neutral-400 hover:text-white underline font-mono transition-colors"
+                  className="text-xs text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white underline font-mono transition-colors"
                 >
                   เลือกทั้งหมด
                 </button>
@@ -429,16 +429,16 @@ export default function AdminVerificationsPage() {
                 onClick={() => setSelectedEventId("ALL")}
                 className={`px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-2 shrink-0 ${
                   selectedEventId === "ALL"
-                    ? "bg-emerald-400 text-black font-bold shadow-lg shadow-emerald-950/50"
-                    : "bg-neutral-900/90 text-neutral-400 hover:text-white border border-neutral-800 hover:border-neutral-700"
+                    ? "bg-emerald-500 dark:bg-emerald-400 text-white dark:text-black font-bold shadow-md"
+                    : "bg-neutral-100 dark:bg-neutral-900/90 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
                 }`}
               >
                 <span>คอนเสิร์ตทั้งหมด</span>
                 <span
                   className={`px-2 py-0.5 rounded-full font-mono text-[10px] ${
                     selectedEventId === "ALL"
-                      ? "bg-black/20 text-black font-bold"
-                      : "bg-neutral-800 text-neutral-400"
+                      ? "bg-white/20 dark:bg-black/20 text-white dark:text-black font-bold"
+                      : "bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400"
                   }`}
                 >
                   {orders.length}
@@ -455,16 +455,16 @@ export default function AdminVerificationsPage() {
                     onClick={() => setSelectedEventId(evt.id)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-2 shrink-0 ${
                       isSelected
-                        ? "bg-white text-black font-bold shadow-lg shadow-white/10"
-                        : "bg-neutral-900/90 text-neutral-400 hover:text-white border border-neutral-800 hover:border-neutral-700"
+                        ? "bg-neutral-900 text-white dark:bg-white dark:text-black font-bold shadow-sm dark:shadow-lg dark:shadow-white/10"
+                        : "bg-neutral-100 dark:bg-neutral-900/90 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
                     }`}
                   >
                     <span>🎵 {evt.name}</span>
                     <span
                       className={`px-2 py-0.5 rounded-full font-mono text-[10px] ${
                         isSelected
-                          ? "bg-neutral-200 text-black font-bold"
-                          : "bg-neutral-800 text-neutral-400"
+                          ? "bg-neutral-700 text-white dark:bg-neutral-200 dark:text-black font-bold"
+                          : "bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400"
                       }`}
                     >
                       {countForEvent}
@@ -484,8 +484,8 @@ export default function AdminVerificationsPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`text-xs px-3 py-1 rounded transition-colors ${
                     selectedCategory === cat
-                      ? "bg-white text-black font-bold"
-                      : "bg-neutral-900 text-neutral-400 hover:text-white border border-neutral-800"
+                      ? "bg-neutral-900 text-white dark:bg-white dark:text-black font-bold"
+                      : "bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white border border-neutral-200 dark:border-neutral-800"
                   }`}
                 >
                   {cat}
@@ -496,7 +496,7 @@ export default function AdminVerificationsPage() {
 
           {/* Real-time Search Bar */}
           <div className="relative flex items-center">
-            <div className="absolute left-3.5 text-neutral-500 pointer-events-none">
+            <div className="absolute left-3.5 text-neutral-400 dark:text-neutral-500 pointer-events-none">
               <SearchIcon className="w-4 h-4" />
             </div>
             <input
@@ -504,17 +504,17 @@ export default function AdminVerificationsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ค้นหา Order ID, ชื่อลูกค้า, อีเมล, เบอร์โทร, ชื่อคอนเสิร์ต หรือเหตุผลที่ปฏิเสธ..."
-              className="w-full pl-10 pr-24 py-2.5 bg-neutral-900/80 border border-neutral-800 rounded-xl text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-colors"
+              className="w-full pl-10 pr-24 py-2.5 bg-white dark:bg-neutral-900/80 border border-neutral-300 dark:border-neutral-800 rounded-xl text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-neutral-900 dark:focus:border-white focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
             />
             {searchQuery && (
               <div className="absolute right-3 flex items-center gap-2">
-                <span className="text-[11px] font-mono text-neutral-400">
+                <span className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">
                   {filteredOrders.length} รายการ
                 </span>
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="p-1 rounded bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                  className="p-1 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
                   title="ล้างคำค้นหา"
                 >
                   <XIcon className="w-3.5 h-3.5" />
@@ -563,12 +563,12 @@ export default function AdminVerificationsPage() {
 
         {/* Empty State when no orders in category */}
         {!loading && !errorMsg && orders.length === 0 && (
-          <div className="p-12 border border-dashed border-neutral-800 bg-neutral-950/40 rounded-xl text-center space-y-3">
-            <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-500">
+          <div className="p-12 border border-dashed border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950/40 rounded-xl text-center space-y-3">
+            <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center mx-auto text-neutral-500">
               <CheckCircleIcon className="w-6 h-6" />
             </div>
-            <h2 className="text-base font-bold text-white">ไม่มีรายการในหมวดหมู่นี้</h2>
-            <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+            <h2 className="text-base font-bold text-neutral-900 dark:text-white">ไม่มีรายการในหมวดหมู่นี้</h2>
+            <p className="text-xs text-neutral-600 dark:text-neutral-500 max-w-sm mx-auto">
               {currentTab === "WAITING_FOR_VERIFY"
                 ? "ไม่มีคำสั่งซื้อที่รอตรวจสอบสลิปในขณะนี้ ทุกรายการได้รับการประมวลผลแล้ว"
                 : "ไม่พบคำสั่งซื้อในสถานะที่เลือก"}
@@ -578,17 +578,17 @@ export default function AdminVerificationsPage() {
 
         {/* Empty State when search returns 0 results */}
         {!loading && !errorMsg && orders.length > 0 && filteredOrders.length === 0 && (
-          <div className="p-12 border border-dashed border-neutral-800 bg-neutral-950/40 rounded-xl text-center space-y-3">
-            <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center mx-auto text-neutral-500">
+          <div className="p-12 border border-dashed border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950/40 rounded-xl text-center space-y-3">
+            <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center mx-auto text-neutral-500">
               <SearchIcon className="w-6 h-6" />
             </div>
-            <h2 className="text-base font-bold text-white">ไม่พบผลการค้นหา</h2>
-            <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+            <h2 className="text-base font-bold text-neutral-900 dark:text-white">ไม่พบผลการค้นหา</h2>
+            <p className="text-xs text-neutral-600 dark:text-neutral-500 max-w-sm mx-auto">
               ไม่พบคำสั่งซื้อที่ตรงกับ &ldquo;{searchQuery}&rdquo; ในหมวดหมู่นี้
             </p>
             <button
               onClick={() => setSearchQuery("")}
-              className="px-3 py-1.5 bg-neutral-900 border border-neutral-800 text-xs rounded-lg text-white hover:bg-neutral-800 transition-colors"
+              className="px-3 py-1.5 bg-neutral-900 text-white dark:bg-white dark:text-black border border-neutral-800 text-xs rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
             >
               ล้างคำค้นหา
             </button>
@@ -601,21 +601,21 @@ export default function AdminVerificationsPage() {
             {filteredOrders.map((order) => (
               <div
                 key={order.id}
-                className="border border-neutral-800 bg-neutral-950 rounded-xl overflow-hidden divide-y divide-neutral-900 shadow-xl"
+                className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-xl overflow-hidden divide-y divide-neutral-200 dark:divide-neutral-900 shadow-sm dark:shadow-xl"
               >
                 {/* Header bar */}
-                <div className="p-4 bg-neutral-900/60 flex flex-wrap justify-between items-center gap-3">
+                <div className="p-4 bg-neutral-50 dark:bg-neutral-900/60 flex flex-wrap justify-between items-center gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-xs font-bold text-neutral-300">
+                    <span className="font-mono text-xs font-bold text-neutral-700 dark:text-neutral-300">
                       Order #{order.id.slice(0, 8)}...
                     </span>
                     <span
                       className={`text-[11px] px-2.5 py-0.5 rounded font-mono font-bold flex items-center gap-1.5 ${
                         order.status === "WAITING_FOR_VERIFY"
-                          ? "bg-amber-950 text-amber-300 border border-amber-700"
+                          ? "bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-700"
                           : order.status === "PAID"
-                            ? "bg-emerald-950 text-emerald-300 border border-emerald-700"
-                            : "bg-red-950 text-red-300 border border-red-700"
+                            ? "bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-700"
+                            : "bg-red-100 text-red-900 border border-red-300 dark:bg-red-950 dark:text-red-300 dark:border-red-700"
                       }`}
                     >
                       {order.status === "WAITING_FOR_VERIFY" && (
@@ -641,18 +641,18 @@ export default function AdminVerificationsPage() {
                     {order.status === "PAID" && (
                       <span className={`text-[10px] px-2 py-0.5 rounded font-mono ${
                         order.deliveryStatus === "SENT"
-                          ? "bg-neutral-900 text-neutral-400 border border-neutral-800"
+                          ? "bg-neutral-100 text-neutral-600 border border-neutral-300 dark:bg-neutral-900 dark:text-neutral-400 dark:border-neutral-800"
                           : order.deliveryStatus === "FAILED"
-                            ? "bg-red-950/80 text-red-300 border border-red-800"
-                            : "bg-blue-950/80 text-blue-300 border border-blue-800"
+                            ? "bg-red-100 text-red-800 border border-red-300 dark:bg-red-950/80 dark:text-red-300 dark:border-red-800"
+                            : "bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-950/80 dark:text-blue-300 dark:border-blue-800"
                       }`}>
                         EMAIL: {order.deliveryStatus}
                       </span>
                     )}
                   </div>
 
-                  <span className="text-xs text-neutral-400 font-mono">
-                    จำนวน: <strong className="text-white">{order.quantity}</strong> ใบ • ยอดเงิน: <strong className="text-emerald-400 font-mono">฿{order.totalAmount}</strong>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+                    จำนวน: <strong className="text-neutral-900 dark:text-white">{order.quantity}</strong> ใบ • ยอดเงิน: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">฿{order.totalAmount}</strong>
                   </span>
                 </div>
 
@@ -660,74 +660,74 @@ export default function AdminVerificationsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                   {/* Left Column: Details & Audit Trail */}
                   <div className="space-y-4">
-                    <h2 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+                    <h2 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                       ข้อมูลคำสั่งซื้อและผู้ซื้อ
                     </h2>
 
-                    <div className="p-4 bg-neutral-900/60 border border-neutral-800/80 rounded-lg space-y-3 text-xs">
+                    <div className="p-4 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800/80 rounded-lg space-y-3 text-xs">
                       <div>
                         <div className="flex items-center justify-between">
                           <span className="text-neutral-500 block">งานแสดง:</span>
                           {order.event.category && (
-                            <span className="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-neutral-800 text-neutral-300 border border-neutral-700">
+                            <span className="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700">
                               {order.event.category}
                             </span>
                           )}
                         </div>
-                        <strong className="text-white text-sm block mt-0.5">{order.event.name}</strong>
-                        <div className="flex flex-wrap items-center gap-3 text-neutral-400 mt-1">
+                        <strong className="text-neutral-900 dark:text-white text-sm block mt-0.5">{order.event.name}</strong>
+                        <div className="flex flex-wrap items-center gap-3 text-neutral-600 dark:text-neutral-400 mt-1">
                           <span className="flex items-center gap-1">
-                            <MapPinIcon className="w-3.5 h-3.5 text-neutral-500" />
+                            <MapPinIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
                             <span>{order.event.venue}</span>
                           </span>
                           <span className="flex items-center gap-1">
-                            <CalendarIcon className="w-3.5 h-3.5 text-neutral-500" />
+                            <CalendarIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
                             <span>{order.event.eventDate.split("T")[0]} ({order.event.startTime} น.)</span>
                           </span>
                         </div>
                       </div>
 
-                      <div className="border-t border-neutral-800 pt-2 grid grid-cols-2 gap-2">
+                      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-2 grid grid-cols-2 gap-2">
                         <div>
                           <span className="text-neutral-500 block">ชื่อผู้สั่งซื้อ:</span>
-                          <span className="text-neutral-200 font-medium">{order.customer.name}</span>
+                          <span className="text-neutral-800 dark:text-neutral-200 font-medium">{order.customer.name}</span>
                         </div>
                         <div>
                           <span className="text-neutral-500 block">เบอร์โทรศัพท์:</span>
-                          <span className="text-neutral-200 font-medium">{order.customer.phone}</span>
+                          <span className="text-neutral-800 dark:text-neutral-200 font-medium">{order.customer.phone}</span>
                         </div>
                         <div className="col-span-2">
                           <span className="text-neutral-500 block">อีเมล:</span>
-                          <span className="text-neutral-200 font-medium font-mono">{order.customer.email}</span>
+                          <span className="text-neutral-800 dark:text-neutral-200 font-medium font-mono">{order.customer.email}</span>
                         </div>
                       </div>
 
-                      <div className="border-t border-neutral-800 pt-2 flex justify-between items-baseline">
-                        <span className="text-neutral-400 font-semibold">ยอดที่ต้องได้รับ (ตรงเป๊ะ):</span>
-                        <strong className="text-emerald-400 text-base font-mono">฿{order.totalAmount}</strong>
+                      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-2 flex justify-between items-baseline">
+                        <span className="text-neutral-600 dark:text-neutral-400 font-semibold">ยอดที่ต้องได้รับ (ตรงเป๊ะ):</span>
+                        <strong className="text-emerald-600 dark:text-emerald-400 text-base font-mono">฿{order.totalAmount}</strong>
                       </div>
                     </div>
 
                     {/* Audit Trail Log (เก็บข้อมูลการอนุมัติ / ไม่อนุมัติ) */}
                     {order.verification && (order.verification.verifiedAt || order.verification.verifierName) && (
-                      <div className="p-3 bg-neutral-900/40 border border-neutral-800 rounded-lg space-y-1.5 text-xs">
-                        <div className="flex items-center gap-1.5 text-neutral-400 font-semibold">
-                          <UserIcon className="w-3.5 h-3.5 text-neutral-500" />
+                      <div className="p-3 bg-neutral-100 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 rounded-lg space-y-1.5 text-xs">
+                        <div className="flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 font-semibold">
+                          <UserIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
                           <span>บันทึกประวัติการตรวจสอบ (Audit Log)</span>
                         </div>
-                        <div className="text-[11px] text-neutral-300 space-y-1 pl-5">
+                        <div className="text-[11px] text-neutral-700 dark:text-neutral-300 space-y-1 pl-5">
                           {order.verification.verifierName && (
                             <p>
-                              ผู้ดำเนินการ: <strong className="text-white">{order.verification.verifierName}</strong> ({order.verification.verifierEmail})
+                              ผู้ดำเนินการ: <strong className="text-neutral-900 dark:text-white">{order.verification.verifierName}</strong> ({order.verification.verifierEmail})
                             </p>
                           )}
                           {order.verification.verifiedAt && (
-                            <p className="text-neutral-400 font-mono">
+                            <p className="text-neutral-500 dark:text-neutral-400 font-mono">
                               เวลาที่ดำเนินการ: {new Date(order.verification.verifiedAt).toLocaleString("th-TH")}
                             </p>
                           )}
                           {order.verification.rejectReason && (
-                            <div className="p-2 bg-red-950/40 border border-red-900/60 rounded text-red-300 mt-1">
+                            <div className="p-2 bg-red-100 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded text-red-800 dark:text-red-300 mt-1">
                               <strong>เหตุผล / หมายเหตุ:</strong> {order.verification.rejectReason}
                             </div>
                           )}
@@ -738,26 +738,26 @@ export default function AdminVerificationsPage() {
 
                   {/* Right Column: Slip Image Preview */}
                   <div className="space-y-4">
-                    <h2 className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+                    <h2 className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                       หลักฐานสลิปการโอนเงิน
                     </h2>
 
-                    <div className="flex flex-col items-center justify-center p-4 bg-neutral-900/60 border border-neutral-800/80 rounded-lg min-h-[260px] text-center">
+                    <div className="flex flex-col items-center justify-center p-4 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800/80 rounded-lg min-h-[260px] text-center">
                       {order.slipPreview ? (
                         <div className="space-y-2">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={order.slipPreview}
                             alt={`สลิปคำสั่งซื้อ ${order.id}`}
-                            className="max-h-72 object-contain rounded border border-neutral-700 mx-auto shadow-md"
+                            className="max-h-72 object-contain rounded border border-neutral-300 dark:border-neutral-700 mx-auto shadow-md"
                           />
-                          <span className="text-[11px] text-neutral-400 block font-mono">
+                          <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block font-mono">
                             สลิปจาก R2 • วันที่สั่งซื้อ {new Date(order.createdAt).toLocaleDateString("th-TH")}
                           </span>
                         </div>
                       ) : (
                         <div className="text-neutral-500 space-y-2">
-                          <FileTextIcon className="w-10 h-10 text-neutral-600 mx-auto" />
+                          <FileTextIcon className="w-10 h-10 text-neutral-400 dark:text-neutral-600 mx-auto" />
                           <p className="text-xs">ไม่พบไฟล์ภาพสลิป หรือไม่มีการแนบสลิป</p>
                         </div>
                       )}
@@ -766,7 +766,7 @@ export default function AdminVerificationsPage() {
                 </div>
 
                 {/* Footer Action Row */}
-                <div className="p-4 bg-neutral-900/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="p-4 bg-neutral-50 dark:bg-neutral-900/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <p className="text-[11px] text-neutral-500">
                     {order.status === "PAID"
                       ? "อนุมัติแล้ว • บัตรออกเรียบร้อย (สามารถกดส่งอีเมลซ้ำได้หากลูกค้าไม่ได้รับ)"
@@ -780,11 +780,11 @@ export default function AdminVerificationsPage() {
                       <button
                         onClick={() => handleResendEmail(order.id)}
                         disabled={resendingOrderId === order.id}
-                        className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-600 text-white font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
                       >
                         {resendingOrderId === order.id ? (
                           <>
-                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <div className="w-3 h-3 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
                             <span>กำลังส่งอีเมล...</span>
                           </>
                         ) : (
@@ -800,11 +800,11 @@ export default function AdminVerificationsPage() {
                       <button
                         onClick={() => handleRevertOrder(order.id)}
                         disabled={revertingOrderId === order.id}
-                        className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-600 text-amber-300 font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 text-amber-800 dark:text-amber-300 font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
                       >
                         {revertingOrderId === order.id ? (
                           <>
-                            <div className="w-3 h-3 border-2 border-amber-300 border-t-transparent rounded-full animate-spin" />
+                            <div className="w-3 h-3 border-2 border-amber-500 dark:border-amber-300 border-t-transparent rounded-full animate-spin" />
                             <span>กำลังดึงกลับ...</span>
                           </>
                         ) : (
@@ -822,11 +822,11 @@ export default function AdminVerificationsPage() {
                         <button
                           onClick={() => handleApproveOrder(order.id)}
                           disabled={approvingOrderId === order.id}
-                          className="flex-1 sm:flex-initial px-4 py-2 bg-white text-black hover:bg-neutral-200 font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                          className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
                         >
                           {approvingOrderId === order.id ? (
                             <>
-                              <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                              <div className="w-3 h-3 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin" />
                               <span>กำลังออกตั๋ว...</span>
                             </>
                           ) : (
@@ -844,7 +844,7 @@ export default function AdminVerificationsPage() {
                             setRejectReason("");
                             setActionFeedback(null);
                           }}
-                          className="inline-flex items-center justify-center gap-1.5 flex-1 sm:flex-initial px-4 py-2 bg-red-950 hover:bg-red-900 border border-red-700 text-red-200 font-bold rounded text-xs transition-colors"
+                          className="inline-flex items-center justify-center gap-1.5 flex-1 sm:flex-initial px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 border border-red-300 dark:bg-red-950 dark:hover:bg-red-900 dark:border-red-700 dark:text-red-200 font-bold rounded text-xs transition-colors"
                         >
                           <XIcon className="w-3.5 h-3.5" />
                           <span>Reject / ปฏิเสธ</span>
@@ -862,52 +862,52 @@ export default function AdminVerificationsPage() {
       {/* Reject Modal with Quick Presets (รองรับกรณีโอนไม่ครบ / สลิปผิด) */}
       {rejectingOrder && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-neutral-950 border border-neutral-800 rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="space-y-1">
-              <h2 className="text-lg font-bold text-white">ปฏิเสธคำสั่งซื้อ #{rejectingOrder.id.slice(0, 8)}...</h2>
-              <p className="text-xs text-neutral-400">
-                ลูกค้า: <strong className="text-white">{rejectingOrder.customer.name}</strong> • ยอดคำสั่งซื้อ: <strong className="text-emerald-400 font-mono">฿{rejectingOrder.totalAmount}</strong>
+              <h2 className="text-lg font-bold text-neutral-900 dark:text-white">ปฏิเสธคำสั่งซื้อ #{rejectingOrder.id.slice(0, 8)}...</h2>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                ลูกค้า: <strong className="text-neutral-900 dark:text-white">{rejectingOrder.customer.name}</strong> • ยอดคำสั่งซื้อ: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">฿{rejectingOrder.totalAmount}</strong>
               </p>
             </div>
 
             {actionFeedback && (
-              <div role="alert" className="p-2.5 bg-red-950 border border-red-700 text-red-200 text-xs rounded flex items-center gap-1.5">
-                <AlertTriangleIcon className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              <div role="alert" className="p-2.5 bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-700 text-red-900 dark:text-red-200 text-xs rounded flex items-center gap-1.5">
+                <AlertTriangleIcon className="w-3.5 h-3.5 text-red-500 dark:text-red-400 shrink-0" />
                 <span>{actionFeedback}</span>
               </div>
             )}
 
             {/* Quick Reason Presets */}
             <div className="space-y-1.5">
-              <span className="text-[11px] text-neutral-400 block font-medium">
+              <span className="text-[11px] text-neutral-600 dark:text-neutral-400 block font-medium">
                 เลือกเหตุผลสำเร็จรูป (คลิกเพื่อใส่ข้อความ):
               </span>
               <div className="grid grid-cols-1 gap-1.5">
                 <button
                   type="button"
                   onClick={() => setRejectReason(`ยอดเงินโอนไม่ครบตามจำนวนคำสั่งซื้อ (ยอดที่ต้องชำระคือ ฿${rejectingOrder.totalAmount}) กรุณาติดต่อเจ้าหน้าที่หรือทำรายการใหม่`)}
-                  className="text-left p-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 rounded text-[11px] text-neutral-300 transition-colors"
+                  className="text-left p-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded text-[11px] text-neutral-700 dark:text-neutral-300 transition-colors"
                 >
                   ⚠️ <strong>โอนเงินไม่ครบถ้วน</strong> (ยอดโอนไม่ถึง ฿{rejectingOrder.totalAmount})
                 </button>
                 <button
                   type="button"
                   onClick={() => setRejectReason("ไม่พบยอดเงินเข้าบัญชี หรือบัญชีปลายทางไม่ถูกต้อง กรุณาตรวจสอบสลิปของท่าน")}
-                  className="text-left p-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 rounded text-[11px] text-neutral-300 transition-colors"
+                  className="text-left p-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded text-[11px] text-neutral-700 dark:text-neutral-300 transition-colors"
                 >
                   ⚠️ <strong>สลิปไม่ถูกต้อง / บัญชีไม่ตรง</strong>
                 </button>
                 <button
                   type="button"
                   onClick={() => setRejectReason("วันเวลาในสลิปไม่สอดคล้องกับช่วงเวลาที่ทำการสั่งซื้อบัตร")}
-                  className="text-left p-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 rounded text-[11px] text-neutral-300 transition-colors"
+                  className="text-left p-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded text-[11px] text-neutral-700 dark:text-neutral-300 transition-colors"
                 >
                   ⚠️ <strong>วันเวลาในสลิปไม่ถูกต้อง</strong>
                 </button>
                 <button
                   type="button"
                   onClick={() => setRejectReason("สลิปหลักฐานการโอนเงินนี้เคยถูกใช้งานในระบบแล้ว (สลิปซ้ำ)")}
-                  className="text-left p-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 rounded text-[11px] text-neutral-300 transition-colors"
+                  className="text-left p-2 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded text-[11px] text-neutral-700 dark:text-neutral-300 transition-colors"
                 >
                   ⚠️ <strong>สลิปซ้ำในระบบ</strong>
                 </button>
@@ -915,7 +915,7 @@ export default function AdminVerificationsPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="reject-reason-input" className="block text-xs text-neutral-300">
+              <label htmlFor="reject-reason-input" className="block text-xs text-neutral-700 dark:text-neutral-300">
                 รายละเอียดเหตุผลที่จะแจ้งลูกค้าในอีเมล:
               </label>
               <textarea
@@ -924,19 +924,19 @@ export default function AdminVerificationsPage() {
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="ระบุเหตุผล เช่น โอนเงินขาด 200 บาท หรือ สลิปไม่ชัดเจน..."
-                className="w-full p-2.5 bg-neutral-900 border border-neutral-700 rounded text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-white"
+                className="w-full p-2.5 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-900 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white"
               />
             </div>
 
             <p className="text-[11px] text-neutral-500 leading-relaxed">
-              * เมื่อยืนยัน ระบบจะปรับสถานะเป็น <strong className="text-neutral-300">REJECTED</strong>, คืนจำนวนบัตร {rejectingOrder.quantity} ใบเข้าสู่สต็อก และส่งอีเมลแจ้งลูกค้า (สามารถดึงกลับมาตรวจสอบใหม่ได้ในภายหลัง)
+              * เมื่อยืนยัน ระบบจะปรับสถานะเป็น <strong className="text-neutral-700 dark:text-neutral-300">REJECTED</strong>, คืนจำนวนบัตร {rejectingOrder.quantity} ใบเข้าสู่สต็อก และส่งอีเมลแจ้งลูกค้า (สามารถดึงกลับมาตรวจสอบใหม่ได้ในภายหลัง)
             </p>
 
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setRejectingOrder(null)}
                 disabled={submittingAction}
-                className="px-4 py-2 bg-neutral-900 border border-neutral-800 text-neutral-300 rounded text-xs hover:bg-neutral-800"
+                className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 rounded text-xs"
               >
                 ยกเลิก
               </button>
@@ -953,7 +953,7 @@ export default function AdminVerificationsPage() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 py-6 text-center text-xs text-neutral-600">
+      <footer className="border-t border-neutral-200 dark:border-neutral-900 py-6 text-center text-xs text-neutral-500 dark:text-neutral-600">
         <p>E-Tikket Admin Dashboard • MVP</p>
       </footer>
     </div>

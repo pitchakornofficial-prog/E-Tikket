@@ -14,7 +14,6 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // Check saved preference or system preference
@@ -23,13 +22,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setThemeState(savedTheme);
       applyTheme(savedTheme);
     } else {
-      // Default to dark as per MVP aesthetic, or respect system preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initialTheme: Theme = prefersDark ? "dark" : "dark"; // Default dark
+      // Check system preference: if OS prefers light, use light; else dark
+      const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+      const initialTheme: Theme = prefersLight ? "light" : "dark";
       setThemeState(initialTheme);
       applyTheme(initialTheme);
     }
-    setMounted(true);
   }, []);
 
   const applyTheme = (t: Theme) => {

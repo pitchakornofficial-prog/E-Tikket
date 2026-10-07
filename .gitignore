@@ -7,3 +7,6 @@ dist/
 coverage/
 *.tsbuildinfo
 .storage/
+prisma/*.db
+prisma/*.db-journal
+*.db

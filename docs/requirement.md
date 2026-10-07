@@ -664,3 +664,21 @@ Existing agreed design constraints D-01 through D-08 apply to news feature pages
 ### Security note
 
 Ticket-number search intentionally does not expose QR codes or view_token access. It serves as a status-check tool only. QR access and PDF download require the view_token delivered by email, maintaining the existing [Separate Guest Capabilities](../CONTEXT.md) invariant (rule 10).
+
+## Confirmed Dark / Light Mode Decisions
+
+- Scope: Implement Dark and Light mode themes across the entire platform (Public, Admin, and Organizer).
+- Status: Agreed
+- Source: explicit user answers in `$grill-workflow` on 2026-10-07 (Asia/Bangkok).
+- These decisions extend the UI requirements without altering the database schema or core event workflows.
+
+| ID | Selected option | State | Confirmed decision |
+| --- | --- | --- | --- |
+| P1 | A | Agreed | Default theme is based on the user's System Preference. If system preference cannot be determined, it falls back to Dark Mode (aligning with the original design). |
+| P2 | A | Agreed | The theme toggle applies globally across all views: Public guest pages, Admin dashboard, and Organizer dashboard. |
+| P3 | A | Agreed | Theme preference is persisted via Local Storage or a Cookie in the user's browser. No database schema changes are required (theme is not tied to the user account in the DB). |
+| P4 | A | Agreed | The toggle UI (Sun/Moon icon) is placed prominently in the Navbar or top header area for easy access on all pages. |
+
+### Design Notes
+
+The current design direction uses a "Modern Monochromatic / High-Contrast Black & White aesthetic". Light mode will invert this paradigm (white backgrounds, black text, neutral gray borders) while retaining the minimalist, high-contrast feel. Semantic colors (e.g., emerald for PAID, red for REJECTED) will be adjusted for accessible contrast in both modes.
