@@ -17,6 +17,7 @@ import {
   TicketIcon,
   InfoIcon,
   RefreshCwIcon,
+  DownloadIcon,
 } from "@/components/icons";
 
 
@@ -54,6 +55,43 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
   const [tickets, setTickets] = useState<TicketItem[]>([]);
+  const [downloadingTicket, setDownloadingTicket] = useState<string | null>(null);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+
+  const handleDownload = async (ticketNumber?: string) => {
+    if (!token) return;
+    const target = ticketNumber || "ALL";
+    setDownloadingTicket(target);
+    setDownloadError(null);
+
+    try {
+      const url = ticketNumber
+        ? `/api/tickets/download?token=${encodeURIComponent(token)}&ticket=${encodeURIComponent(ticketNumber)}`
+        : `/api/tickets/download?token=${encodeURIComponent(token)}`;
+
+      const res = await fetch(url);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error?.message || "ไม่สามารถดาวน์โหลดไฟล์ PDF ได้");
+      }
+
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = ticketNumber
+        ? `ticket-${ticketNumber}.pdf`
+        : `tickets-order-${orderInfo?.id.slice(0, 8) || "tickets"}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(a);
+    } catch (err: unknown) {
+      setDownloadError(err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการดาวน์โหลด PDF");
+    } finally {
+      setDownloadingTicket(null);
+    }
+  };
 
   const fetchTickets = useCallback(async () => {
     if (!token) {
@@ -193,6 +231,50 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
               </p>
             </div>
 
+            {/* Download Error Banner */}
+            {downloadError && (
+              <div className="max-w-2xl mx-auto p-3.5 bg-red-950/60 border border-red-800 rounded-lg text-center text-xs text-red-300 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <AlertTriangleIcon className="w-4 h-4 text-red-400 shrink-0" />
+                  <span>{downloadError}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setDownloadError(null)}
+                  className="text-neutral-400 hover:text-white p-1"
+                >
+                  <XIcon className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* Batch Download Button (AC-05, AC-06: for 2+ tickets) */}
+            {tickets.length >= 2 && (
+              <div className="max-w-2xl mx-auto flex items-center justify-between pb-2 border-b border-neutral-900">
+                <span className="text-xs font-mono text-neutral-400">
+                  มีตั๋วทั้งหมด {tickets.length} ใบในคำสั่งซื้อนี้
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleDownload()}
+                  disabled={!!downloadingTicket}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-black text-xs font-bold rounded-lg hover:bg-neutral-200 transition-colors disabled:opacity-50 shadow-md"
+                >
+                  {downloadingTicket === "ALL" ? (
+                    <>
+                      <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                      <span>กำลังสร้าง PDF ทั้งหมด...</span>
+                    </>
+                  ) : (
+                    <>
+                      <DownloadIcon className="w-3.5 h-3.5" />
+                      <span>ดาวน์โหลดทั้งหมด ({tickets.length} ใบ)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
             {/* Ticket Cards List */}
             <div className="space-y-6 max-w-2xl mx-auto">
               {tickets.map((ticket, index) => (
@@ -268,8 +350,8 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
                       </div>
                     </div>
 
-                    {/* QR Code Presentation Box */}
-                    <div className="flex flex-col items-center space-y-2 p-3 bg-neutral-900/60 border border-neutral-800 rounded-lg">
+                    {/* QR Code Presentation Box & Individual Download Button */}
+                    <div className="flex flex-col items-center space-y-2 p-3 bg-neutral-900/60 border border-neutral-800 rounded-lg w-full sm:w-auto">
                       <div className="p-2 bg-white rounded-md shadow-inner flex items-center justify-center">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
@@ -282,6 +364,27 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
                       <span className="text-[10px] text-neutral-400 font-mono">
                         สแกนเพื่อเข้างาน • ใบที่ {index + 1}
                       </span>
+
+                      {/* Download PDF Button (AC-04, AC-10) */}
+                      <button
+                        type="button"
+                        onClick={() => handleDownload(ticket.ticketNumber)}
+                        disabled={!!downloadingTicket}
+                        className="w-full mt-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-xs font-semibold text-white rounded-md transition-colors disabled:opacity-50"
+                        aria-label={`ดาวน์โหลด PDF บัตร ${ticket.ticketNumber}`}
+                      >
+                        {downloadingTicket === ticket.ticketNumber ? (
+                          <>
+                            <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                            <span>กำลังสร้าง PDF...</span>
+                          </>
+                        ) : (
+                          <>
+                            <DownloadIcon className="w-3.5 h-3.5" />
+                            <span>ดาวน์โหลด PDF</span>
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>

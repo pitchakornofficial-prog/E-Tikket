@@ -15,7 +15,7 @@ Both tasks are independent and can run in parallel.
 ## Task List
 
 - [x] `TASK-021`: [Ticket Number Search](TASK-021-ticket-number-search.md)
-- [ ] `TASK-022`: [PDF Ticket Download](TASK-022-pdf-ticket-download.md)
+- [x] `TASK-022`: [PDF Ticket Download](TASK-022-pdf-ticket-download.md)
 
 ## Acceptance Coverage
 
