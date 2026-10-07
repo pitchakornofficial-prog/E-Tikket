@@ -210,6 +210,13 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
             {article.title}
           </h1>
 
+          {/* Editorial Standfirst / Deck */}
+          {article.excerpt && (
+            <p className="text-base sm:text-lg text-neutral-300 font-normal leading-relaxed pt-1">
+              {article.excerpt}
+            </p>
+          )}
+
           {/* Author and Date Meta */}
           <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-neutral-400 pt-2">
             <span className="flex items-center gap-1.5">
@@ -239,13 +246,6 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
               alt={article.title}
               className="w-full h-full object-cover"
             />
-          </div>
-        )}
-
-        {/* Article Excerpt */}
-        {article.excerpt && (
-          <div className="my-6 p-4 rounded-lg bg-neutral-950 border-l-2 border-white text-neutral-300 text-sm sm:text-base font-medium leading-relaxed">
-            {article.excerpt}
           </div>
         )}
 
