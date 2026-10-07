@@ -1,6 +1,6 @@
 # TASK-019: Public Article Listing & Discovery
 
-- Status: todo
+- Status: done
 - Spec: [docs/specs/SPEC-003-news-blog-seo.md](../../docs/specs/SPEC-003-news-blog-seo.md)
 
 ## Goal
@@ -16,11 +16,11 @@ Read:
 
 ## Todo
 
-- [ ] Add a "News" link to the main public navigation bar (AC-01).
-- [ ] Implement the public API route `/api/articles` (or equivalent data fetching logic for SSR/ISR) returning only PUBLISHED articles, supporting reverse-chronological order and pagination.
-- [ ] Support `?category=<slug>` and `?tag=<slug>` filtering in the data fetching logic.
-- [ ] Build the `/news` page component rendering article cards (cover image, title, category, date, excerpt) (AC-02).
-- [ ] Implement UI controls for category and tag filtering, updating the URL query parameters (AC-03, AC-04).
-- [ ] Ensure clicking a tag on an article detail page (which will be built in TASK-020, but the link logic belongs here) navigates to `/news?tag=<slug>` (AC-30).
-- [ ] Verify AC-01, AC-02, AC-03, AC-04, AC-30 via unit tests and manual browsing.
-- [ ] Commit the task-scoped changes.
+- [x] Add a "News" link to the main public navigation bar (AC-01 in `src/components/public-navbar.tsx`).
+- [x] Implement the public API route `/api/articles` returning only PUBLISHED articles in reverse-chronological order with pagination support.
+- [x] Support `?category=<slug>` and `?tag=<slug>` filtering in data fetching logic.
+- [x] Build the `/news` page component rendering article cards (cover image, title, category, date, excerpt) (AC-02 in `src/app/news/page.tsx`).
+- [x] Implement UI controls for category and tag filtering, updating URL query parameters (AC-03, AC-04).
+- [x] Ensure clicking a tag on an article navigates to `/news?tag=<slug>` (AC-30).
+- [x] Verify AC-01, AC-02, AC-03, AC-04, AC-30 via scratch test script, `npm run typecheck`, `npm run lint`, and `npm run build`.
+- [x] Review approved: Public discovery, listing, filtering, pagination, and navbar integration verified. Status transitioned to done.

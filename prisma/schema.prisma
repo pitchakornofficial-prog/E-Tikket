@@ -72,6 +72,7 @@ model User {
   events        Event[]      @relation("OrganizerEvents")
   verifiedSlips Payment[]    @relation("AdminVerifiedPayments")
   scans         TicketScan[] @relation("StaffScans")
+  articles      Article[]    @relation("UserArticles")
 
   @@map("users")
 }
@@ -96,6 +97,7 @@ model Event {
   orders       Order[]
   tickets      Ticket[]
   scans        TicketScan[] @relation("EventScans")
+  articles     Article[]   @relation("ArticleToEvent")
 
   @@index([status, eventDate])
   @@map("events")
@@ -188,3 +190,62 @@ model TicketScan {
   @@index([ticketId, scannedAt])
   @@map("ticket_scans")
 }
+
+enum ArticleStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+model ArticleCategory {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  articles  Article[]
+
+  @@map("article_categories")
+}
+
+model ArticleTag {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  articles  Article[] @relation("ArticleToTag")
+
+  @@map("article_tags")
+}
+
+model Article {
+  id             String          @id @default(cuid())
+  title          String
+  slug           String          @unique
+  content        String          @db.Text
+  excerpt        String?         @db.Text
+  coverImageUrl  String?         @map("cover_image_url")
+  seoTitle       String?         @map("seo_title")
+  seoDescription String?         @map("seo_description") @db.Text
+  ogImageUrl     String?         @map("og_image_url")
+  status         ArticleStatus   @default(DRAFT)
+  authorId       String          @map("author_id")
+  categoryId     String          @map("category_id")
+  publishedAt    DateTime?       @map("published_at")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  author         User            @relation("UserArticles", fields: [authorId], references: [id])
+  category       ArticleCategory @relation(fields: [categoryId], references: [id])
+  tags           ArticleTag[]    @relation("ArticleToTag")
+  events         Event[]         @relation("ArticleToEvent")
+
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@index([authorId])
+  @@map("articles")
+}
+

@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "./logout-button";
-import { ClipboardCheckIcon, MusicIcon } from "./icons";
+import { ClipboardCheckIcon, MusicIcon, FileTextIcon, SlidersIcon } from "./icons";
 
 export function AdminNav() {
   const pathname = usePathname();
 
   const isVerifications = pathname.startsWith("/admin/verifications");
   const isEvents = pathname.startsWith("/admin/events");
+  const isArticles = pathname.startsWith("/admin/articles");
+  const isCategories = pathname.startsWith("/admin/categories");
 
   return (
     <header className="border-b border-neutral-900 bg-neutral-950/90 backdrop-blur sticky top-0 z-40">
@@ -42,6 +44,28 @@ export function AdminNav() {
             >
               <MusicIcon className="w-3.5 h-3.5" />
               <span>จัดการคอนเสิร์ต</span>
+            </Link>
+            <Link
+              href="/admin/articles"
+              className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
+                isArticles
+                  ? "bg-neutral-800 text-white font-bold"
+                  : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+              }`}
+            >
+              <FileTextIcon className="w-3.5 h-3.5" />
+              <span>จัดการบทความ</span>
+            </Link>
+            <Link
+              href="/admin/categories"
+              className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
+                isCategories
+                  ? "bg-neutral-800 text-white font-bold"
+                  : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+              }`}
+            >
+              <SlidersIcon className="w-3.5 h-3.5" />
+              <span>หมวดหมู่บทความ</span>
             </Link>
           </nav>
         </div>

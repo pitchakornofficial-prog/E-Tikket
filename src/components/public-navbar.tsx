@@ -33,6 +33,16 @@ export function PublicNavbar() {
             สำรวจงานแสดง
           </Link>
           <Link
+            href="/news"
+            className={`transition-colors ${
+              pathname.startsWith("/news")
+                ? "text-white font-medium"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            ข่าวสาร
+          </Link>
+          <Link
             href="/my-tickets"
             className={`transition-colors ${
               isMyTickets

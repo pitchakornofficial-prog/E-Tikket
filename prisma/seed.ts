@@ -126,6 +126,23 @@ async function main() {
 
   await seedCleanSampleEvents(organizerUser.id);
   console.info("Seeded clean 4 sample published events with categories.");
+
+  // Seed default article categories
+  const defaultCategories = [
+    { name: "ข่าวอีเวนต์", slug: "event-news" },
+    { name: "รีวิวคอนเสิร์ต", slug: "concert-reviews" },
+    { name: "บทสัมภาษณ์ศิลปิน", slug: "artist-interviews" },
+    { name: "แนะนำดนตรี", slug: "music-guides" },
+  ];
+
+  for (const cat of defaultCategories) {
+    await prisma.articleCategory.upsert({
+      where: { slug: cat.slug },
+      create: cat,
+      update: { name: cat.name },
+    });
+  }
+  console.info("Seeded default article categories.");
 }
 
 main()

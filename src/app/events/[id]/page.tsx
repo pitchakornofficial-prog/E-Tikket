@@ -10,6 +10,7 @@ import {
   UserIcon,
   CheckIcon,
   ArrowLeftIcon,
+  FileTextIcon,
 } from "@/components/icons";
 import { formatPrice } from "@/lib/format";
 
@@ -29,6 +30,21 @@ export default async function EventDetailPage({ params }: PageProps) {
       include: {
         organizer: {
           select: { name: true },
+        },
+        articles: {
+          where: { status: "PUBLISHED" },
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            excerpt: true,
+            coverImageUrl: true,
+            publishedAt: true,
+            createdAt: true,
+            category: { select: { name: true } },
+          },
+          orderBy: { publishedAt: "desc" },
+          take: 3,
         },
       },
     });
@@ -169,6 +185,50 @@ export default async function EventDetailPage({ params }: PageProps) {
                 </div>
               </div>
             </div>
+
+            {/* Related Articles Section (AC-26) */}
+            {event.articles && event.articles.length > 0 && (
+              <div className="border border-neutral-800 bg-neutral-950 rounded-lg p-6 space-y-4">
+                <div className="flex items-center gap-2 border-b border-neutral-900 pb-3">
+                  <FileTextIcon className="w-4 h-4 text-white" />
+                  <h2 className="text-sm font-bold text-white uppercase tracking-wider">
+                    บทความและข่าวสารที่เกี่ยวข้อง (Related Articles)
+                  </h2>
+                </div>
+
+                <div className="space-y-3">
+                  {event.articles.map((art) => (
+                    <Link
+                      key={art.id}
+                      href={`/news/${art.slug}`}
+                      className="flex items-start gap-3 p-3 rounded-md bg-neutral-900/60 hover:bg-neutral-900 border border-neutral-800/60 hover:border-neutral-700 transition-colors group"
+                    >
+                      {art.coverImageUrl && (
+                        <div className="w-16 h-16 rounded overflow-hidden bg-neutral-950 shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={art.coverImageUrl}
+                            alt={art.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <span className="text-[10px] font-mono text-neutral-400 bg-black/60 px-1.5 py-0.5 rounded">
+                          {art.category.name}
+                        </span>
+                        <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-neutral-200 line-clamp-1">
+                          {art.title}
+                        </h3>
+                        <p className="text-[11px] text-neutral-400 line-clamp-1">
+                          {art.excerpt || ""}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column: Ticket Purchase Box */}
