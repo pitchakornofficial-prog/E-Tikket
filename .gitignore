@@ -10,3 +10,5 @@ coverage/
 prisma/*.db
 prisma/*.db-journal
 *.db
+
+certificates

@@ -55,12 +55,24 @@ export async function sendTicketEmail(
 
   const { to, customerName, orderId, eventName, tickets, viewUrl } = payload;
 
-  // Redact viewToken parameter in ordinary console log
-  const sanitizedViewUrl = viewUrl.replace(/token=[a-zA-Z0-9_-]+/, "token=[REDACTED]");
-
-  console.log(
-    `[EMAIL:TICKETS] To: ${to} | Customer: ${customerName} | Order: #${orderId} | Event: ${eventName} | TicketsCount: ${tickets.length} | ViewLink: ${sanitizedViewUrl}`,
-  );
+  if (process.env.NODE_ENV !== "production") {
+    console.log(
+      `\n======================================================================\n` +
+      `🎟️ [DEV EMAIL DISPATCH] จำลองการจัดส่งอีเมลตั๋วคอนเสิร์ตสำเร็จ!\n` +
+      `ผู้รับ: ${to} (${customerName})\n` +
+      `งาน: ${eventName} (ออเดอร์: #${orderId})\n` +
+      `จำนวนตั๋ว: ${tickets.length} ใบ\n` +
+      `👉 คลิกลิงก์เพื่อเปิดดูตั๋ว & QR Code ของลูกค้า:\n` +
+      `   http://localhost:3001${viewUrl}\n` +
+      `======================================================================\n`,
+    );
+  } else {
+    // Redact viewToken parameter in ordinary production console log
+    const sanitizedViewUrl = viewUrl.replace(/token=[a-zA-Z0-9_-]+/, "token=[REDACTED]");
+    console.log(
+      `[EMAIL:TICKETS] To: ${to} | Customer: ${customerName} | Order: #${orderId} | Event: ${eventName} | TicketsCount: ${tickets.length} | ViewLink: ${sanitizedViewUrl}`,
+    );
+  }
 
   return { success: true };
 }

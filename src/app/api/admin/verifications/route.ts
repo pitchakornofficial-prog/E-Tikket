@@ -117,6 +117,19 @@ export async function GET(request: Request) {
           }
         }
 
+        let viewUrl: string | null = null;
+        if (order.status === "PAID" && order.deliveryArtifactKey) {
+          try {
+            const deliveryArtifact = await getPrivateArtifact(order.deliveryArtifactKey);
+            if (deliveryArtifact) {
+              const parsed = JSON.parse(deliveryArtifact.data.toString("utf-8"));
+              viewUrl = parsed.viewUrl || null;
+            }
+          } catch {
+            // Keep viewUrl null
+          }
+        }
+
         return {
           id: order.id,
           customer: {
@@ -136,6 +149,7 @@ export async function GET(request: Request) {
           totalAmount: order.totalAmount.toFixed(2),
           status: order.status,
           deliveryStatus: order.deliveryStatus,
+          viewUrl,
           slipPreview,
           createdAt: order.createdAt.toISOString(),
           verification: latestPayment

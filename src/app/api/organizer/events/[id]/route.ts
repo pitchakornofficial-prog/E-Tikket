@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/auth";
+import { getPrivateArtifact } from "@/lib/storage";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -83,22 +84,40 @@ export async function GET(request: Request, { params }: RouteParams) {
     const checkinRatePercent =
       soldTickets > 0 ? ((insideCount / soldTickets) * 100).toFixed(1) : "0";
 
-    const formattedOrders = event.orders.map((order) => ({
-      id: order.id,
-      customerName: order.customerName,
-      customerEmail: order.customerEmail,
-      customerPhone: order.customerPhone,
-      quantity: order.quantity,
-      totalAmount: Number(order.totalAmount),
-      organizerRevenue: Number(order.organizerRevenue),
-      status: order.status,
-      createdAt: order.createdAt.toISOString(),
-      tickets: order.tickets.map((t) => ({
-        id: t.id,
-        ticketNumber: t.ticketNumber,
-        status: t.status,
-      })),
-    }));
+    const formattedOrders = await Promise.all(
+      event.orders.map(async (order) => {
+        let viewUrl: string | null = null;
+        if (order.status === "PAID" && order.deliveryArtifactKey) {
+          try {
+            const artifact = await getPrivateArtifact(order.deliveryArtifactKey);
+            if (artifact) {
+              const parsed = JSON.parse(artifact.data.toString("utf-8"));
+              viewUrl = parsed.viewUrl || null;
+            }
+          } catch {
+            // Keep viewUrl null
+          }
+        }
+
+        return {
+          id: order.id,
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone,
+          quantity: order.quantity,
+          totalAmount: Number(order.totalAmount),
+          organizerRevenue: Number(order.organizerRevenue),
+          status: order.status,
+          viewUrl,
+          createdAt: order.createdAt.toISOString(),
+          tickets: order.tickets.map((t) => ({
+            id: t.id,
+            ticketNumber: t.ticketNumber,
+            status: t.status,
+          })),
+        };
+      })
+    );
 
     return jsonResponse({
       event: {

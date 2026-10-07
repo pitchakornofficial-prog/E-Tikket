@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
+import Link from "next/link";
 import { AdminNav } from "@/components/admin-nav";
 import {
   CalendarIcon,
@@ -17,6 +18,7 @@ import {
   UserIcon,
   SearchIcon,
   MusicIcon,
+  TicketIcon,
 } from "@/components/icons";
 
 interface VerificationOrder {
@@ -38,6 +40,7 @@ interface VerificationOrder {
   totalAmount: string;
   status: "WAITING_FOR_VERIFY" | "PAID" | "REJECTED";
   deliveryStatus: "PENDING" | "SENT" | "FAILED";
+  viewUrl?: string | null;
   slipPreview: string | null;
   createdAt: string;
   verification?: {
@@ -777,23 +780,37 @@ export default function AdminVerificationsPage() {
 
                   <div className="flex items-center gap-3 w-full sm:w-auto">
                     {order.status === "PAID" && (
-                      <button
-                        onClick={() => handleResendEmail(order.id)}
-                        disabled={resendingOrderId === order.id}
-                        className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
-                      >
-                        {resendingOrderId === order.id ? (
-                          <>
-                            <div className="w-3 h-3 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
-                            <span>กำลังส่งอีเมล...</span>
-                          </>
-                        ) : (
-                          <>
-                            <ArrowRightIcon className="w-3.5 h-3.5" />
-                            <span>ส่งอีเมลบัตรเดิมอีกครั้ง</span>
-                          </>
+                      <>
+                        {order.viewUrl && (
+                          <Link
+                            href={order.viewUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 sm:flex-initial px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                            title="เปิดดูหน้าบัตรของลูกค้าและคิวอาร์โค้ดจริง"
+                          >
+                            <TicketIcon className="w-3.5 h-3.5" />
+                            <span>เปิดดูตั๋ว & QR Code</span>
+                          </Link>
                         )}
-                      </button>
+                        <button
+                          onClick={() => handleResendEmail(order.id)}
+                          disabled={resendingOrderId === order.id}
+                          className="flex-1 sm:flex-initial px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 text-neutral-900 dark:text-white font-bold rounded text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        >
+                          {resendingOrderId === order.id ? (
+                            <>
+                              <div className="w-3 h-3 border-2 border-neutral-900 dark:border-white border-t-transparent rounded-full animate-spin" />
+                              <span>กำลังส่งอีเมล...</span>
+                            </>
+                          ) : (
+                            <>
+                              <ArrowRightIcon className="w-3.5 h-3.5" />
+                              <span>ส่งอีเมลบัตรเดิมอีกครั้ง</span>
+                            </>
+                          )}
+                        </button>
+                      </>
                     )}
 
                     {order.status === "REJECTED" && (

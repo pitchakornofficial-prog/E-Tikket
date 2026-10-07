@@ -61,6 +61,7 @@ interface OrderDetail {
   totalAmount: number;
   organizerRevenue: number;
   status: "PENDING_PAYMENT" | "WAITING_FOR_VERIFY" | "PAID" | "CANCELLED" | "EXPIRED";
+  viewUrl?: string | null;
   createdAt: string;
   tickets: TicketItem[];
 }
@@ -891,27 +892,43 @@ export default function OrganizerEventsPage() {
 
                                   {/* Order Status */}
                                   <td className="py-3.5 px-4 align-top whitespace-nowrap">
-                                    <span
-                                      className={`inline-block px-2.5 py-1 rounded text-[11px] font-bold ${
-                                        ord.status === "PAID"
-                                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                                    <div>
+                                      <span
+                                        className={`inline-block px-2.5 py-1 rounded text-[11px] font-bold ${
+                                          ord.status === "PAID"
+                                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                                            : ord.status === "WAITING_FOR_VERIFY"
+                                            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                            : ord.status === "PENDING_PAYMENT"
+                                            ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700"
+                                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+                                        }`}
+                                      >
+                                        {ord.status === "PAID"
+                                          ? "ชำระแล้ว"
                                           : ord.status === "WAITING_FOR_VERIFY"
-                                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                          ? "รอตรวจสอบสลิป"
                                           : ord.status === "PENDING_PAYMENT"
-                                          ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700"
-                                          : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
-                                      }`}
-                                    >
-                                      {ord.status === "PAID"
-                                        ? "ชำระแล้ว"
-                                        : ord.status === "WAITING_FOR_VERIFY"
-                                        ? "รอตรวจสอบสลิป"
-                                        : ord.status === "PENDING_PAYMENT"
-                                        ? "รอชำระเงิน"
-                                        : ord.status === "EXPIRED"
-                                        ? "หมดอายุ"
-                                        : "ยกเลิก"}
-                                    </span>
+                                          ? "รอชำระเงิน"
+                                          : ord.status === "EXPIRED"
+                                          ? "หมดอายุ"
+                                          : "ยกเลิก"}
+                                      </span>
+                                      {ord.viewUrl && (
+                                        <div className="mt-1">
+                                          <Link
+                                            href={ord.viewUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+                                            title="เปิดดูหน้าบัตรของลูกค้าและ QR Code จริง"
+                                          >
+                                            <TicketIcon className="w-3 h-3" />
+                                            <span>เปิดดูตั๋ว & QR</span>
+                                          </Link>
+                                        </div>
+                                      )}
+                                    </div>
                                   </td>
                                 </tr>
                               ))
