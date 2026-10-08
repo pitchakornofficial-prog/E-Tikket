@@ -1,0 +1,27 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DescribeTargetInSydney",
+      "Effect": "Allow",
+      "Action": "ec2:DescribeInstances",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "ap-southeast-2"
+        }
+      }
+    },
+    {
+      "Sid": "ConnectOnlyToETikketHost",
+      "Effect": "Allow",
+      "Action": "ec2-instance-connect:SendSSHPublicKey",
+      "Resource": "arn:aws:ec2:ap-southeast-2:901708383730:instance/i-0b8de89cc3f31ba14",
+      "Condition": {
+        "StringEquals": {
+          "ec2:osuser": "ubuntu"
+        }
+      }
+    }
+  ]
+}

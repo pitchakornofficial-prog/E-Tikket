@@ -12,3 +12,6 @@ prisma/*.db-journal
 *.db
 
 certificates
+.deploy/
+*.db-wal
+*.db-shm

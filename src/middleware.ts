@@ -28,6 +28,8 @@ function clearCookie(response: NextResponse): void {
 }
 
 export async function middleware(request: NextRequest) {
+  // A standalone server's request.url can contain its internal hostname.
+  const redirectOrigin = process.env.APP_ORIGIN || request.url;
   const { pathname, search } = request.nextUrl;
   const rawCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
@@ -52,7 +54,7 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/login") {
     if (session) {
       const destination = session.role === "ADMIN" ? "/admin" : "/organizer";
-      return NextResponse.redirect(new URL(destination, request.url));
+      return NextResponse.redirect(new URL(destination, redirectOrigin));
     }
     // If not authenticated and had invalid cookie, clear it
     if (rawCookie && !session) {
@@ -72,7 +74,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const callbackUrl = encodeURIComponent(`${pathname}${search}`);
-    const loginUrl = new URL(`/login?callbackUrl=${callbackUrl}`, request.url);
+    const loginUrl = new URL(`/login?callbackUrl=${callbackUrl}`, redirectOrigin);
     const response = NextResponse.redirect(loginUrl);
     if (rawCookie) clearCookie(response);
     return response;
@@ -84,7 +86,7 @@ export async function middleware(request: NextRequest) {
       if (isApiRoute) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
-      return NextResponse.redirect(new URL("/organizer", request.url));
+      return NextResponse.redirect(new URL("/organizer", redirectOrigin));
     }
   }
 

@@ -1,0 +1,64 @@
+name: Deploy dev to EC2
+
+on:
+  push:
+    branches: [deploy-dev]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: e-ticket-deploy-dev
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      AWS_REGION: ap-southeast-2
+      EC2_INSTANCE_ID: i-0b8de89cc3f31ba14
+      EC2_SSH_HOST_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJR6A2vdhs1MQZIgugro5kVlg+P7GjGJV54iiYZucEMR
+      APP_ORIGIN: https://e-ticket.phatysd.me
+      APP_URL: https://e-ticket.phatysd.me
+      NEXT_PUBLIC_APP_URL: https://e-ticket.phatysd.me
+      DATABASE_URL: file:/tmp/e-tikket-ci.db
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - name: Checkout exact pushed commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Node.js 22
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install from lockfile
+        run: npm ci
+      - name: Validate migration and app
+        run: |
+          touch /tmp/e-tikket-ci.db
+          npx prisma migrate deploy
+          npm run lint
+          npm run typecheck
+          npm run build
+      - name: Package standalone app and migrations
+        run: bash deploy/build-bundle.sh "$GITHUB_SHA"
+      - name: Assume branch-scoped AWS role
+        uses: aws-actions/configure-aws-credentials@4a1596c86fd706dc0521e32f0121ad1a6d1adb74 # v6
+        with:
+          role-to-assume: arn:aws:iam::901708383730:role/E-TikketDeployDev
+          aws-region: ap-southeast-2
+          role-session-name: e-tikket-${{ github.run_id }}
+          role-duration-seconds: 900
+          allowed-account-ids: '901708383730'
+      - name: Transfer and activate on EC2
+        run: bash deploy/send-release.sh "$GITHUB_SHA"
+      - name: Verify public domain and login redirects
+        run: python3 deploy/verify-public.py "$GITHUB_SHA"
+      - name: Deployment summary
+        if: always()
+        run: |
+          printf 'Site: https://e-ticket.phatysd.me\n\nCommit: `%s`\n\nResult: %s\n' "$GITHUB_SHA" '${{ job.status }}' >> "$GITHUB_STEP_SUMMARY"
