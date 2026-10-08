@@ -110,6 +110,24 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
   // Sensory feedback states
   const [isMuted, setIsMuted] = useState(false);
 
+  // Network connectivity status
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    setIsOnline(typeof navigator !== "undefined" ? navigator.onLine : true);
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   useEffect(() => {
     try {
       const savedMute = localStorage.getItem("etikket_scanner_muted");
@@ -614,6 +632,22 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
             </span>
           </div>
           <div className="flex items-center gap-2">
+            {/* Network Online / Offline Status Badge */}
+            <span
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold border transition-colors ${
+                isOnline
+                  ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800"
+                  : "bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 border-red-300 dark:border-red-800 animate-pulse"
+              }`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isOnline ? "bg-emerald-500" : "bg-red-500"
+                }`}
+              />
+              <span>{isOnline ? "ออนไลน์" : "ขาดการเชื่อมต่อ"}</span>
+            </span>
+
             <button
               type="button"
               onClick={toggleMute}
@@ -633,6 +667,19 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
       </header>
 
       <main className="flex-1 max-w-xl mx-auto px-4 py-5 w-full space-y-5">
+        {/* Offline Warning Banner */}
+        {!isOnline && (
+          <div className="bg-red-600 text-white rounded-xl p-3.5 flex items-start gap-3 shadow-lg border border-red-700 animate-pulse">
+            <AlertTriangleIcon className="w-5 h-5 shrink-0 mt-0.5 text-white" />
+            <div className="space-y-0.5 text-xs">
+              <p className="font-bold">อุปกรณ์ขาดการเชื่อมต่ออินเทอร์เน็ต (Offline)</p>
+              <p className="text-red-100 leading-relaxed">
+                การสแกนหรือค้นหาบัตรจะไม่สามารถส่งข้อมูลไปยังระบบได้จนกว่าสัญญาณจะกลับมา กรุณาตรวจสอบ Wi-Fi หรือ Cellular
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Event & Staff Info Card */}
         <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 space-y-3 shadow-sm">
           <div>

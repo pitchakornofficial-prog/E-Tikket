@@ -73,6 +73,24 @@ export function OrganizerScanner() {
   // Sensory feedback states
   const [isMuted, setIsMuted] = useState(false);
 
+  // Network connectivity status
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    setIsOnline(typeof navigator !== "undefined" ? navigator.onLine : true);
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   useEffect(() => {
     try {
       const savedMute = localStorage.getItem("etikket_scanner_muted");
@@ -437,8 +455,40 @@ export function OrganizerScanner() {
 
   return (
     <div className="space-y-6 max-w-xl mx-auto w-full">
+      {/* Network Online / Offline Status Banner */}
+      {!isOnline && (
+        <div className="bg-red-600 text-white rounded-xl p-3.5 flex items-start gap-3 shadow-lg border border-red-700 animate-pulse">
+          <AlertTriangleIcon className="w-5 h-5 shrink-0 mt-0.5 text-white" />
+          <div className="space-y-0.5 text-xs">
+            <p className="font-bold">อุปกรณ์ขาดการเชื่อมต่ออินเทอร์เน็ต (Offline)</p>
+            <p className="text-red-100 leading-relaxed">
+              การสแกนบัตรไม่สามารถส่งข้อมูลยืนยันไปยังฐานข้อมูลได้จนกว่าจะเชื่อมต่อสำเร็จ กรุณาตรวจสอบการเชื่อมต่อ Wi-Fi หรือเครือข่ายมือถือ
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* 1. Event & Action Selector Card */}
       <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 space-y-4">
+        {/* Header with Network Indicator */}
+        <div className="flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-900">
+          <span className="text-xs font-bold text-neutral-600 dark:text-neutral-400">สถานะเครือข่าย</span>
+          <span
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold border transition-colors ${
+              isOnline
+                ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800"
+                : "bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 border-red-300 dark:border-red-800 animate-pulse"
+            }`}
+          >
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isOnline ? "bg-emerald-500" : "bg-red-500"
+              }`}
+            />
+            <span>{isOnline ? "ออนไลน์ (Online)" : "ขาดการเชื่อมต่อ (Offline)"}</span>
+          </span>
+        </div>
+
         {loadingEvents ? (
           <div className="text-center py-4 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
             กำลังโหลดรายชื่องานแสดง...

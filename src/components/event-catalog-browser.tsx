@@ -46,11 +46,12 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
 
   const [timeframe, setTimeframe] = useState<"all" | "7days" | "30days">("all");
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [lifecycleTab, setLifecycleTab] = useState<"upcoming" | "past" | "all">("upcoming");
 
   // Reset pagination to page 1 whenever search, category, sorting, or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory, sortBy, timeframe, inStockOnly]);
+  }, [searchQuery, selectedCategory, sortBy, timeframe, inStockOnly, lifecycleTab]);
 
   // Determine the soonest upcoming event for the Hero Banner
   const soonestEvent = useMemo(() => {
@@ -76,6 +77,13 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
     now.setHours(0, 0, 0, 0);
 
     const list = events.filter((e) => {
+      const evDate = new Date(e.eventDate);
+      evDate.setHours(0, 0, 0, 0);
+      const isPast = evDate.getTime() < now.getTime();
+
+      if (lifecycleTab === "upcoming" && isPast) return false;
+      if (lifecycleTab === "past" && !isPast) return false;
+
       const matchesCategory =
         selectedCategory === "ทั้งหมด" || e.category === selectedCategory;
       const query = searchQuery.trim().toLowerCase();
@@ -91,7 +99,6 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
       if (inStockOnly && e.availableQuantity <= 0) return false;
 
       if (timeframe !== "all") {
-        const evDate = new Date(e.eventDate);
         const diffMs = evDate.getTime() - now.getTime();
         const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
         if (timeframe === "7days" && (diffDays < 0 || diffDays > 7)) return false;
@@ -119,7 +126,7 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
     });
 
     return list;
-  }, [events, selectedCategory, searchQuery, sortBy, timeframe, inStockOnly]);
+  }, [events, selectedCategory, searchQuery, sortBy, timeframe, inStockOnly, lifecycleTab]);
 
   // Pagination calculation
   const totalItems = filteredAndSortedEvents.length;
@@ -221,9 +228,45 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
 
       {/* 2. Search & Category Filter Section */}
       <section className="space-y-6">
+        {/* Lifecycle Tabs (Upcoming / Past / All) */}
+        <div className="flex border-b border-neutral-200 dark:border-neutral-800 gap-6 text-sm font-semibold">
+          <button
+            onClick={() => setLifecycleTab("upcoming")}
+            className={`pb-3 border-b-2 transition-colors ${
+              lifecycleTab === "upcoming"
+                ? "border-black dark:border-white text-neutral-900 dark:text-white"
+                : "border-transparent text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300"
+            }`}
+          >
+            งานที่จะมาถึง (Upcoming)
+          </button>
+          <button
+            onClick={() => setLifecycleTab("past")}
+            className={`pb-3 border-b-2 transition-colors ${
+              lifecycleTab === "past"
+                ? "border-black dark:border-white text-neutral-900 dark:text-white"
+                : "border-transparent text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300"
+            }`}
+          >
+            งานที่จบไปแล้ว (Past Events)
+          </button>
+          <button
+            onClick={() => setLifecycleTab("all")}
+            className={`pb-3 border-b-2 transition-colors ${
+              lifecycleTab === "all"
+                ? "border-black dark:border-white text-neutral-900 dark:text-white"
+                : "border-transparent text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300"
+            }`}
+          >
+            ทั้งหมด (All)
+          </button>
+        </div>
+
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 dark:border-neutral-900 pb-4">
           <div className="space-y-1">
-            <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">คอนเสิร์ตและอีเวนต์ทั้งหมด</h2>
+            <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              {lifecycleTab === "past" ? "คอนเสิร์ตและอีเวนต์ที่จัดไปแล้ว" : "คอนเสิร์ตและอีเวนต์ทั้งหมด"}
+            </h2>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">ค้นหาตามหมวดหมู่ ชื่อคอนเสิร์ต หรือสถานที่จัดงาน</p>
           </div>
 
@@ -371,11 +414,20 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
               {paginatedEvents.map((event) => {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const evDate = new Date(event.eventDate);
+                evDate.setHours(0, 0, 0, 0);
+                const isPast = evDate.getTime() < now.getTime();
                 const isSoldOut = event.availableQuantity <= 0;
                 return (
                   <article
                     key={event.id}
-                    className="border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-lg overflow-hidden flex flex-col hover:border-neutral-400 dark:hover:border-neutral-700 transition-colors group shadow-sm hover:shadow-md"
+                    className={`border rounded-lg overflow-hidden flex flex-col transition-colors group shadow-sm hover:shadow-md ${
+                      isPast
+                        ? "border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/50 opacity-90"
+                        : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-neutral-400 dark:hover:border-neutral-700"
+                    }`}
                   >
                     {/* Artwork Container */}
                     <div className="relative aspect-[16/9] bg-neutral-100 dark:bg-neutral-900 overflow-hidden">
@@ -383,7 +435,9 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                       <img
                         src={event.imageUrl}
                         alt={`โปสเตอร์งาน ${event.name}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${
+                          isPast ? "grayscale contrast-125" : ""
+                        }`}
                       />
                       <div className="absolute top-3 left-3">
                         <span className="px-2.5 py-1 text-xs font-mono font-bold rounded bg-black/80 text-white border border-neutral-700 backdrop-blur">
@@ -391,7 +445,11 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                         </span>
                       </div>
                       <div className="absolute top-3 right-3">
-                        {isSoldOut ? (
+                        {isPast ? (
+                          <span className="px-2.5 py-1 text-xs font-semibold rounded bg-neutral-800 text-neutral-300 border border-neutral-700">
+                            จบไปแล้ว (Ended)
+                          </span>
+                        ) : isSoldOut ? (
                           <span className="px-2.5 py-1 text-xs font-semibold rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">
                             บัตรหมด
                           </span>
@@ -435,17 +493,23 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
                         </div>
                         <div className="text-right">
                           <p className="text-[11px] text-neutral-500">
-                            {isSoldOut ? "บัตรจำหน่ายหมดแล้ว" : `เหลือ ${event.availableQuantity} ใบ`}
+                            {isPast
+                              ? "จัดแสดงเสร็จสิ้นแล้ว"
+                              : isSoldOut
+                              ? "บัตรจำหน่ายหมดแล้ว"
+                              : `เหลือ ${event.availableQuantity} ใบ`}
                           </p>
                           <Link
                             href={`/events/${event.id}`}
                             className={`inline-flex items-center gap-1 mt-1 text-xs font-semibold px-4 py-2 rounded transition-colors ${
-                              isSoldOut
+                              isPast
+                                ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700"
+                                : isSoldOut
                                 ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 pointer-events-none"
                                 : "bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200"
                             }`}
                           >
-                            <span>{isSoldOut ? "บัตรหมด" : "ดูรายละเอียด & ซื้อบัตร"}</span>
+                            <span>{isPast ? "ดูรายละเอียดงาน" : isSoldOut ? "บัตรหมด" : "ดูรายละเอียด & ซื้อบัตร"}</span>
                             {!isSoldOut && <ArrowRightIcon className="w-3.5 h-3.5" />}
                           </Link>
                         </div>

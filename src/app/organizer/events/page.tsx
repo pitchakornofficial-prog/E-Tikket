@@ -111,6 +111,44 @@ export default function OrganizerEventsPage() {
   const [orderSearch, setOrderSearch] = useState("");
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>("ALL");
 
+  // Organizer Manual Ticket Reissue state
+  const [organizerReissueTarget, setOrganizerReissueTarget] = useState<{
+    ticketNumber: string;
+    customerName: string;
+  } | null>(null);
+  const [organizerReissuing, setOrganizerReissuing] = useState(false);
+  const [organizerReissueError, setOrganizerReissueError] = useState<string | null>(null);
+
+  const handleOrganizerReissue = async () => {
+    if (!activeEventId || !organizerReissueTarget) return;
+    setOrganizerReissuing(true);
+    setOrganizerReissueError(null);
+
+    try {
+      const res = await fetch(`/api/organizer/events/${activeEventId}/reissue`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ticketNumber: organizerReissueTarget.ticketNumber,
+          reason: "Organizer assisted reissue",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setOrganizerReissueError(data.error || "เกิดข้อผิดพลาดในการยกเลิกและออกบัตรใหม่");
+        return;
+      }
+
+      setOrganizerReissueTarget(null);
+      await openEventModal(activeEventId);
+    } catch {
+      setOrganizerReissueError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setOrganizerReissuing(false);
+    }
+  };
+
   // Create / Edit Event Form state
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formData, setFormData] = useState<{
@@ -1082,22 +1120,39 @@ export default function OrganizerEventsPage() {
                                     </div>
                                     <div className="flex flex-wrap gap-1.5 max-w-xs">
                                       {ord.tickets.map((t) => (
-                                        <span
-                                          key={t.id}
-                                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border ${
-                                            t.status === "INSIDE"
-                                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 font-bold"
-                                              : t.status === "CANCELLED"
-                                              ? "bg-rose-500/10 text-rose-500 border-rose-500/20 line-through"
-                                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
-                                          }`}
-                                          title={`บัตร ${t.ticketNumber} (${t.status})`}
-                                        >
-                                          {t.status === "INSIDE" && (
-                                            <CheckIcon className="w-2.5 h-2.5 shrink-0" />
+                                        <div key={t.id} className="inline-flex items-center gap-1">
+                                          <span
+                                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border ${
+                                              t.status === "INSIDE"
+                                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 font-bold"
+                                                : t.status === "CANCELLED"
+                                                ? "bg-rose-500/10 text-rose-500 border-rose-500/20 line-through opacity-70"
+                                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
+                                            }`}
+                                            title={`บัตร ${t.ticketNumber} (${t.status})`}
+                                          >
+                                            {t.status === "INSIDE" && (
+                                              <CheckIcon className="w-2.5 h-2.5 shrink-0" />
+                                            )}
+                                            <span>{t.ticketNumber}</span>
+                                          </span>
+                                          {ord.status === "PAID" && t.status === "OUTSIDE" && (
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                setOrganizerReissueTarget({
+                                                  ticketNumber: t.ticketNumber,
+                                                  customerName: ord.customerName,
+                                                });
+                                                setOrganizerReissueError(null);
+                                              }}
+                                              title="ยกเลิกและออกบัตรใหม่ให้ลูกค้า (กรณี QR หลุด)"
+                                              className="text-[9px] font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 px-1 py-0.5 rounded border border-amber-500/20 transition"
+                                            >
+                                              ออกใหม่
+                                            </button>
                                           )}
-                                          <span>{t.ticketNumber}</span>
-                                        </span>
+                                        </div>
                                       ))}
                                     </div>
                                   </td>
@@ -1453,6 +1508,85 @@ export default function OrganizerEventsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Organizer Reissue Confirmation */}
+      {organizerReissueTarget && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 text-xs">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                <AlertTriangleIcon className="w-5 h-5 shrink-0" />
+                <h3 className="font-bold text-sm text-neutral-900 dark:text-white">
+                  ยกเลิกบัตรเดิม & ออกบัตรใหม่ให้ลูกค้า
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!organizerReissuing) setOrganizerReissueTarget(null);
+                }}
+                disabled={organizerReissuing}
+                className="p-1 rounded-lg text-neutral-400 hover:text-black dark:hover:text-white"
+              >
+                <XIcon className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="text-neutral-600 dark:text-neutral-400 space-y-2 leading-relaxed">
+              <p>
+                ผู้ซื้อ: <strong className="text-neutral-900 dark:text-white">{organizerReissueTarget.customerName}</strong>
+              </p>
+              <p>
+                หมายเลขบัตรเดิม: <strong className="text-neutral-900 dark:text-white font-mono">{organizerReissueTarget.ticketNumber}</strong>
+              </p>
+
+              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl space-y-1.5 text-amber-800 dark:text-amber-300">
+                <p className="font-bold flex items-center gap-1.5">
+                  ⚠️ การดำเนินการนี้จะมีผลทันที:
+                </p>
+                <ul className="list-disc list-inside space-y-0.5 text-[11px] opacity-90">
+                  <li>บัตรเดิมจะถูกเปลี่ยนสถานะเป็น CANCELLED ทันที</li>
+                  <li>ระบบจะสร้าง QR Code และรหัสบัตรใหม่ให้ลูกค้า</li>
+                  <li>ระบบจะส่งอีเมลแจ้งเตือนไปยังผู้ซื้ออัตโนมัติ</li>
+                </ul>
+              </div>
+
+              {organizerReissueError && (
+                <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 rounded-lg text-xs flex items-center gap-2">
+                  <AlertTriangleIcon className="w-4 h-4 shrink-0" />
+                  <span>{organizerReissueError}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setOrganizerReissueTarget(null)}
+                disabled={organizerReissuing}
+                className="flex-1 py-2 px-4 rounded-lg border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+              >
+                ยกเลิก
+              </button>
+              <button
+                type="button"
+                onClick={handleOrganizerReissue}
+                disabled={organizerReissuing}
+                className="flex-1 py-2 px-4 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-md"
+              >
+                {organizerReissuing ? (
+                  <>
+                    <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                    <span>กำลังออกบัตรใหม่...</span>
+                  </>
+                ) : (
+                  <span>ยืนยันออกบัตรใหม่</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
