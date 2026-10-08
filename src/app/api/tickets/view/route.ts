@@ -49,6 +49,8 @@ export async function GET(request: Request) {
           ticketNumber: true,
           status: true,
           qrArtifactKey: true,
+          reissueCount: true,
+          reissuedFromId: true,
         },
       },
     },
@@ -72,10 +74,18 @@ export async function GET(request: Request) {
 
   // 2. Fetch original private QR artifacts from R2 for each ticket
   try {
+    const [hours, minutes] = order.event.startTime.split(":").map(Number);
+    const eventStartTime = new Date(order.event.eventDate);
+    eventStartTime.setHours(isNaN(hours) ? 0 : hours, isNaN(minutes) ? 0 : minutes, 0, 0);
+    const isBeforeEventStart = new Date() < eventStartTime;
+
     const ticketItems: Array<{
       ticketNumber: string;
       status: "OUTSIDE" | "INSIDE" | "CANCELLED";
       qrDataUrl: string;
+      reissueCount: number;
+      reissuedFromId: string | null;
+      canReissue: boolean;
     }> = [];
 
     for (const ticket of order.tickets) {
@@ -88,10 +98,19 @@ export async function GET(request: Request) {
         throw new Error("ARTIFACT_NOT_FOUND");
       }
 
+      const canReissue =
+        isBeforeEventStart &&
+        ticket.status === "OUTSIDE" &&
+        ticket.reissueCount === 0 &&
+        !ticket.reissuedFromId;
+
       ticketItems.push({
         ticketNumber: ticket.ticketNumber,
         status: ticket.status as "OUTSIDE" | "INSIDE" | "CANCELLED",
         qrDataUrl: `data:${qrArtifact.contentType};base64,${qrArtifact.data.toString("base64")}`,
+        reissueCount: ticket.reissueCount,
+        reissuedFromId: ticket.reissuedFromId,
+        canReissue,
       });
     }
 

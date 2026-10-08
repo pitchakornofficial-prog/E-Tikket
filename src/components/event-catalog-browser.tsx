@@ -44,10 +44,13 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
   const [sortBy, setSortBy] = useState<SortOption>("date_asc");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Reset pagination to page 1 whenever search, category, or sorting changes
+  const [timeframe, setTimeframe] = useState<"all" | "7days" | "30days">("all");
+  const [inStockOnly, setInStockOnly] = useState(false);
+
+  // Reset pagination to page 1 whenever search, category, sorting, or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [searchQuery, selectedCategory, sortBy, timeframe, inStockOnly]);
 
   // Determine the soonest upcoming event for the Hero Banner
   const soonestEvent = useMemo(() => {
@@ -69,6 +72,9 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
 
   // Filter and Sort events
   const filteredAndSortedEvents = useMemo(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
     const list = events.filter((e) => {
       const matchesCategory =
         selectedCategory === "ทั้งหมด" || e.category === selectedCategory;
@@ -79,7 +85,20 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
         e.venue.toLowerCase().includes(query) ||
         e.category.toLowerCase().includes(query) ||
         e.description.toLowerCase().includes(query);
-      return matchesCategory && matchesSearch;
+
+      if (!matchesCategory || !matchesSearch) return false;
+
+      if (inStockOnly && e.availableQuantity <= 0) return false;
+
+      if (timeframe !== "all") {
+        const evDate = new Date(e.eventDate);
+        const diffMs = evDate.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        if (timeframe === "7days" && (diffDays < 0 || diffDays > 7)) return false;
+        if (timeframe === "30days" && (diffDays < 0 || diffDays > 30)) return false;
+      }
+
+      return true;
     });
 
     list.sort((a, b) => {
@@ -100,7 +119,7 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
     });
 
     return list;
-  }, [events, selectedCategory, searchQuery, sortBy]);
+  }, [events, selectedCategory, searchQuery, sortBy, timeframe, inStockOnly]);
 
   // Pagination calculation
   const totalItems = filteredAndSortedEvents.length;
@@ -273,6 +292,58 @@ export function EventCatalogBrowser({ events }: EventCatalogBrowserProps) {
           <span className="ml-auto text-xs text-neutral-500 font-mono">
             พบ {totalItems} งาน {totalPages > 1 && `(หน้า ${currentPage}/${totalPages})`}
           </span>
+        </div>
+
+        {/* Timeframe & In-Stock Filter Controls */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs pt-1">
+          {/* Timeframe selector */}
+          <div className="flex items-center gap-1.5 bg-neutral-100 dark:bg-neutral-900 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
+            <span className="text-[11px] font-bold text-neutral-400 px-2 flex items-center gap-1">
+              <CalendarIcon className="w-3 h-3" /> ช่วงเวลา:
+            </span>
+            {(
+              [
+                { id: "all", label: "ทั้งหมด" },
+                { id: "7days", label: "7 วันนี้" },
+                { id: "30days", label: "เดือนนี้" },
+              ] as const
+            ).map((tf) => (
+              <button
+                key={tf.id}
+                onClick={() => setTimeframe(tf.id)}
+                className={`px-2.5 py-1 rounded text-xs font-semibold transition ${
+                  timeframe === tf.id
+                    ? "bg-white dark:bg-neutral-800 text-black dark:text-white shadow-xs font-bold"
+                    : "text-neutral-500 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                {tf.label}
+              </button>
+            ))}
+          </div>
+
+          {/* In-Stock Only Toggle */}
+          <button
+            onClick={() => setInStockOnly((prev) => !prev)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition ${
+              inStockOnly
+                ? "bg-neutral-900 dark:bg-white text-white dark:text-black border-transparent shadow-xs"
+                : "bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+            }`}
+          >
+            <div
+              className={`w-3.5 h-3.5 rounded border flex items-center justify-center transition ${
+                inStockOnly
+                  ? "bg-white dark:bg-black border-transparent"
+                  : "border-neutral-400"
+              }`}
+            >
+              {inStockOnly && (
+                <CheckIcon className="w-2.5 h-2.5 text-black dark:text-white" />
+              )}
+            </div>
+            <span>เฉพาะงานที่มีบัตรจำหน่าย</span>
+          </button>
         </div>
 
         {/* 3. Event Cards Grid */}

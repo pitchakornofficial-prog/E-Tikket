@@ -100,3 +100,82 @@ export async function GET(request: Request) {
     return jsonResponse({ error: "ไม่สามารถดึงข้อมูลคอนเสิร์ตได้" }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  const auth = await requireStaff(request, ["ORGANIZER"]);
+  if (auth.response) {
+    const res = auth.response;
+    res.headers.set("Cache-Control", "private, no-store");
+    res.headers.set("Referrer-Policy", "no-referrer");
+    return res;
+  }
+
+  try {
+    const body = await request.json();
+    const {
+      name,
+      category,
+      description,
+      venue,
+      eventDate,
+      startTime,
+      ticketPrice,
+      totalTickets,
+      imageUrl,
+      status,
+    } = body;
+
+    if (
+      !name ||
+      typeof name !== "string" ||
+      !venue ||
+      typeof venue !== "string" ||
+      !eventDate ||
+      !startTime ||
+      ticketPrice === undefined ||
+      totalTickets === undefined
+    ) {
+      return jsonResponse(
+        { error: "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, สถานที่, วันที่, เวลา, ราคา, จำนวนบัตร)" },
+        { status: 400 },
+      );
+    }
+
+    const priceNum = parseFloat(ticketPrice);
+    const ticketsNum = parseInt(totalTickets, 10);
+
+    if (isNaN(priceNum) || priceNum < 0 || isNaN(ticketsNum) || ticketsNum <= 0) {
+      return jsonResponse(
+        { error: "ราคาบัตรต้องไม่ติดลบ และจำนวนบัตรต้องมากกว่า 0" },
+        { status: 400 },
+      );
+    }
+
+    const createdEvent = await prisma.event.create({
+      data: {
+        name: name.trim(),
+        category: category?.trim() || "Concert",
+        description: description?.trim() || "",
+        venue: venue.trim(),
+        eventDate: new Date(eventDate),
+        startTime: startTime.trim(),
+        ticketPrice: priceNum,
+        totalTickets: ticketsNum,
+        imageUrl: imageUrl?.trim() || "",
+        status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
+        organizerId: auth.session.sub,
+      },
+    });
+
+    return jsonResponse(
+      { success: true, event: createdEvent },
+      { status: 201 },
+    );
+  } catch (err) {
+    console.error("Failed to create organizer event:", err);
+    return jsonResponse(
+      { error: "เกิดข้อผิดพลาดในการสร้างคอนเสิร์ต" },
+      { status: 500 },
+    );
+  }
+}

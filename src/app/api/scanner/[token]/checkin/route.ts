@@ -60,14 +60,17 @@ export async function POST(request: Request, { params }: RouteParams) {
     );
   }
 
-  const { qrToken, action } = body || {};
+  const { qrToken, ticketNumber, action } = body || {};
 
-  if (!qrToken || typeof qrToken !== "string" || qrToken.trim() === "") {
+  if (
+    (!qrToken || typeof qrToken !== "string" || qrToken.trim() === "") &&
+    (!ticketNumber || typeof ticketNumber !== "string" || ticketNumber.trim() === "")
+  ) {
     return jsonResponse(
       {
         error: {
           code: "VALIDATION_ERROR",
-          message: "ต้องระบุ qrToken",
+          message: "ต้องระบุ qrToken หรือ ticketNumber",
         },
       },
       { status: 422 },
@@ -93,27 +96,50 @@ export async function POST(request: Request, { params }: RouteParams) {
     ? `${checker.name} (${checker.gateNote})`
     : checker.name;
 
-  const scannedSecret = qrToken.trim();
-  const ticketTokenHash = hashToken(scannedSecret);
-
-  // 3. Look up ticket by SHA-256 hash
-  const ticket = await prisma.ticket.findFirst({
-    where: { qrTokenHash: ticketTokenHash },
-    include: {
-      order: {
-        select: {
-          id: true,
-          status: true,
+  // 3. Look up ticket by SHA-256 hash or ticketNumber
+  let ticket = null;
+  if (qrToken && typeof qrToken === "string" && qrToken.trim() !== "") {
+    const scannedSecret = qrToken.trim();
+    const ticketTokenHash = hashToken(scannedSecret);
+    ticket = await prisma.ticket.findFirst({
+      where: { qrTokenHash: ticketTokenHash },
+      include: {
+        order: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
+        event: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-      event: {
-        select: {
-          id: true,
-          name: true,
+    });
+  } else if (ticketNumber && typeof ticketNumber === "string" && ticketNumber.trim() !== "") {
+    ticket = await prisma.ticket.findFirst({
+      where: {
+        ticketNumber: ticketNumber.trim(),
+        eventId: event.id,
+      },
+      include: {
+        order: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
+        event: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-    },
-  });
+    });
+  }
 
   const now = new Date();
 

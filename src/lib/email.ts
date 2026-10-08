@@ -77,3 +77,44 @@ export async function sendTicketEmail(
   return { success: true };
 }
 
+export interface ReissueTicketEmailPayload {
+  to: string;
+  customerName: string;
+  orderId: string;
+  eventName: string;
+  oldTicketNumber: string;
+  newTicketNumber: string;
+  viewUrl: string;
+}
+
+export async function sendReissueTicketEmail(
+  payload: ReissueTicketEmailPayload,
+): Promise<{ success: boolean; error?: string }> {
+  if (emailFailureInjection) {
+    return { success: false, error: "Injected email delivery failure" };
+  }
+
+  const { to, customerName, orderId, eventName, oldTicketNumber, newTicketNumber, viewUrl } = payload;
+
+  if (process.env.NODE_ENV !== "production") {
+    console.log(
+      `\n======================================================================\n` +
+      `🛡️ [DEV EMAIL DISPATCH] แจ้งเตือนการยกเลิกและออกบัตรใหม่ทดแทน (Reissue Ticket)!\n` +
+      `ผู้รับ: ${to} (${customerName})\n` +
+      `งาน: ${eventName} (ออเดอร์: #${orderId})\n` +
+      `บัตรเดิมที่ถูกยกเลิก: ${oldTicketNumber} (สถานะ: CANCELLED ❌)\n` +
+      `บัตรใหม่ที่ออกทดแทน: ${newTicketNumber} (สถานะ: OUTSIDE พร้อมใช้งาน ✅)\n` +
+      `👉 คลิกลิงก์เพื่อเปิดดูตั๋ว & QR Code ใหม่:\n` +
+      `   http://localhost:3000${viewUrl}\n` +
+      `======================================================================\n`,
+    );
+  } else {
+    const sanitizedViewUrl = viewUrl.replace(/token=[a-zA-Z0-9_-]+/, "token=[REDACTED]");
+    console.log(
+      `[EMAIL:REISSUE] To: ${to} | Customer: ${customerName} | Order: #${orderId} | Event: ${eventName} | Cancelled: ${oldTicketNumber} | ReplacedWith: ${newTicketNumber} | ViewLink: ${sanitizedViewUrl}`,
+    );
+  }
+
+  return { success: true };
+}
+

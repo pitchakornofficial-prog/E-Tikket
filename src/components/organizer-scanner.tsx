@@ -13,7 +13,18 @@ import {
   RefreshCwIcon,
   ArrowRightIcon,
   PauseIcon,
+  FlashlightIcon,
+  FlashlightOffIcon,
+  VolumeIcon,
+  VolumeXIcon,
+  ZapIcon,
 } from "@/components/icons";
+import {
+  playBeep,
+  triggerHaptic,
+  checkTorchCapability,
+  setTorchEnabled,
+} from "@/lib/scanner-feedback";
 
 interface EventItem {
   id: string;
@@ -56,6 +67,61 @@ export function OrganizerScanner() {
   // Camera states
   const [cameraState, setCameraState] = useState<"IDLE" | "REQUESTING" | "ACTIVE" | "DENIED" | "UNAVAILABLE">("IDLE");
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [torchAvailable, setTorchAvailable] = useState(false);
+  const [isTorchOn, setIsTorchOn] = useState(false);
+
+  // Sensory feedback states
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedMute = localStorage.getItem("etikket_scanner_muted");
+      if (savedMute === "true") {
+        setIsMuted(true);
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  const toggleMute = () => {
+    setIsMuted((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("etikket_scanner_muted", String(next));
+      } catch {
+        // Ignore
+      }
+      return next;
+    });
+  };
+
+  // Continuous Auto-Scan (Fast Mode) states
+  const [isContinuousScan, setIsContinuousScan] = useState(true);
+  const [autoNextCountdown, setAutoNextCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedContinuous = localStorage.getItem("etikket_continuous_scan");
+      if (savedContinuous !== null) {
+        setIsContinuousScan(savedContinuous === "true");
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  const toggleContinuousScan = () => {
+    setIsContinuousScan((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("etikket_continuous_scan", String(next));
+      } catch {
+        // Ignore
+      }
+      return next;
+    });
+  };
 
   // Scan gating states (AC-23)
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,6 +186,9 @@ export function OrganizerScanner() {
   const releaseCamera = useCallback(() => {
     cameraRequestIdRef.current += 1;
 
+    setIsTorchOn(false);
+    setTorchAvailable(false);
+
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
@@ -174,6 +243,7 @@ export function OrganizerScanner() {
       }
 
       setCameraState("ACTIVE");
+      setTorchAvailable(checkTorchCapability(stream));
     } catch (err: unknown) {
       if (requestId !== cameraRequestIdRef.current) {
         return;
@@ -189,6 +259,15 @@ export function OrganizerScanner() {
       }
     }
   }, [releaseCamera]);
+
+  const toggleTorch = useCallback(async () => {
+    if (!streamRef.current || !torchAvailable) return;
+    const nextState = !isTorchOn;
+    const success = await setTorchEnabled(streamRef.current, nextState);
+    if (success) {
+      setIsTorchOn(nextState);
+    }
+  }, [torchAvailable, isTorchOn]);
 
   // Start once for the selected event. Camera state changes must not restart
   // this effect; cleanup only releases resources and invalidates pending opens.
@@ -234,7 +313,18 @@ export function OrganizerScanner() {
             scannedAt: data.scannedAt,
             ticket: data.ticket,
           });
+
+          if (data.result === "VALID") {
+            playBeep("success", isMuted);
+            triggerHaptic("success");
+          } else {
+            playBeep("warning", isMuted);
+            triggerHaptic("warning");
+          }
         } else {
+          playBeep("error", isMuted);
+          triggerHaptic("error");
+
           setScanResult({
             result: data.error?.code === "SCAN_UNCONFIRMED" ? "SCAN_UNCONFIRMED" : "ERROR",
             action,
@@ -243,6 +333,9 @@ export function OrganizerScanner() {
           });
         }
       } catch {
+        playBeep("error", isMuted);
+        triggerHaptic("error");
+
         setScanResult({
           result: "SCAN_UNCONFIRMED",
           action,
@@ -255,7 +348,7 @@ export function OrganizerScanner() {
         loadRecentScans(selectedEventId);
       }
     },
-    [selectedEventId, action, loadRecentScans],
+    [selectedEventId, action, loadRecentScans, isMuted],
   );
 
   // 6. Camera frame processing loop
@@ -305,11 +398,39 @@ export function OrganizerScanner() {
   }, [cameraState, handleScanDetected]);
 
   // 7. Acknowledgment handler: "สแกนคนถัดไป" (AC-23)
-  const handleAcknowledgeNext = () => {
+  const handleAcknowledgeNext = useCallback(() => {
     setScanResult(null);
     setIsSubmitting(false);
+    setAutoNextCountdown(null);
     isAwaitingAcknowledgmentRef.current = false;
-  };
+  }, []);
+
+  // Auto-advance timer in Continuous Mode
+  useEffect(() => {
+    if (!scanResult || !isContinuousScan) {
+      setAutoNextCountdown(null);
+      return;
+    }
+
+    const duration = scanResult.result === "VALID" ? 1500 : 2500;
+    const startTime = Date.now();
+    setAutoNextCountdown(100);
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remainingPercent = Math.max(0, 100 - (elapsed / duration) * 100);
+      setAutoNextCountdown(remainingPercent);
+
+      if (elapsed >= duration) {
+        clearInterval(interval);
+        handleAcknowledgeNext();
+      }
+    }, 40);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [scanResult, isContinuousScan, handleAcknowledgeNext]);
 
   const selectedEvent = events.find((e) => e.id === selectedEventId);
   const scanControlsDisabled = isSubmitting || scanResult !== null;
@@ -348,6 +469,53 @@ export function OrganizerScanner() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Continuous Auto-Scan (Fast Mode) Toggle */}
+            <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl">
+              <div className="flex items-center gap-2.5">
+                <div
+                  className={`p-1.5 rounded-lg transition-colors ${
+                    isContinuousScan
+                      ? "bg-amber-400 text-black shadow-sm"
+                      : "bg-neutral-200 dark:bg-neutral-800 text-neutral-400"
+                  }`}
+                >
+                  <ZapIcon className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5">
+                    <span>สแกนต่อเนื่องอัตโนมัติ (Fast Mode)</span>
+                    {isContinuousScan && (
+                      <span className="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold bg-neutral-900 text-white dark:bg-white dark:text-black">
+                        ON
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-neutral-500">
+                    {isContinuousScan
+                      ? "รีเซ็ตกล้องรับบัตรถัดไปอัตโนมัติ (ผ่าน 1.5s / แจ้งเตือน 2.5s)"
+                      : "ต้องกดปุ่ม 'สแกนคนถัดไป' ด้วยตนเองทุกครั้ง"}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={toggleContinuousScan}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  isContinuousScan ? "bg-neutral-900 dark:bg-white" : "bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-800"
+                }`}
+                role="switch"
+                aria-checked={isContinuousScan}
+                title={isContinuousScan ? "ปิดโหมดสแกนต่อเนื่อง" : "เปิดโหมดสแกนต่อเนื่อง"}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-neutral-900 shadow ring-0 transition duration-200 ease-in-out ${
+                    isContinuousScan ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
             </div>
 
             <div>
@@ -422,6 +590,42 @@ export function OrganizerScanner() {
                   <div className="absolute inset-x-2 top-0 h-0.5 bg-red-500 shadow-md shadow-red-500 animate-pulse" />
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Quick Toolbar Overlay on Viewfinder */}
+          {cameraState === "ACTIVE" && (
+            <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleMute}
+                aria-label={isMuted ? "เปิดเสียงแจ้งเตือน" : "ปิดเสียงแจ้งเตือน"}
+                title={isMuted ? "เปิดเสียงแจ้งเตือน" : "ปิดเสียงแจ้งเตือน"}
+                className={`p-2 rounded-full backdrop-blur shadow-md transition-colors ${
+                  isMuted
+                    ? "bg-black/60 text-neutral-400 border border-white/20 hover:bg-black/80"
+                    : "bg-emerald-500 text-white shadow-emerald-500/30"
+                }`}
+              >
+                {isMuted ? <VolumeXIcon className="w-3.5 h-3.5" /> : <VolumeIcon className="w-3.5 h-3.5" />}
+              </button>
+
+              {torchAvailable && (
+                <button
+                  type="button"
+                  onClick={toggleTorch}
+                  aria-label={isTorchOn ? "ปิดไฟฉาย" : "เปิดไฟฉาย"}
+                  title={isTorchOn ? "ปิดไฟฉาย" : "เปิดไฟฉาย"}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg backdrop-blur transition-all ${
+                    isTorchOn
+                      ? "bg-amber-400 text-black shadow-amber-400/40 ring-2 ring-amber-300"
+                      : "bg-black/60 text-white border border-white/20 hover:bg-black/80"
+                  }`}
+                >
+                  {isTorchOn ? <FlashlightOffIcon className="w-3.5 h-3.5" /> : <FlashlightIcon className="w-3.5 h-3.5" />}
+                  <span>{isTorchOn ? "ไฟฉาย: เปิด" : "ไฟฉาย"}</span>
+                </button>
+              )}
             </div>
           )}
 
@@ -561,19 +765,38 @@ export function OrganizerScanner() {
             )}
           </div>
 
-          {/* Acknowledgment Action Button (AC-23) */}
-          <div className="pt-2">
-            <button
-              id="next-scan-btn"
-              type="button"
-              onClick={handleAcknowledgeNext}
-              autoFocus
-              className="inline-flex items-center justify-center gap-2 w-full py-4 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-extrabold text-sm sm:text-base rounded-xl transition-all shadow-lg active:scale-98 cursor-pointer"
-            >
-              <span>สแกนคนถัดไป</span>
-              <ArrowRightIcon className="w-5 h-5" />
-            </button>
-          </div>
+            {/* Fast Mode Countdown Bar */}
+            {isContinuousScan && autoNextCountdown !== null && (
+              <div className="space-y-1.5 pt-2 text-left">
+                <div className="flex justify-between items-center text-[11px] font-mono font-bold text-neutral-500">
+                  <span className="flex items-center gap-1.5">
+                    <ZapIcon className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+                    <span>กำลังรีเซ็ตกล้องอัตโนมัติ (Fast Mode)...</span>
+                  </span>
+                  <span>{((scanResult.result === "VALID" ? 1.5 : 2.5) * (autoNextCountdown / 100)).toFixed(1)}s</span>
+                </div>
+                <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-2 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-neutral-900 dark:bg-white transition-all duration-75 rounded-full"
+                    style={{ width: `${autoNextCountdown}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Acknowledgment Action Button (AC-23) */}
+            <div className="pt-2">
+              <button
+                id="next-scan-btn"
+                type="button"
+                onClick={handleAcknowledgeNext}
+                autoFocus
+                className="inline-flex items-center justify-center gap-2 w-full py-4 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-extrabold text-sm sm:text-base rounded-xl transition-all shadow-lg active:scale-98 cursor-pointer"
+              >
+                <span>{isContinuousScan ? "สแกนคนถัดไปทันที (ข้ามเวลารอ)" : "สแกนคนถัดไป"}</span>
+                <ArrowRightIcon className="w-5 h-5" />
+              </button>
+            </div>
         </section>
       )}
 

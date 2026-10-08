@@ -162,8 +162,10 @@ model Ticket {
   ticketNumber String       @unique @map("ticket_number")
   qrTokenHash  String       @unique @map("qr_token_hash")
   qrArtifactKey String      @map("qr_artifact_key")
-  status       TicketStatus @default(OUTSIDE)
-  createdAt    DateTime     @default(now()) @map("created_at")
+  status         TicketStatus @default(OUTSIDE)
+  reissueCount   Int          @default(0) @map("reissue_count")
+  reissuedFromId String?      @map("reissued_from_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
   event        Event        @relation(fields: [eventId], references: [id])

@@ -92,6 +92,12 @@ export async function GET(request: Request) {
       return res;
     }
     targetTickets = [matched];
+  } else {
+    // For batch download, exclude CANCELLED tickets if active tickets exist
+    const activeTickets = order.tickets.filter((t) => t.status !== "CANCELLED");
+    if (activeTickets.length > 0) {
+      targetTickets = activeTickets;
+    }
   }
 
   // 3. Fetch QR artifacts from R2 (AC-11)

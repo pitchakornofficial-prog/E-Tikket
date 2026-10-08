@@ -26,6 +26,9 @@ interface TicketItem {
   ticketNumber: string;
   status: "OUTSIDE" | "INSIDE" | "CANCELLED";
   qrDataUrl: string;
+  reissueCount?: number;
+  reissuedFromId?: string | null;
+  canReissue?: boolean;
 }
 
 interface OrderInfo {
@@ -58,6 +61,44 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
   const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [downloadingTicket, setDownloadingTicket] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+
+  // Leaked QR Reissue state
+  const [reissueModalTicket, setReissueModalTicket] = useState<TicketItem | null>(null);
+  const [reissuing, setReissuing] = useState(false);
+  const [reissueError, setReissueError] = useState<string | null>(null);
+  const [reissueSuccess, setReissueSuccess] = useState<string | null>(null);
+
+  const handleReissueTicket = async (ticket: TicketItem) => {
+    if (!token) return;
+    setReissuing(true);
+    setReissueError(null);
+
+    try {
+      const res = await fetch("/api/tickets/reissue", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          ticketNumber: ticket.ticketNumber,
+          reason: "QR Code Leaked",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setReissueError(data.error || "เกิดข้อผิดพลาดในการยกเลิกและออกบัตรใหม่");
+        return;
+      }
+
+      setReissueSuccess(data.message || `ออกบัตรใหม่ ${data.newTicketNumber} เรียบร้อยแล้ว`);
+      setReissueModalTicket(null);
+      await fetchTickets();
+    } catch {
+      setReissueError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setReissuing(false);
+    }
+  };
 
   const handleDownload = async (ticketNumber?: string) => {
     if (!token) return;
@@ -252,6 +293,22 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
               </div>
             )}
 
+            {reissueSuccess && (
+              <div className="max-w-2xl mx-auto p-3.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 rounded-lg text-xs text-emerald-900 dark:text-emerald-300 flex items-center justify-between gap-2 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <CheckCircleIcon className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>{reissueSuccess}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReissueSuccess(null)}
+                  className="text-emerald-600 dark:text-emerald-400 hover:text-black dark:hover:text-white p-1"
+                >
+                  <XIcon className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
             {/* Batch Download Button (AC-05, AC-06: for 2+ tickets) */}
             {tickets.length >= 2 && (
               <div className="max-w-2xl mx-auto flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-900">
@@ -288,9 +345,16 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
                 >
                   {/* Ticket Card Header */}
                   <div className="p-4 bg-neutral-50 dark:bg-neutral-900/40 flex justify-between items-center">
-                    <span className="text-xs font-mono font-bold text-neutral-600 dark:text-neutral-400">
-                      TICKET {index + 1} OF {tickets.length}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono font-bold text-neutral-600 dark:text-neutral-400">
+                        TICKET {index + 1} OF {tickets.length}
+                      </span>
+                      {ticket.reissuedFromId && (
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 font-semibold">
+                          ออกใหม่ทดแทน
+                        </span>
+                      )}
+                    </div>
                     <span
                       className={`text-xs px-2.5 py-0.5 rounded font-mono font-bold inline-flex items-center gap-1.5 ${
                         ticket.status === "OUTSIDE"
@@ -325,10 +389,21 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
                         <h2 className="text-xl font-extrabold text-neutral-900 dark:text-white">
                           {orderInfo.event.name}
                         </h2>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 flex items-center gap-1.5">
-                          <MapPinIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500 shrink-0" />
-                          <span>{orderInfo.event.venue}</span>
-                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
+                          <p className="text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-1.5">
+                            <MapPinIcon className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500 shrink-0" />
+                            <span>{orderInfo.event.venue}</span>
+                          </p>
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(orderInfo.event.venue)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 px-2 py-0.5 rounded border border-neutral-300 dark:border-neutral-700 transition-colors"
+                          >
+                            <span>ดูแผนที่นำทาง</span>
+                            <ArrowRightIcon className="w-3 h-3" />
+                          </a>
+                        </div>
                       </div>
 
                       <div className="text-xs text-neutral-700 dark:text-neutral-300 space-y-1.5 font-sans">
@@ -389,6 +464,27 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
                           </>
                         )}
                       </button>
+
+                      {/* Leaked QR Report / Reissue Button */}
+                      {ticket.status === "OUTSIDE" && ticket.canReissue && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReissueModalTicket(ticket);
+                            setReissueError(null);
+                          }}
+                          className="w-full mt-2 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-300 dark:border-amber-800/80 text-[11px] font-semibold rounded-md transition-colors"
+                        >
+                          <AlertTriangleIcon className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                          <span>แจ้ง QR หลุด / ขอออกบัตรใหม่</span>
+                        </button>
+                      )}
+
+                      {ticket.status === "CANCELLED" && (
+                        <div className="w-full mt-2 p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 rounded text-[10px] text-rose-700 dark:text-rose-400 text-center font-medium">
+                          บัตรใบนี้ถูกยกเลิกแล้ว (ไม่สามารถใช้สแกนได้)
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -401,6 +497,94 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
               <span>แนะนำให้บันทึกภาพหน้าจอ (Screenshot) หรือบุ๊กมาร์กลิงก์หน้านี้ไว้เพื่อความสะดวกรวดเร็วเมื่อถึงหน้างาน</span>
             </div>
           </>
+        )}
+
+        {/* Modal: Leaked QR Reissue Confirmation */}
+        {reissueModalTicket && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                  <AlertTriangleIcon className="w-5 h-5 shrink-0" />
+                  <h3 className="font-bold text-base text-neutral-900 dark:text-white">
+                    ยกเลิกบัตรเดิม & ขอออกบัตรใหม่
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!reissuing) setReissueModalTicket(null);
+                  }}
+                  disabled={reissuing}
+                  className="p-1 rounded-lg text-neutral-400 hover:text-black dark:hover:text-white"
+                >
+                  <XIcon className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="text-xs text-neutral-600 dark:text-neutral-400 space-y-3 leading-relaxed">
+                <p>
+                  คุณกำลังจะขอยกเลิกบัตรเลขที่{" "}
+                  <strong className="text-neutral-900 dark:text-white font-mono">
+                    {reissueModalTicket.ticketNumber}
+                  </strong>
+                </p>
+
+                <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl space-y-2 text-amber-800 dark:text-amber-300">
+                  <p className="font-bold text-xs flex items-center gap-1.5">
+                    ⚠️ โปรดอ่านข้อกำหนดอย่างละเอียด:
+                  </p>
+                  <ul className="list-disc list-inside space-y-1 text-[11px] opacity-90">
+                    <li>
+                      <strong>QR Code เดิมจะถูกยกเลิกทันที:</strong> หากมีผู้อื่นนำไปสแกนที่หน้างาน
+                      ระบบจะปฏิเสธการเข้างาน (CANCELLED)
+                    </li>
+                    <li>
+                      <strong>ออก QR Code ชุดใหม่ทันที:</strong>{" "}
+                      ระบบจะออกตั๋วใบใหม่พร้อมรหัสเข้ารหัสใหม่ให้คุณใช้งานแทน
+                    </li>
+                    <li>
+                      <strong>จำกัดสิทธิ์ 1 ครั้ง:</strong> บัตรแต่ละใบสามารถขอออกใหม่ได้เพียง 1 ครั้งเท่านั้น
+                      และทำได้เฉพาะก่อนงานเริ่ม
+                    </li>
+                  </ul>
+                </div>
+
+                {reissueError && (
+                  <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 rounded-lg text-xs flex items-center gap-2">
+                    <AlertTriangleIcon className="w-4 h-4 shrink-0" />
+                    <span>{reissueError}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setReissueModalTicket(null)}
+                  disabled={reissuing}
+                  className="flex-1 py-2 px-4 rounded-lg border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleReissueTicket(reissueModalTicket)}
+                  disabled={reissuing}
+                  className="flex-1 py-2 px-4 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 text-xs font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-md"
+                >
+                  {reissuing ? (
+                    <>
+                      <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                      <span>กำลังออกบัตรใหม่...</span>
+                    </>
+                  ) : (
+                    <span>ยืนยันออกบัตรใหม่</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
 

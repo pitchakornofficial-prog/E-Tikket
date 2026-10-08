@@ -332,9 +332,17 @@ export default function MyTicketsPage() {
                                   <CalendarIcon className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
                                   <span>{order.event.eventDate} • เวลา {order.event.startTime} น.</span>
                                 </p>
-                                <p className="flex items-center gap-1.5">
+                                <p className="flex items-center gap-1.5 flex-wrap">
                                   <MapPinIcon className="w-3.5 h-3.5 text-neutral-500 shrink-0" />
                                   <span>{order.event.venue}</span>
+                                  <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.event.venue)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[10px] text-neutral-400 hover:text-white dark:text-neutral-400 dark:hover:text-white underline ml-1 font-sans"
+                                  >
+                                    (ดูแผนที่)
+                                  </a>
                                 </p>
                               </div>
                             </div>

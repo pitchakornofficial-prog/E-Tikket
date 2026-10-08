@@ -17,7 +17,11 @@ import {
   AlertTriangleIcon,
   ArrowRightIcon,
   CheckIcon,
+  BarChartIcon,
+  PlusIcon,
+  EditIcon,
 } from "@/components/icons";
+import { EventAnalyticsModal } from "@/components/event-analytics-modal";
 
 interface EventSummary {
   id: string;
@@ -99,12 +103,163 @@ export default function OrganizerEventsPage() {
 
   // Event Details Modal state
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
+  const [analyticsEventId, setAnalyticsEventId] = useState<string | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState<string | null>(null);
   const [modalData, setModalData] = useState<EventDetailResponse | null>(null);
 
   const [orderSearch, setOrderSearch] = useState("");
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>("ALL");
+
+  // Create / Edit Event Form state
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [formData, setFormData] = useState<{
+    id?: string;
+    name: string;
+    category: string;
+    description: string;
+    venue: string;
+    eventDate: string;
+    startTime: string;
+    ticketPrice: string;
+    totalTickets: string;
+    imageUrl: string;
+    status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  }>({
+    name: "",
+    category: "Concert",
+    description: "",
+    venue: "",
+    eventDate: new Date().toISOString().slice(0, 10),
+    startTime: "19:00",
+    ticketPrice: "500",
+    totalTickets: "100",
+    imageUrl: "",
+    status: "DRAFT",
+  });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSoldTickets, setFormSoldTickets] = useState(0);
+  const [formInitialTotalTickets, setFormInitialTotalTickets] = useState(1);
+
+  const openCreateEventModal = () => {
+    setFormData({
+      name: "",
+      category: "Concert",
+      description: "",
+      venue: "",
+      eventDate: new Date().toISOString().slice(0, 10),
+      startTime: "19:00",
+      ticketPrice: "500",
+      totalTickets: "100",
+      imageUrl: "",
+      status: "DRAFT",
+    });
+    setFormSoldTickets(0);
+    setFormInitialTotalTickets(1);
+    setFormError(null);
+    setIsFormModalOpen(true);
+  };
+
+  const openEditEventModal = (ev: EventSummary) => {
+    setFormData({
+      id: ev.id,
+      name: ev.name,
+      category: ev.category || "Concert",
+      description: ev.description || "",
+      venue: ev.venue || "",
+      eventDate: ev.eventDate ? ev.eventDate.slice(0, 10) : "",
+      startTime: ev.startTime || "19:00",
+      ticketPrice: String(ev.ticketPrice),
+      totalTickets: String(ev.totalTickets),
+      imageUrl: ev.imageUrl || "",
+      status:
+        ev.status === "PUBLISHED"
+          ? "PUBLISHED"
+          : ev.status === "COMPLETED" || ev.status === "CANCELLED"
+          ? "ARCHIVED"
+          : "DRAFT",
+    });
+    setFormSoldTickets(ev.soldTickets || 0);
+    setFormInitialTotalTickets(ev.totalTickets || 1);
+    setFormError(null);
+    setIsFormModalOpen(true);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormError(null);
+
+    const isEdit = !!formData.id;
+    const url = isEdit ? `/api/organizer/events/${formData.id}` : "/api/organizer/events";
+    const method = isEdit ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setFormError(data.error || "เกิดข้อผิดพลาดในการบันทึกข้อมูลคอนเสิร์ต");
+        return;
+      }
+
+      setIsFormModalOpen(false);
+      await loadEvents(true);
+    } catch {
+      setFormError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // Export CSV state
+  const [exportingKey, setExportingKey] = useState<string | null>(null);
+  const [exportDropdownEventId, setExportDropdownEventId] = useState<string | null>(null);
+
+  const downloadExportCSV = useCallback(
+    async (eventId: string, type: "attendees" | "orders", eventName: string) => {
+      const key = `${eventId}-${type}`;
+      setExportingKey(key);
+      try {
+        const res = await fetch(`/api/events/${eventId}/export?type=${type}`);
+        if (!res.ok) {
+          let msg = "ไม่สามารถส่งออกไฟล์ CSV ได้";
+          try {
+            const errData = await res.json();
+            if (errData.error) msg = errData.error;
+          } catch {
+            // fallback
+          }
+          alert(msg);
+          return;
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const safeName = eventName.replace(/[^a-zA-Z0-9ก-๙_-]/g, "_");
+        const dateStr = new Date().toISOString().slice(0, 10);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${safeName}_${type}_${dateStr}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("Export error:", err);
+        alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง");
+      } finally {
+        setExportingKey(null);
+        setExportDropdownEventId(null);
+      }
+    },
+    []
+  );
 
   // Fetch all organizer events
   const loadEvents = useCallback(async (isRefresh = false) => {
@@ -225,70 +380,6 @@ export default function OrganizerEventsPage() {
     });
   }, [modalData, orderStatusFilter, orderSearch]);
 
-  // Export CSV
-  const handleExportCSV = useCallback(() => {
-    if (!modalData) return;
-
-    const BOM = "\uFEFF";
-    const headers = [
-      "ลำดับ",
-      "รหัสคำสั่งซื้อ",
-      "วันเวลาสั่งซื้อ",
-      "ชื่อผู้ซื้อ",
-      "อีเมล",
-      "เบอร์โทรศัพท์",
-      "จำนวนบัตร",
-      "ยอดชำระรวม (บาท)",
-      "รายได้ผู้จัด (บาท)",
-      "สถานะคำสั่งซื้อ",
-      "เลขที่บัตร (Ticket Numbers)",
-      "สถานะบัตรแต่ละใบ",
-    ];
-
-    const escapeCSV = (val: string | number | null | undefined) => {
-      if (val === null || val === undefined) return '""';
-      const str = String(val).replace(/"/g, '""');
-      return `"${str}"`;
-    };
-
-    const rows = filteredOrders.map((order, idx) => {
-      const ticketNums = order.tickets.map((t) => t.ticketNumber).join(", ");
-      const ticketStatuses = order.tickets
-        .map((t) => `${t.ticketNumber}: ${t.status}`)
-        .join(", ");
-      const orderDate = new Date(order.createdAt).toLocaleString("th-TH");
-      return [
-        idx + 1,
-        order.id,
-        orderDate,
-        order.customerName,
-        order.customerEmail,
-        order.customerPhone,
-        order.quantity,
-        order.totalAmount.toFixed(2),
-        order.organizerRevenue.toFixed(2),
-        order.status,
-        ticketNums,
-        ticketStatuses,
-      ]
-        .map(escapeCSV)
-        .join(",");
-    });
-
-    const csvContent = BOM + [headers.map(escapeCSV).join(","), ...rows].join("\r\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const safeName = modalData.event.name.replace(/[^a-zA-Z0-9ก-๙_-]/g, "_");
-    const dateStr = new Date().toISOString().slice(0, 10);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `${safeName}_buyers_${dateStr}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, [modalData, filteredOrders]);
-
   const formatThaiDate = (dateStr: string) => {
     try {
       const d = new Date(dateStr);
@@ -323,6 +414,14 @@ export default function OrganizerEventsPage() {
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={() => openCreateEventModal()}
+              className="w-full sm:w-auto px-4 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
+            >
+              <PlusIcon className="w-3.5 h-3.5" />
+              <span>สร้างคอนเสิร์ตใหม่</span>
+            </button>
+
             <button
               onClick={() => loadEvents(true)}
               disabled={refreshing || loading}
@@ -592,7 +691,7 @@ export default function OrganizerEventsPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-900">
+                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-900">
                     <button
                       onClick={() => openEventModal(ev.id)}
                       className="flex-1 py-2 px-3 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
@@ -600,6 +699,70 @@ export default function OrganizerEventsPage() {
                       <UsersIcon className="w-3.5 h-3.5" />
                       <span>ดูรายละเอียด & ผู้ซื้อ ({ev.soldTickets})</span>
                     </button>
+
+                    {/* Analytics Button */}
+                    <button
+                      onClick={() => setAnalyticsEventId(ev.id)}
+                      className="py-2 px-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm"
+                      title="ดูสถิติและกราฟวิเคราะห์ยอดขายและการเข้างาน"
+                    >
+                      <BarChartIcon className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">สถิติ & กราฟ</span>
+                    </button>
+
+                    {/* Edit Event Button */}
+                    <button
+                      onClick={() => openEditEventModal(ev)}
+                      className="py-2 px-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm"
+                      title="แก้ไขข้อมูลคอนเสิร์ต"
+                    >
+                      <EditIcon className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">แก้ไข</span>
+                    </button>
+
+                    {/* Export CSV Dropdown */}
+                    <div className="relative">
+                      <button
+                        onClick={() =>
+                          setExportDropdownEventId(
+                            exportDropdownEventId === ev.id ? null : ev.id
+                          )
+                        }
+                        className="py-2 px-2.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm"
+                        title="ส่งออกรายงาน CSV สำหรับงานนี้"
+                      >
+                        <DownloadIcon className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Export</span>
+                      </button>
+
+                      {exportDropdownEventId === ev.id && (
+                        <div className="absolute right-0 bottom-full mb-2 w-52 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl z-20 py-1.5 text-xs">
+                          <div className="px-3 py-1 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+                            ส่งออกรายงาน CSV
+                          </div>
+                          <button
+                            onClick={() => downloadExportCSV(ev.id, "attendees", ev.name)}
+                            disabled={exportingKey === `${ev.id}-attendees`}
+                            className="w-full text-left px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium flex items-center justify-between transition disabled:opacity-50"
+                          >
+                            <span>📋 รายชื่อผู้เข้างาน (Attendees)</span>
+                            {exportingKey === `${ev.id}-attendees` && (
+                              <RefreshCwIcon className="w-3 h-3 animate-spin text-neutral-500" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => downloadExportCSV(ev.id, "orders", ev.name)}
+                            disabled={exportingKey === `${ev.id}-orders`}
+                            className="w-full text-left px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium flex items-center justify-between transition border-t border-neutral-100 dark:border-neutral-800 disabled:opacity-50"
+                          >
+                            <span>💰 สรุปคำสั่งซื้อ (Orders)</span>
+                            {exportingKey === `${ev.id}-orders` && (
+                              <RefreshCwIcon className="w-3 h-3 animate-spin text-neutral-500" />
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </div>
 
                     <Link
                       href={`/events/${ev.id}`}
@@ -646,7 +809,17 @@ export default function OrganizerEventsPage() {
                 </h2>
                 {modalData && (
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                    <span>สถานที่: {modalData.event.venue}</span>
+                    <span className="inline-flex items-center gap-1">
+                      สถานที่: {modalData.event.venue}
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(modalData.event.venue)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 dark:text-blue-400 hover:underline ml-0.5"
+                      >
+                        (แผนที่)
+                      </a>
+                    </span>
                     <span>
                       วันแสดง: {formatThaiDate(modalData.event.eventDate)} ({modalData.event.startTime} น.)
                     </span>
@@ -742,14 +915,63 @@ export default function OrganizerEventsPage() {
                         </h3>
                       </div>
 
-                      <button
-                        onClick={handleExportCSV}
-                        disabled={filteredOrders.length === 0}
-                        className="w-full sm:w-auto px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50"
-                      >
-                        <DownloadIcon className="w-3.5 h-3.5" />
-                        <span>Export CSV ({filteredOrders.length})</span>
-                      </button>
+                      <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <button
+                          onClick={() =>
+                            modalData &&
+                            downloadExportCSV(
+                              modalData.event.id,
+                              "attendees",
+                              modalData.event.name
+                            )
+                          }
+                          disabled={
+                            !modalData ||
+                            exportingKey === `${modalData?.event.id}-attendees`
+                          }
+                          className="flex-1 sm:flex-none px-3 py-1.5 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50"
+                          title="ส่งออกรายชื่อผู้ถือบัตรรายใบสำหรับจุดตรวจหน้างาน"
+                        >
+                          {exportingKey === `${modalData?.event.id}-attendees` ? (
+                            <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <DownloadIcon className="w-3.5 h-3.5" />
+                          )}
+                          <span>
+                            {exportingKey === `${modalData?.event.id}-attendees`
+                              ? "กำลังโหลด..."
+                              : "รายชื่อผู้เข้างาน (CSV)"}
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            modalData &&
+                            downloadExportCSV(
+                              modalData.event.id,
+                              "orders",
+                              modalData.event.name
+                            )
+                          }
+                          disabled={
+                            !modalData ||
+                            exportingKey === `${modalData?.event.id}-orders`
+                          }
+                          className="flex-1 sm:flex-none px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50"
+                          title="ส่งออกสรุปคำสั่งซื้อและยอดเงินสำหรับทำบัญชี"
+                        >
+                          {exportingKey === `${modalData?.event.id}-orders` ? (
+                            <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <DownloadIcon className="w-3.5 h-3.5" />
+                          )}
+                          <span>
+                            {exportingKey === `${modalData?.event.id}-orders`
+                              ? "กำลังโหลด..."
+                              : "สรุปคำสั่งซื้อ (CSV)"}
+                          </span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Search & Order Status Filters */}
@@ -951,6 +1173,286 @@ export default function OrganizerEventsPage() {
                 ปิดหน้าต่าง
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Event Analytics & Peak Traffic Charts */}
+      {analyticsEventId && (
+        <EventAnalyticsModal
+          eventId={analyticsEventId}
+          onClose={() => setAnalyticsEventId(null)}
+        />
+      )}
+
+      {/* Modal: Create / Edit Event Form */}
+      {isFormModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+          <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Header */}
+            <div className="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center">
+              <div>
+                <h2 className="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                  <CalendarIcon className="w-4 h-4" />
+                  <span>{formData.id ? "แก้ไขข้อมูลคอนเสิร์ต" : "สร้างคอนเสิร์ตใหม่"}</span>
+                </h2>
+                <p className="text-xs text-neutral-500">
+                  {formData.id
+                    ? formSoldTickets > 0
+                      ? `ปรับปรุงข้อมูลคอนเสิร์ต (ข้อมูลสำคัญถูกล็อกเนื่องจากมีผู้ซื้อแล้ว ${formSoldTickets} ใบ)`
+                      : "ปรับปรุงข้อมูล วันที่ ราคาบัตร หรือจำนวนที่เปิดจำหน่าย"
+                    : "กรอกข้อมูลเพื่อเปิดรอบการจำหน่ายบัตรคอนเสิร์ตของคุณ"}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsFormModalOpen(false)}
+                className="p-1 rounded-lg text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                <XIcon className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleFormSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
+              {formData.id && formSoldTickets > 0 && (
+                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs flex items-start gap-2">
+                  <AlertTriangleIcon className="w-4 h-4 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold">จำกัดการแก้ไขข้อมูล (มีผู้ซื้อบัตรแล้ว {formSoldTickets} ใบ)</p>
+                    <p className="text-[11px] opacity-90 mt-0.5">
+                      เพื่อคุ้มครองสิทธิ์ของผู้ซื้อบัตร: วันและเวลาจัดงาน, สถานที่, ราคาบัตร และการลดโควตาบัตร จะถูกล็อกไม่ให้แก้ไข แต่คุณยังสามารถแก้ไขรายละเอียด, โปสเตอร์, หมวดหมู่, สถานะงาน หรือเพิ่มโควตาบัตรได้ตามปกติ
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {formError && (
+                <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs flex items-center gap-2">
+                  <AlertTriangleIcon className="w-4 h-4 shrink-0" />
+                  <span>{formError}</span>
+                </div>
+              )}
+
+              {/* Event Name */}
+              <div className="space-y-1">
+                <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                  ชื่อคอนเสิร์ต / ชื่องาน <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="เช่น Friday Night Live Session #4"
+                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
+                />
+              </div>
+
+              {/* Category & Status */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">หมวดหมู่</label>
+                  <input
+                    type="text"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    placeholder="เช่น Indie Pop, Rock, Acoustic"
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">สถานะงาน</label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as "DRAFT" | "PUBLISHED" | "ARCHIVED" })}
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                  >
+                    <option value="DRAFT">ฉบับร่าง (DRAFT) - ยังไม่เปิดจำหน่าย</option>
+                    <option value="PUBLISHED">เปิดขายบัตร (PUBLISHED) - แสดงบนหน้าเว็บ</option>
+                    {formData.id && <option value="ARCHIVED">จัดเก็บ / ปิดรอบ (ARCHIVED)</option>}
+                  </select>
+                </div>
+              </div>
+
+              {/* Venue */}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                    สถานที่จัดงาน (Venue) <span className="text-rose-500">*</span>
+                  </label>
+                  {formSoldTickets > 0 && (
+                    <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                      🔒 ล็อก (มีตั๋วออกในระบบแล้ว)
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  required
+                  disabled={formSoldTickets > 0}
+                  value={formData.venue}
+                  onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                  placeholder="เช่น Jam Factory เจริญนคร, Decommune ทองหล่อ"
+                  className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white ${
+                    formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                  }`}
+                />
+              </div>
+
+              {/* Date & Time */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      วันที่จัดงาน <span className="text-rose-500">*</span>
+                    </label>
+                    {formSoldTickets > 0 && (
+                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                        🔒 ล็อก
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="date"
+                    required
+                    disabled={formSoldTickets > 0}
+                    value={formData.eventDate}
+                    onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white ${
+                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                    }`}
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      เวลาเริ่มงาน (HH:MM) <span className="text-rose-500">*</span>
+                    </label>
+                    {formSoldTickets > 0 && (
+                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                        🔒 ล็อก
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    disabled={formSoldTickets > 0}
+                    value={formData.startTime}
+                    onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                    placeholder="19:00"
+                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white ${
+                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Price & Quota */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      ราคาบัตร (บาท) <span className="text-rose-500">*</span>
+                    </label>
+                    {formSoldTickets > 0 && (
+                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                        🔒 ล็อก
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    disabled={formSoldTickets > 0}
+                    value={formData.ticketPrice}
+                    onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
+                    placeholder="450"
+                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono ${
+                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                    }`}
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      จำนวนบัตรทั้งหมด (ใบ) <span className="text-rose-500">*</span>
+                    </label>
+                    {formSoldTickets > 0 && (
+                      <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                        ขยายโควตาได้ (ขั้นต่ำ {formInitialTotalTickets})
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="number"
+                    min={formSoldTickets > 0 ? formInitialTotalTickets : 1}
+                    step="1"
+                    required
+                    value={formData.totalTickets}
+                    onChange={(e) => setFormData({ ...formData, totalTickets: e.target.value })}
+                    placeholder="150"
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono"
+                  />
+                  {formSoldTickets > 0 && (
+                    <p className="text-[10px] text-neutral-500">
+                      * ปรับเพิ่มโควตาได้ แต่ไม่สามารถปรับลดต่ำกว่าโควตาเดิม ({formInitialTotalTickets} ใบ)
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Poster Image URL */}
+              <div className="space-y-1">
+                <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                  URL รูปภาพโปสเตอร์ (Image URL)
+                </label>
+                <input
+                  type="url"
+                  value={formData.imageUrl}
+                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                  placeholder="https://images.unsplash.com/photo-..."
+                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono text-[11px]"
+                />
+              </div>
+
+              {/* Description */}
+              <div className="space-y-1">
+                <label className="font-bold text-neutral-700 dark:text-neutral-300">รายละเอียดงาน (Description)</label>
+                <textarea
+                  rows={4}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="รายละเอียดงาน เงื่อนไขการเข้างาน รายชื่อศิลปิน ฯลฯ"
+                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg p-3 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white resize-y"
+                />
+              </div>
+
+              {/* Footer Actions */}
+              <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsFormModalOpen(false)}
+                  className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg font-bold transition"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="px-5 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black rounded-lg font-bold transition flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+                >
+                  {formLoading && <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />}
+                  <span>{formData.id ? "บันทึกการแก้ไข" : "สร้างคอนเสิร์ต"}</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

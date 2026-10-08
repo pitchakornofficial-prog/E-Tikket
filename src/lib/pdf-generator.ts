@@ -27,8 +27,8 @@ export async function generateTicketsPdf(data: TicketPdfData): Promise<Uint8Arra
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
 
-  const regularFontPath = path.join(process.cwd(), "src/assets/fonts/NotoSansThai-Regular.ttf");
-  const boldFontPath = path.join(process.cwd(), "src/assets/fonts/NotoSansThai-Bold.ttf");
+  const regularFontPath = path.join(process.cwd(), "src/assets/fonts/Sarabun-Regular.ttf");
+  const boldFontPath = path.join(process.cwd(), "src/assets/fonts/Sarabun-Bold.ttf");
 
   const fontRegular = await pdfDoc.embedFont(fs.readFileSync(regularFontPath));
   const fontBold = await pdfDoc.embedFont(fs.readFileSync(boldFontPath));

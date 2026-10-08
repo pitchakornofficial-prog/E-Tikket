@@ -22,6 +22,7 @@ export function TicketPurchaseForm({
   const [quantity, setQuantity] = useState(1);
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -50,6 +51,7 @@ export function TicketPurchaseForm({
 
     const trimmedName = customerName.trim();
     const trimmedEmail = customerEmail.trim();
+    const trimmedConfirmEmail = confirmEmail.trim();
     const trimmedPhone = customerPhone.trim();
 
     if (!trimmedName) {
@@ -58,6 +60,14 @@ export function TicketPurchaseForm({
     }
     if (!trimmedEmail) {
       setErrorMessage("กรุณากรอกอีเมล");
+      return;
+    }
+    if (!trimmedConfirmEmail) {
+      setErrorMessage("กรุณายืนยันอีเมลอีกครั้ง");
+      return;
+    }
+    if (trimmedEmail.toLowerCase() !== trimmedConfirmEmail.toLowerCase()) {
+      setErrorMessage("อีเมลและช่องยืนยันอีเมลไม่ตรงกัน กรุณาตรวจสอบตัวสะกด");
       return;
     }
     if (!trimmedPhone) {
@@ -185,9 +195,43 @@ export function TicketPurchaseForm({
             disabled={isSubmitting}
             className="w-full px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded text-neutral-900 dark:text-white text-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white min-h-[40px]"
           />
-          <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-            ระบบจะส่ง E-Ticket และ QR Code ไปยังอีเมลนี้หลังยืนยันการชำระเงิน
-          </p>
+        </div>
+
+        {/* Confirm Email */}
+        <div className="space-y-1.5 mb-3">
+          <label htmlFor="cust-confirm-email" className="block text-xs text-neutral-600 dark:text-neutral-400">
+            ยืนยันอีเมลอีกครั้ง (Confirm Email) <span className="text-red-500">*</span>
+          </label>
+          <input
+            id="cust-confirm-email"
+            name="confirmEmail"
+            type="email"
+            required
+            placeholder="กรอกอีเมลเดิมเพื่อยืนยันความถูกต้อง"
+            value={confirmEmail}
+            onChange={(e) => setConfirmEmail(e.target.value)}
+            disabled={isSubmitting}
+            className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 border rounded text-neutral-900 dark:text-white text-sm placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-2 min-h-[40px] transition-colors ${
+              confirmEmail.length > 0 && confirmEmail.trim().toLowerCase() !== customerEmail.trim().toLowerCase()
+                ? "border-red-500 dark:border-red-500 focus:ring-red-500"
+                : confirmEmail.length > 0 && confirmEmail.trim().toLowerCase() === customerEmail.trim().toLowerCase()
+                ? "border-emerald-500 dark:border-emerald-500 focus:ring-emerald-500"
+                : "border-neutral-300 dark:border-neutral-700 focus:ring-black dark:focus:ring-white"
+            }`}
+          />
+          {confirmEmail.length > 0 && confirmEmail.trim().toLowerCase() !== customerEmail.trim().toLowerCase() ? (
+            <p className="text-[11px] text-red-500 font-medium">
+              อีเมลไม่ตรงกัน กรุณาตรวจสอบตัวสะกด
+            </p>
+          ) : confirmEmail.length > 0 && confirmEmail.trim().toLowerCase() === customerEmail.trim().toLowerCase() ? (
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+              ✓ อีเมลตรงกันเรียบร้อย
+            </p>
+          ) : (
+            <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+              ระบบจะส่ง E-Ticket และ QR Code ไปยังอีเมลนี้หลังยืนยันการชำระเงิน
+            </p>
+          )}
         </div>
 
         {/* Customer Phone */}

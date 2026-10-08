@@ -16,7 +16,23 @@ import {
   CalendarIcon,
   MapPinIcon,
   UserIcon,
+  FlashlightIcon,
+  FlashlightOffIcon,
+  VolumeIcon,
+  VolumeXIcon,
+  ZapIcon,
+  SearchIcon,
+  XIcon,
+  CheckIcon,
+  RefreshCwIcon,
+  TicketIcon,
 } from "@/components/icons";
+import {
+  playBeep,
+  triggerHaptic,
+  checkTorchCapability,
+  setTorchEnabled,
+} from "@/lib/scanner-feedback";
 
 interface RouteProps {
   params: Promise<{ token: string }>;
@@ -58,6 +74,15 @@ interface ScanResultData {
   errorMessage?: string;
 }
 
+interface ManualTicketItem {
+  id: string;
+  ticketNumber: string;
+  status: "OUTSIDE" | "INSIDE" | "CANCELLED";
+  customerName: string;
+  customerPhone: string;
+  orderStatus: string;
+}
+
 export default function MobileGateScannerPage({ params }: RouteProps) {
   const { token } = use(params);
 
@@ -69,9 +94,71 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
   const [action, setAction] = useState<"CHECK_IN" | "CHECK_OUT">("CHECK_IN");
   const [sessionScans, setSessionScans] = useState<ScanRecord[]>([]);
 
+  // Manual search states
+  const [isManualSearchOpen, setIsManualSearchOpen] = useState(false);
+  const [manualSearchQuery, setManualSearchQuery] = useState("");
+  const [manualSearchResults, setManualSearchResults] = useState<ManualTicketItem[]>([]);
+  const [manualSearching, setManualSearching] = useState(false);
+  const [manualActionLoadingNumber, setManualActionLoadingNumber] = useState<string | null>(null);
+
   // Camera states
   const [cameraState, setCameraState] = useState<"IDLE" | "REQUESTING" | "ACTIVE" | "DENIED" | "UNAVAILABLE">("IDLE");
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [torchAvailable, setTorchAvailable] = useState(false);
+  const [isTorchOn, setIsTorchOn] = useState(false);
+
+  // Sensory feedback states
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedMute = localStorage.getItem("etikket_scanner_muted");
+      if (savedMute === "true") {
+        setIsMuted(true);
+      }
+    } catch {
+      // Ignore local storage error
+    }
+  }, []);
+
+  const toggleMute = () => {
+    setIsMuted((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("etikket_scanner_muted", String(next));
+      } catch {
+        // Ignore
+      }
+      return next;
+    });
+  };
+
+  // Continuous Auto-Scan (Fast Mode) states
+  const [isContinuousScan, setIsContinuousScan] = useState(true);
+  const [autoNextCountdown, setAutoNextCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedContinuous = localStorage.getItem("etikket_continuous_scan");
+      if (savedContinuous !== null) {
+        setIsContinuousScan(savedContinuous === "true");
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  const toggleContinuousScan = () => {
+    setIsContinuousScan((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("etikket_continuous_scan", String(next));
+      } catch {
+        // Ignore
+      }
+      return next;
+    });
+  };
 
   // Scan gating states
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,6 +205,9 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
   // 2. Camera Controls
   const releaseCamera = useCallback(() => {
     cameraRequestIdRef.current += 1;
+
+    setIsTorchOn(false);
+    setTorchAvailable(false);
 
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -172,6 +262,7 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
       }
 
       setCameraState("ACTIVE");
+      setTorchAvailable(checkTorchCapability(stream));
     } catch (err: unknown) {
       if (requestId !== cameraRequestIdRef.current) return;
 
@@ -194,6 +285,15 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
       releaseCamera();
     };
   }, [checker, event, startCamera, releaseCamera]);
+
+  const toggleTorch = useCallback(async () => {
+    if (!streamRef.current || !torchAvailable) return;
+    const nextState = !isTorchOn;
+    const success = await setTorchEnabled(streamRef.current, nextState);
+    if (success) {
+      setIsTorchOn(nextState);
+    }
+  }, [torchAvailable, isTorchOn]);
 
   // 3. Scan QR submission
   const handleScanDetected = useCallback(
@@ -226,6 +326,14 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
             ticket: data.ticket,
           });
 
+          if (data.result === "VALID") {
+            playBeep("success", isMuted);
+            triggerHaptic("success");
+          } else {
+            playBeep("warning", isMuted);
+            triggerHaptic("warning");
+          }
+
           // Add to local session log
           setSessionScans((prev) => [
             {
@@ -238,6 +346,9 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
             ...prev.slice(0, 19),
           ]);
         } else {
+          playBeep("error", isMuted);
+          triggerHaptic("error");
+
           setScanResult({
             result: data.error?.code === "SCAN_UNCONFIRMED" ? "SCAN_UNCONFIRMED" : "ERROR",
             action,
@@ -246,6 +357,9 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
           });
         }
       } catch {
+        playBeep("error", isMuted);
+        triggerHaptic("error");
+
         setScanResult({
           result: "SCAN_UNCONFIRMED",
           action,
@@ -256,7 +370,117 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
         setIsSubmitting(false);
       }
     },
-    [checker, event, token, action],
+    [checker, event, token, action, isMuted],
+  );
+
+  // Manual ticket search & check-in handlers
+  const searchTickets = useCallback(
+    async (q: string) => {
+      if (!q.trim()) {
+        setManualSearchResults([]);
+        return;
+      }
+      setManualSearching(true);
+      try {
+        const res = await fetch(
+          `/api/scanner/${encodeURIComponent(token)}/search?q=${encodeURIComponent(q.trim())}`,
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setManualSearchResults(data.tickets || []);
+        } else {
+          setManualSearchResults([]);
+        }
+      } catch {
+        setManualSearchResults([]);
+      } finally {
+        setManualSearching(false);
+      }
+    },
+    [token],
+  );
+
+  const handleManualCheckin = useCallback(
+    async (ticketNumber: string, targetAction: "CHECK_IN" | "CHECK_OUT") => {
+      if (manualActionLoadingNumber || !checker || !event) return;
+      setManualActionLoadingNumber(ticketNumber);
+
+      try {
+        const res = await fetch(`/api/scanner/${encodeURIComponent(token)}/checkin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ticketNumber,
+            action: targetAction,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setScanResult({
+            result: data.result,
+            action: data.action,
+            eventId: data.eventId,
+            scannedAt: data.scannedAt,
+            ticket: data.ticket,
+          });
+
+          if (data.result === "VALID") {
+            playBeep("success", isMuted);
+            triggerHaptic("success");
+            // Update in manual search results list
+            setManualSearchResults((prev) =>
+              prev.map((item) =>
+                item.ticketNumber === ticketNumber
+                  ? {
+                      ...item,
+                      status: targetAction === "CHECK_IN" ? "INSIDE" : "OUTSIDE",
+                    }
+                  : item,
+              ),
+            );
+          } else {
+            playBeep("warning", isMuted);
+            triggerHaptic("warning");
+          }
+
+          setSessionScans((prev) => [
+            {
+              id: `${Date.now()}-${Math.random()}`,
+              action: data.action,
+              result: data.result,
+              scannedAt: data.scannedAt || new Date().toISOString(),
+              ticketNumber: data.ticket?.ticketNumber || ticketNumber,
+            },
+            ...prev.slice(0, 19),
+          ]);
+        } else {
+          playBeep("error", isMuted);
+          triggerHaptic("error");
+
+          setScanResult({
+            result: data.error?.code === "SCAN_UNCONFIRMED" ? "SCAN_UNCONFIRMED" : "ERROR",
+            action: targetAction,
+            eventId: event.id,
+            errorMessage: data.error?.message || "การตรวจสอบบัตรล้มเหลว",
+          });
+        }
+      } catch {
+        playBeep("error", isMuted);
+        triggerHaptic("error");
+
+        setScanResult({
+          result: "SCAN_UNCONFIRMED",
+          action: targetAction,
+          eventId: event.id,
+          errorMessage: "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ในขณะนี้ กรุณาตรวจสอบอินเทอร์เน็ต",
+        });
+      } finally {
+        setManualActionLoadingNumber(null);
+      }
+    },
+    [checker, event, isMuted, manualActionLoadingNumber, token],
   );
 
   // 4. Processing loop
@@ -306,11 +530,39 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
   }, [cameraState, handleScanDetected]);
 
   // Acknowledge Next
-  const handleAcknowledgeNext = () => {
+  const handleAcknowledgeNext = useCallback(() => {
     setScanResult(null);
     setIsSubmitting(false);
+    setAutoNextCountdown(null);
     isAwaitingAcknowledgmentRef.current = false;
-  };
+  }, []);
+
+  // Auto-advance timer in Continuous Mode
+  useEffect(() => {
+    if (!scanResult || !isContinuousScan) {
+      setAutoNextCountdown(null);
+      return;
+    }
+
+    const duration = scanResult.result === "VALID" ? 1500 : 2500;
+    const startTime = Date.now();
+    setAutoNextCountdown(100);
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remainingPercent = Math.max(0, 100 - (elapsed / duration) * 100);
+      setAutoNextCountdown(remainingPercent);
+
+      if (elapsed >= duration) {
+        clearInterval(interval);
+        handleAcknowledgeNext();
+      }
+    }, 40);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [scanResult, isContinuousScan, handleAcknowledgeNext]);
 
   const scanControlsDisabled = isSubmitting || scanResult !== null;
 
@@ -361,7 +613,22 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
               GATE STAFF
             </span>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={isMuted ? "เปิดเสียงแจ้งเตือน" : "ปิดเสียงแจ้งเตือน"}
+              title={isMuted ? "เปิดเสียงแจ้งเตือน" : "ปิดเสียงแจ้งเตือน"}
+              className={`p-2 rounded-lg border transition-colors ${
+                isMuted
+                  ? "bg-neutral-100 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-neutral-400"
+                  : "bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800 text-emerald-600 dark:text-emerald-400 shadow-sm"
+              }`}
+            >
+              {isMuted ? <VolumeXIcon className="w-4 h-4" /> : <VolumeIcon className="w-4 h-4" />}
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -394,6 +661,53 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
               </span>
             )}
           </div>
+        </div>
+
+        {/* Continuous Auto-Scan (Fast Mode) Toggle */}
+        <div className="flex items-center justify-between p-3 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <div
+              className={`p-1.5 rounded-lg transition-colors ${
+                isContinuousScan
+                  ? "bg-amber-400 text-black shadow-sm"
+                  : "bg-neutral-100 dark:bg-neutral-900 text-neutral-400"
+              }`}
+            >
+              <ZapIcon className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-neutral-900 dark:text-white flex items-center gap-1.5">
+                <span>สแกนต่อเนื่องอัตโนมัติ (Fast Mode)</span>
+                {isContinuousScan && (
+                  <span className="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold bg-neutral-900 text-white dark:bg-white dark:text-black">
+                    ON
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-neutral-500">
+                {isContinuousScan
+                  ? "รีเซ็ตกล้องรับบัตรถัดไปอัตโนมัติ (ผ่าน 1.5s / แจ้งเตือน 2.5s)"
+                  : "ต้องกดปุ่ม 'สแกนคนถัดไป' ด้วยตนเองทุกครั้ง"}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleContinuousScan}
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              isContinuousScan ? "bg-neutral-900 dark:bg-white" : "bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-800"
+            }`}
+            role="switch"
+            aria-checked={isContinuousScan}
+            title={isContinuousScan ? "ปิดโหมดสแกนต่อเนื่อง" : "เปิดโหมดสแกนต่อเนื่อง"}
+          >
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-neutral-900 shadow ring-0 transition duration-200 ease-in-out ${
+                isContinuousScan ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
         </div>
 
         {/* Scan Action Mode Toggle */}
@@ -440,18 +754,41 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
 
             {/* Overlays */}
             {cameraState === "ACTIVE" && (
-              <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                <div className="w-52 h-52 sm:w-64 sm:h-64 border-2 border-dashed border-white/60 rounded-2xl relative">
-                  <div className="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-white rounded-tl" />
-                  <div className="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-white rounded-tr" />
-                  <div className="absolute -bottom-1 -left-1 w-5 h-5 border-b-4 border-l-4 border-white rounded-bl" />
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 border-b-4 border-r-4 border-white rounded-br" />
+              <>
+                {/* Viewfinder Target Box */}
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                  <div className="w-52 h-52 sm:w-64 sm:h-64 border-2 border-dashed border-white/60 rounded-2xl relative">
+                    <div className="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-white rounded-tl" />
+                    <div className="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-white rounded-tr" />
+                    <div className="absolute -bottom-1 -left-1 w-5 h-5 border-b-4 border-l-4 border-white rounded-bl" />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 border-b-4 border-r-4 border-white rounded-br" />
 
-                  {!scanResult && !isSubmitting && (
-                    <div className="absolute inset-x-2 top-0 h-0.5 bg-red-500 shadow-md shadow-red-500 animate-pulse" />
-                  )}
+                    {!scanResult && !isSubmitting && (
+                      <div className="absolute inset-x-2 top-0 h-0.5 bg-red-500 shadow-md shadow-red-500 animate-pulse" />
+                    )}
+                  </div>
                 </div>
-              </div>
+
+                {/* Torch Toggle Overlay */}
+                {torchAvailable && (
+                  <div className="absolute top-3 right-3 z-20">
+                    <button
+                      type="button"
+                      onClick={toggleTorch}
+                      aria-label={isTorchOn ? "ปิดไฟฉาย" : "เปิดไฟฉาย"}
+                      title={isTorchOn ? "ปิดไฟฉาย" : "เปิดไฟฉาย"}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg backdrop-blur transition-all ${
+                        isTorchOn
+                          ? "bg-amber-400 text-black shadow-amber-400/40 ring-2 ring-amber-300"
+                          : "bg-black/60 text-white border border-white/20 hover:bg-black/80"
+                      }`}
+                    >
+                      {isTorchOn ? <FlashlightOffIcon className="w-3.5 h-3.5" /> : <FlashlightIcon className="w-3.5 h-3.5" />}
+                      <span>{isTorchOn ? "ไฟฉาย: เปิด" : "ไฟฉาย"}</span>
+                    </button>
+                  </div>
+                )}
+              </>
             )}
 
             {/* Camera States */}
@@ -519,6 +856,21 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
           </div>
         </div>
 
+        {/* Manual Ticket Search Trigger Button */}
+        <button
+          type="button"
+          onClick={() => {
+            setIsManualSearchOpen(true);
+            setManualSearchQuery("");
+            setManualSearchResults([]);
+          }}
+          className="w-full py-2.5 px-4 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-800 dark:text-neutral-200 text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs"
+        >
+          <SearchIcon className="w-3.5 h-3.5 text-neutral-500" />
+          <span>ค้นหาตั๋วด้วยตนเอง (Manual Ticket Search)</span>
+          <span className="text-[10px] text-neutral-400 font-mono hidden sm:inline">เมื่อสแกนไม่ติด</span>
+        </button>
+
         {/* Scan Result Feedback Panel */}
         {scanResult && (
           <section
@@ -582,6 +934,25 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
               )}
             </div>
 
+            {/* Fast Mode Countdown Bar */}
+            {isContinuousScan && autoNextCountdown !== null && (
+              <div className="space-y-1.5 pt-2 text-left">
+                <div className="flex justify-between items-center text-[11px] font-mono font-bold text-neutral-500">
+                  <span className="flex items-center gap-1.5">
+                    <ZapIcon className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+                    <span>กำลังรีเซ็ตกล้องอัตโนมัติ (Fast Mode)...</span>
+                  </span>
+                  <span>{((scanResult.result === "VALID" ? 1.5 : 2.5) * (autoNextCountdown / 100)).toFixed(1)}s</span>
+                </div>
+                <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-2 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-neutral-900 dark:bg-white transition-all duration-75 rounded-full"
+                    style={{ width: `${autoNextCountdown}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="pt-2">
               <button
                 type="button"
@@ -589,7 +960,7 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
                 autoFocus
                 className="inline-flex items-center justify-center gap-2 w-full py-4 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-extrabold text-base rounded-xl transition-all shadow-lg active:scale-98 cursor-pointer"
               >
-                <span>สแกนคนถัดไป</span>
+                <span>{isContinuousScan ? "สแกนคนถัดไปทันที (ข้ามเวลารอ)" : "สแกนคนถัดไป"}</span>
                 <ArrowRightIcon className="w-5 h-5" />
               </button>
             </div>
@@ -624,6 +995,199 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
       <footer className="border-t border-neutral-200 dark:border-neutral-900 py-4 text-center text-[11px] text-neutral-400 font-mono">
         E-Tikket Gate Staff Scanner • Mobile Optimized
       </footer>
+
+      {/* Modal: Manual Ticket Search */}
+      {isManualSearchOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+            {/* Modal Header */}
+            <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center">
+              <div>
+                <h2 className="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                  <SearchIcon className="w-4 h-4" />
+                  <span>ค้นหาตั๋วด้วยตนเอง</span>
+                </h2>
+                <p className="text-xs text-neutral-500">
+                  ค้นหาด้วยเลขตั๋ว, ชื่อผู้ซื้อ หรือเบอร์โทรศัพท์
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsManualSearchOpen(false)}
+                className="p-1 rounded-lg text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                <XIcon className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Search Input Box */}
+            <div className="p-4 border-b border-neutral-100 dark:border-neutral-900 bg-neutral-50 dark:bg-neutral-900/50">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  searchTickets(manualSearchQuery);
+                }}
+                className="flex gap-2"
+              >
+                <div className="relative flex-1">
+                  <SearchIcon className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={manualSearchQuery}
+                    onChange={(e) => {
+                      setManualSearchQuery(e.target.value);
+                      searchTickets(e.target.value);
+                    }}
+                    placeholder="พิมพ์เลขตั๋ว (TK-...), ชื่อ, หรือเบอร์โทร..."
+                    autoFocus
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg pl-9 pr-3 py-2 text-xs text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
+                  />
+                  {manualSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setManualSearchQuery("");
+                        setManualSearchResults([]);
+                      }}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black dark:hover:text-white"
+                    >
+                      <XIcon className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={manualSearching || !manualSearchQuery.trim()}
+                  className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black text-xs font-bold rounded-lg transition disabled:opacity-50 shrink-0 flex items-center gap-1.5"
+                >
+                  {manualSearching ? (
+                    <RefreshCwIcon className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <span>ค้นหา</span>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* Search Results List */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[220px]">
+              {manualSearching ? (
+                <div className="py-12 text-center space-y-2">
+                  <RefreshCwIcon className="w-6 h-6 animate-spin mx-auto text-neutral-400" />
+                  <p className="text-xs text-neutral-500">กำลังค้นหาตั๋วในระบบ...</p>
+                </div>
+              ) : manualSearchResults.length === 0 ? (
+                <div className="py-12 text-center space-y-2">
+                  <TicketIcon className="w-8 h-8 mx-auto text-neutral-300 dark:text-neutral-700" />
+                  <p className="text-xs text-neutral-500">
+                    {manualSearchQuery.trim()
+                      ? "ไม่พบตั๋วที่ตรงกับคำค้นหาในคอนเสิร์ตนี้"
+                      : "พิมพ์คำค้นหาเพื่อเริ่มค้นหาตั๋ว"}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <span className="text-[11px] font-mono font-bold text-neutral-400 uppercase">
+                    พบ {manualSearchResults.length} รายการ
+                  </span>
+                  {manualSearchResults.map((t) => (
+                    <div
+                      key={t.id}
+                      className="p-3 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    >
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-black text-xs text-neutral-900 dark:text-white">
+                            {t.ticketNumber}
+                          </span>
+                          <span
+                            className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                              t.status === "INSIDE"
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                                : t.status === "OUTSIDE"
+                                ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+                                : "bg-red-500/10 text-red-600 border border-red-500/20"
+                            }`}
+                          >
+                            {t.status === "INSIDE"
+                              ? "อยู่ในงาน (INSIDE)"
+                              : t.status === "OUTSIDE"
+                              ? "อยู่นอกงาน (OUTSIDE)"
+                              : "ยกเลิก"}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-neutral-500 flex flex-wrap items-center gap-x-2">
+                          <span className="font-medium text-neutral-700 dark:text-neutral-300">
+                            {t.customerName}
+                          </span>
+                          {t.customerPhone && (
+                            <span className="font-mono text-neutral-400">({t.customerPhone})</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleManualCheckin(t.ticketNumber, "CHECK_IN")}
+                          disabled={manualActionLoadingNumber === t.ticketNumber || t.status === "CANCELLED"}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                            t.status === "OUTSIDE"
+                              ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+                              : "bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300"
+                          } disabled:opacity-50`}
+                          title="กดเพื่อบันทึกการเข้างาน"
+                        >
+                          {manualActionLoadingNumber === t.ticketNumber ? (
+                            <RefreshCwIcon className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <CheckIcon className="w-3 h-3" />
+                          )}
+                          <span>เข้างาน</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleManualCheckin(t.ticketNumber, "CHECK_OUT")}
+                          disabled={manualActionLoadingNumber === t.ticketNumber || t.status === "CANCELLED"}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                            t.status === "INSIDE"
+                              ? "bg-amber-600 hover:bg-amber-700 text-white shadow-sm"
+                              : "bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300"
+                          } disabled:opacity-50`}
+                          title="กดเพื่อบันทึกการออกชั่วคราว"
+                        >
+                          {manualActionLoadingNumber === t.ticketNumber ? (
+                            <RefreshCwIcon className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <WalkIcon className="w-3 h-3" />
+                          )}
+                          <span>ออกชั่วคราว</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 flex justify-between items-center text-xs">
+              <span className="text-[11px] text-neutral-400">
+                การกด Check-in/Check-out จะบันทึกประวัติการสแกนทันที
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsManualSearchOpen(false)}
+                className="px-3 py-1.5 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 rounded-lg font-bold transition"
+              >
+                ปิด
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

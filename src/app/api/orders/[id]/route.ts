@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import QRCode from "qrcode";
 import { prisma } from "@/lib/prisma";
 import { hashToken } from "@/lib/crypto";
+import { generatePromptPayPayload, formatPromptPayDisplay } from "@/lib/promptpay";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -76,6 +78,23 @@ export async function GET(request: Request, { params }: RouteParams) {
       });
     }
 
+    const promptPayTarget = process.env.PROMPTPAY_TARGET || "0812345678";
+    const promptPayPayload = generatePromptPayPayload(promptPayTarget, Number(order.totalAmount));
+    let promptPayQrDataUrl: string | null = null;
+    try {
+      promptPayQrDataUrl = await QRCode.toDataURL(promptPayPayload, {
+        errorCorrectionLevel: "M",
+        margin: 2,
+        width: 320,
+        color: {
+          dark: "#000000",
+          light: "#FFFFFF",
+        },
+      });
+    } catch (qrErr) {
+      console.warn("Failed to generate dynamic PromptPay QR:", qrErr);
+    }
+
     const response = NextResponse.json({
       orderId: order.id,
       event: {
@@ -96,12 +115,18 @@ export async function GET(request: Request, { params }: RouteParams) {
       totalAmount: order.totalAmount.toFixed(2),
       orderStatus: currentStatus,
       expiresAt: order.expiresAt.toISOString(),
+      promptPay: {
+        target: promptPayTarget,
+        displayTarget: formatPromptPayDisplay(promptPayTarget),
+        qrDataUrl: promptPayQrDataUrl,
+        amount: order.totalAmount.toFixed(2),
+      },
       bankAccount: {
         bank: "กสิกรไทย (KBANK)",
         accountName: "บริษัท อี-ทิคเก็ต จำกัด",
         accountNumber: "123-4-56789-0",
       },
-      transferQr: "/qr-transfer-sample.svg",
+      transferQr: promptPayQrDataUrl || "/qr-transfer-sample.svg",
     });
 
     response.headers.set("Cache-Control", "private, no-store");

@@ -12,6 +12,8 @@ import {
   FileTextIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
+  CheckIcon,
+  CopyIcon,
 } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -35,6 +37,12 @@ interface OrderData {
   totalAmount: string;
   orderStatus: "PENDING_PAYMENT" | "WAITING_FOR_VERIFY" | "PAID" | "EXPIRED" | "REJECTED" | "CANCELLED";
   expiresAt: string;
+  promptPay?: {
+    target: string;
+    displayTarget: string;
+    qrDataUrl: string | null;
+    amount: string;
+  };
   bankAccount: {
     bank: string;
     accountName: string;
@@ -60,6 +68,19 @@ function CheckoutContent() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // Copy-to-clipboard state
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopy = (text: string, fieldName: string) => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedField(fieldName);
+      setTimeout(() => {
+        setCopiedField((curr) => (curr === fieldName ? null : curr));
+      }, 2000);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUploadError(null);
@@ -268,6 +289,9 @@ function CheckoutContent() {
   };
 
   const isExpired = order.orderStatus === "EXPIRED" || (order.orderStatus === "PENDING_PAYMENT" && (timeRemaining ?? 0) <= 0);
+  const percentRemaining = timeRemaining !== null ? Math.min(100, Math.max(0, (timeRemaining / 900) * 100)) : 100;
+  const isUrgent = timeRemaining !== null && timeRemaining > 0 && timeRemaining < 180;
+  const isCritical = timeRemaining !== null && timeRemaining > 0 && timeRemaining < 60;
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
@@ -295,23 +319,70 @@ function CheckoutContent() {
         {order.orderStatus === "PENDING_PAYMENT" && !isExpired && (
           <div
             id="timer-banner"
-            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-600/50 rounded-lg text-amber-900 dark:text-amber-200"
+            className={`p-4 sm:p-5 border rounded-xl transition-all duration-300 shadow-sm ${
+              isCritical
+                ? "bg-rose-500/10 dark:bg-rose-950/30 border-rose-400 dark:border-rose-600/60 text-rose-900 dark:text-rose-200"
+                : isUrgent
+                ? "bg-amber-500/10 dark:bg-amber-950/30 border-amber-400 dark:border-amber-600/60 text-amber-900 dark:text-amber-200"
+                : "bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100"
+            }`}
           >
-            <div>
-              <strong className="text-sm font-bold flex items-center gap-1.5 text-amber-700 dark:text-amber-400">
-                <ClockIcon className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                เวลาในการล็อกบัตรและชำระเงิน
-              </strong>
-              <span className="text-xs text-amber-800 dark:text-amber-200/80">
-                กรุณาโอนเงินและแนบสลิปก่อนหมดเวลา เพื่อรักษาสิทธิ์บัตรของท่าน
-              </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <strong
+                  className={`text-sm font-bold flex items-center gap-1.5 ${
+                    isCritical
+                      ? "text-rose-600 dark:text-rose-400"
+                      : isUrgent
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-neutral-900 dark:text-white"
+                  }`}
+                >
+                  <ClockIcon className={`w-4 h-4 shrink-0 ${isUrgent ? "animate-pulse" : ""}`} />
+                  เวลาในการล็อกบัตรและชำระเงิน (15 นาที)
+                </strong>
+                <span className="text-xs text-neutral-600 dark:text-neutral-400 block mt-0.5">
+                  {isCritical
+                    ? "⚠️ เหลือเวลาไม่ถึง 1 นาที! กรุณาแนบสลิปทันทีเพื่อป้องกันตั๋วหลุดการจอง"
+                    : isUrgent
+                    ? "⚠️ เหลือเวลาน้อยกว่า 3 นาที กรุณาโอนเงินและแนบสลิปเพื่อรักษาสิทธิ์บัตรของท่าน"
+                    : "กรุณาโอนเงินและแนบสลิปก่อนหมดเวลา เพื่อรักษาสิทธิ์บัตรของท่าน"}
+                </span>
+              </div>
+              <div
+                id="reservation-timer"
+                className={`font-mono text-3xl font-black tracking-wider flex items-center gap-1.5 self-start sm:self-auto ${
+                  isCritical
+                    ? "text-rose-600 dark:text-rose-400 animate-pulse"
+                    : isUrgent
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-neutral-900 dark:text-white"
+                }`}
+                aria-live="polite"
+              >
+                {timeRemaining !== null ? formatTimer(timeRemaining) : "--:--"}
+              </div>
             </div>
-            <div
-              id="reservation-timer"
-              className="font-mono text-2xl font-black text-amber-900 dark:text-amber-300 tracking-wider"
-              aria-live="polite"
-            >
-              {timeRemaining !== null ? formatTimer(timeRemaining) : "--:--"}
+
+            {/* Progress Bar */}
+            <div className="mt-3.5 pt-1">
+              <div className="w-full bg-neutral-200 dark:bg-neutral-800 rounded-full h-2 overflow-hidden">
+                <div
+                  className={`h-2 rounded-full transition-all duration-1000 ${
+                    isCritical
+                      ? "bg-rose-600 dark:bg-rose-500"
+                      : isUrgent
+                      ? "bg-amber-500"
+                      : "bg-neutral-900 dark:bg-white"
+                  }`}
+                  style={{ width: `${percentRemaining}%` }}
+                />
+              </div>
+              <div className="flex justify-between items-center text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 font-mono">
+                <span>00:00</span>
+                <span>{percentRemaining.toFixed(0)}% เหลืออยู่</span>
+                <span>15:00</span>
+              </div>
             </div>
           </div>
         )}
@@ -432,25 +503,76 @@ function CheckoutContent() {
 
         {/* Payment Transfer Instructions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-sm dark:shadow-none">
-          {/* Transfer QR */}
+          {/* Dynamic PromptPay QR */}
           <div className="flex flex-col items-center justify-center p-4 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-900 text-center space-y-3">
-            <div className="bg-white p-3 rounded-lg border-2 border-neutral-200 dark:border-black inline-block">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-neutral-800 dark:text-neutral-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>PromptPay QR • ระบุยอดเงินอัตโนมัติ</span>
+            </div>
+
+            <div className="bg-white p-3 rounded-xl border-2 border-neutral-200 dark:border-neutral-800 shadow-sm inline-block">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={order.transferQr || "/qr-transfer-sample.svg"}
-                alt="QR Code สำหรับโอนเงิน"
-                className="w-36 h-36 object-contain"
+                src={order.promptPay?.qrDataUrl || order.transferQr || "/qr-transfer-sample.svg"}
+                alt="PromptPay QR Code สำหรับโอนเงิน"
+                className="w-44 h-44 object-contain rounded"
               />
             </div>
-            <span className="text-xs text-neutral-500">
-              QR พร้อมเพย์ตัวอย่าง • ใช้ชำระเงินจำลอง
-            </span>
+
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-full text-xs font-mono font-bold text-emerald-800 dark:text-emerald-300">
+                <span>ยอดที่ต้องสแกนจ่าย: ฿{order.totalAmount}</span>
+              </div>
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                สแกนผ่านแอปธนาคารใดก็ได้ ระบบจะใส่ยอดเงินให้อัตโนมัติ
+              </p>
+            </div>
+
+            {/* Quick Copy Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1 w-full max-w-xs">
+              {order.promptPay?.target && (
+                <button
+                  type="button"
+                  onClick={() => handleCopy(order.promptPay!.target, "promptpay")}
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  {copiedField === "promptpay" ? (
+                    <>
+                      <CheckIcon className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>คัดลอกเบอร์แล้ว</span>
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="w-3.5 h-3.5 text-neutral-500" />
+                      <span>คัดลอก {order.promptPay.displayTarget}</span>
+                    </>
+                  )}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handleCopy(order.totalAmount, "amount")}
+                className="flex-1 py-1.5 px-2.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition-colors"
+              >
+                {copiedField === "amount" ? (
+                  <>
+                    <CheckIcon className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>คัดลอกยอดแล้ว</span>
+                  </>
+                ) : (
+                  <>
+                    <CopyIcon className="w-3.5 h-3.5 text-neutral-500" />
+                    <span>คัดลอก ฿{order.totalAmount}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Bank Account Info */}
           <div className="flex flex-col justify-center space-y-4 text-sm">
             <span className="inline-block px-2.5 py-1 text-[11px] font-semibold bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-800 rounded w-fit">
-              ข้อมูลบัญชีธนาคารสำหรับโอนเงิน
+              ข้อมูลบัญชีธนาคารสำหรับโอนเงิน (ทางเลือกสำรอง)
             </span>
             <div className="space-y-1">
               <span className="text-xs text-neutral-500 block">ธนาคาร:</span>
@@ -462,9 +584,23 @@ function CheckoutContent() {
             </div>
             <div className="space-y-1">
               <span className="text-xs text-neutral-500 block">เลขที่บัญชี:</span>
-              <p className="font-mono text-xl font-bold tracking-wider text-neutral-900 dark:text-white">
-                {order.bankAccount.accountNumber}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="font-mono text-xl font-bold tracking-wider text-neutral-900 dark:text-white">
+                  {order.bankAccount.accountNumber}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(order.bankAccount.accountNumber.replace(/-/g, ""), "account")}
+                  title="คัดลอกเลขบัญชี"
+                  className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                >
+                  {copiedField === "account" ? (
+                    <CheckIcon className="w-4 h-4 text-emerald-500" />
+                  ) : (
+                    <CopyIcon className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
             <div className="space-y-1 pt-2 border-t border-neutral-200 dark:border-neutral-900">
               <span className="text-xs text-neutral-500 block">ยอดเงินที่ต้องโอน (ยอดตรงเป๊ะ):</span>

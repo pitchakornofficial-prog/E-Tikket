@@ -17,6 +17,8 @@ import {
   TrashIcon,
   ArchiveIcon,
   RotateCcwIcon,
+  DownloadIcon,
+  RefreshCwIcon,
 } from "@/components/icons";
 
 interface OrganizerUser {
@@ -59,6 +61,47 @@ export default function AdminEventsPage() {
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
   const [statusFilter, setStatusFilter] = useState<"ALL" | "PUBLISHED" | "DRAFT" | "ARCHIVED">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Export CSV state
+  const [exportingKey, setExportingKey] = useState<string | null>(null);
+  const [exportDropdownEventId, setExportDropdownEventId] = useState<string | null>(null);
+
+  const downloadExportCSV = async (eventId: string, type: "attendees" | "orders", eventName: string) => {
+    const key = `${eventId}-${type}`;
+    setExportingKey(key);
+    try {
+      const res = await fetch(`/api/events/${eventId}/export?type=${type}`);
+      if (!res.ok) {
+        let msg = "ไม่สามารถส่งออกไฟล์ CSV ได้";
+        try {
+          const errData = await res.json();
+          if (errData.error) msg = errData.error;
+        } catch {
+          // fallback
+        }
+        setErrorMsg(msg);
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const safeName = eventName.replace(/[^a-zA-Z0-9ก-๙_-]/g, "_");
+      const dateStr = new Date().toISOString().slice(0, 10);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `${safeName}_${type}_${dateStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setSuccessMsg(`ดาวน์โหลดรายงาน CSV (${type === "attendees" ? "ผู้เข้างาน" : "คำสั่งซื้อ"}) ของงาน "${eventName}" สำเร็จ`);
+    } catch {
+      setErrorMsg("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setExportingKey(null);
+      setExportDropdownEventId(null);
+    }
+  };
 
   // Delete modal state
   const [deletingEvent, setDeletingEvent] = useState<AdminEventItem | null>(null);
@@ -570,15 +613,62 @@ export default function AdminEventsPage() {
                 </div>
 
                 <div className="pt-2 border-t border-neutral-200 dark:border-neutral-900 flex justify-between items-center text-xs">
-                  <a
-                    href={`/events/${event.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
-                  >
-                    <span>ดูหน้าจำหน่ายบัตรจริง</span>
-                    <ArrowRightIcon className="w-3 h-3" />
-                  </a>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={`/events/${event.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                      <span>ดูหน้าจำหน่ายบัตร</span>
+                      <ArrowRightIcon className="w-3 h-3" />
+                    </a>
+
+                    {/* Admin Export CSV Dropdown */}
+                    <div className="relative">
+                      <button
+                        onClick={() =>
+                          setExportDropdownEventId(
+                            exportDropdownEventId === event.id ? null : event.id
+                          )
+                        }
+                        className="p-1 px-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-neutral-300 dark:border-neutral-800 rounded text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors inline-flex items-center gap-1 text-xs"
+                        title="ส่งออกรายงาน CSV"
+                      >
+                        <DownloadIcon className="w-3 h-3" />
+                        <span>Export CSV</span>
+                      </button>
+
+                      {exportDropdownEventId === event.id && (
+                        <div className="absolute left-0 bottom-full mb-2 w-52 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl z-20 py-1.5 text-xs">
+                          <div className="px-3 py-1 text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
+                            ส่งออกรายงาน CSV
+                          </div>
+                          <button
+                            onClick={() => downloadExportCSV(event.id, "attendees", event.name)}
+                            disabled={exportingKey === `${event.id}-attendees`}
+                            className="w-full text-left px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium flex items-center justify-between transition disabled:opacity-50"
+                          >
+                            <span>📋 รายชื่อผู้เข้างาน (Attendees)</span>
+                            {exportingKey === `${event.id}-attendees` && (
+                              <RefreshCwIcon className="w-3 h-3 animate-spin text-neutral-500" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => downloadExportCSV(event.id, "orders", event.name)}
+                            disabled={exportingKey === `${event.id}-orders`}
+                            className="w-full text-left px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-medium flex items-center justify-between transition border-t border-neutral-100 dark:border-neutral-800 disabled:opacity-50"
+                          >
+                            <span>💰 สรุปคำสั่งซื้อ (Orders)</span>
+                            {exportingKey === `${event.id}-orders` && (
+                              <RefreshCwIcon className="w-3 h-3 animate-spin text-neutral-500" />
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <span className="text-neutral-400 dark:text-neutral-600 font-mono text-[10px]">ID: {event.id.slice(-8)}</span>
                 </div>
               </div>

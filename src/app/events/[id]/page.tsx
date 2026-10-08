@@ -11,6 +11,7 @@ import {
   UserIcon,
   CheckIcon,
   ArrowLeftIcon,
+  ArrowRightIcon,
   FileTextIcon,
 } from "@/components/icons";
 import { formatPrice } from "@/lib/format";
@@ -161,6 +162,46 @@ export default async function EventDetailPage({ params }: PageProps) {
                     <UserIcon className="w-4 h-4 text-neutral-400 shrink-0" />
                     <span>{event.organizer.name}</span>
                   </p>
+                </div>
+              </div>
+
+              {/* Venue Map & Navigation */}
+              <div className="pt-5 border-t border-neutral-200 dark:border-neutral-900 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <MapPinIcon className="w-4 h-4 text-neutral-900 dark:text-white" />
+                    <h3 className="text-sm font-bold text-neutral-900 dark:text-white">
+                      แผนที่สถานที่จัดงาน (Location Map)
+                    </h3>
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.venue)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shadow-sm self-start sm:self-auto"
+                  >
+                    <span>เปิดใน Google Maps (นำทาง)</span>
+                    <ArrowRightIcon className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+
+                <div className="w-full h-64 sm:h-80 rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 shadow-inner relative">
+                  <iframe
+                    title={`แผนที่สถานที่ ${event.venue}`}
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(event.venue)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-neutral-500">
+                  <span className="flex items-center gap-1">
+                    <MapPinIcon className="w-3.5 h-3.5 text-neutral-400" />
+                    {event.venue}
+                  </span>
+                  <span>แตะที่แผนที่หรือปุ่มนำทางเพื่อดูเส้นทาง</span>
                 </div>
               </div>
             </div>
