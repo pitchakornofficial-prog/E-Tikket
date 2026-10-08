@@ -10,7 +10,7 @@
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:pitchakornofficial-prog/E-Tikket:ref:refs/heads/deploy-dev"
+          "token.actions.githubusercontent.com:sub": "repo:pitchakornofficial-prog@248051057/E-Tikket@1406759378:ref:refs/heads/deploy-dev"
         }
       }
     }

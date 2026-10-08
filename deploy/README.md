@@ -10,7 +10,8 @@ packages Next.js standalone output including public/static assets and Thai PDF
 fonts. Only a validated Linux build is transferred to EC2.
 
 AWS authentication uses GitHub OIDC and the `E-TikketDeployDev` IAM role. Its trust
-policy allows only this repository's `refs/heads/deploy-dev`; permissions allow
+policy matches the observed immutable owner/repository-ID subject for this repo
+and only `refs/heads/deploy-dev`; permissions allow
 instance discovery in Sydney and ephemeral EC2 Instance Connect access as Ubuntu
 on this one instance. There are no long-lived AWS keys or SSH private keys in
 GitHub. The verified public SSH host key and other public target values are
@@ -75,3 +76,6 @@ curl -fsS http://127.0.0.1:3100/api/health
 
 OIDC reference: https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws
 AWS OIDC provider API: https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateOpenIDConnectProvider.html
+
+Verified OIDC subject: `repo:pitchakornofficial-prog@248051057/E-Tikket@1406759378:ref:refs/heads/deploy-dev`.
+Subject-format reference: https://docs.github.com/en/actions/reference/security/oidc
