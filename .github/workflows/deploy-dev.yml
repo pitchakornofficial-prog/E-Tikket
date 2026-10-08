@@ -30,6 +30,26 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      - name: Inspect public OIDC subject metadata
+        run: |
+          node --input-type=module <<'JS'
+          const response = await fetch(process.env.ACTIONS_ID_TOKEN_REQUEST_URL + '&audience=sts.amazonaws.com', {
+            headers: { Authorization: 'Bearer ' + process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }
+          });
+          if (!response.ok) throw new Error('OIDC request failed: ' + response.status);
+          const { value } = await response.json();
+          const claims = JSON.parse(Buffer.from(value.split('.')[1], 'base64url').toString());
+          console.log(JSON.stringify({ sub: claims.sub, aud: claims.aud, ref: claims.ref, repository: claims.repository }));
+          JS
+      - name: Assume branch-scoped AWS role
+        uses: aws-actions/configure-aws-credentials@4a1596c86fd706dc0521e32f0121ad1a6d1adb74 # v6
+        with:
+          role-to-assume: arn:aws:iam::901708383730:role/E-TikketDeployDev
+          aws-region: ap-southeast-2
+          role-session-name: e-tikket-${{ github.run_id }}
+          role-duration-seconds: 900
+          allowed-account-ids: '901708383730'
+          retry-max-attempts: 2
       - name: Node.js 22
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -46,14 +66,6 @@ jobs:
           npm run build
       - name: Package standalone app and migrations
         run: bash deploy/build-bundle.sh "$GITHUB_SHA"
-      - name: Assume branch-scoped AWS role
-        uses: aws-actions/configure-aws-credentials@4a1596c86fd706dc0521e32f0121ad1a6d1adb74 # v6
-        with:
-          role-to-assume: arn:aws:iam::901708383730:role/E-TikketDeployDev
-          aws-region: ap-southeast-2
-          role-session-name: e-tikket-${{ github.run_id }}
-          role-duration-seconds: 900
-          allowed-account-ids: '901708383730'
       - name: Transfer and activate on EC2
         run: bash deploy/send-release.sh "$GITHUB_SHA"
       - name: Verify public domain and login redirects
