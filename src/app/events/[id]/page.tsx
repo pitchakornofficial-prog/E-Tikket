@@ -94,8 +94,8 @@ export default async function EventDetailPage({ params }: PageProps) {
             <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden border border-neutral-800 bg-neutral-950">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={event.imageUrl}
-                alt={`โปสเตอร์งาน ${event.name}`}
+                src={event.posterHorizontalUrl || event.imageUrl}
+                alt={`แบนเนอร์งาน ${event.name}`}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -103,8 +103,13 @@ export default async function EventDetailPage({ params }: PageProps) {
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700">
-                  {event.category || "Concert"}
+                  {event.genre || event.category || "Concert"}
                 </span>
+                {event.studentDiscountActive && (
+                  <span className="px-2.5 py-0.5 rounded text-xs font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                    🎓 สิทธิ์นักศึกษา @ubu.ac.th
+                  </span>
+                )}
                 {isSoldOut ? (
                   <span className="px-3 py-1 text-xs font-semibold rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">
                     บัตรหมด
@@ -124,9 +129,31 @@ export default async function EventDetailPage({ params }: PageProps) {
                 {event.name}
               </h1>
 
+              {event.artists && (
+                <div className="p-3 bg-neutral-100 dark:bg-neutral-900/80 rounded-lg border border-neutral-200 dark:border-neutral-800 flex items-start gap-2">
+                  <span className="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider whitespace-nowrap">
+                    🎤 ศิลปิน / Lineup:
+                  </span>
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300 font-medium">
+                    {event.artists}
+                  </span>
+                </div>
+              )}
+
               <div className="text-neutral-600 dark:text-neutral-300 text-sm sm:text-base leading-relaxed whitespace-pre-line border-t border-neutral-200 dark:border-neutral-900 pt-4">
                 {event.description}
               </div>
+
+              {event.entryRules && (
+                <div className="p-4 rounded-lg bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 space-y-1.5 text-xs">
+                  <h3 className="font-bold text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📋 กฎและเงื่อนไขการเข้างาน (Entry Policy)</span>
+                  </h3>
+                  <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-line">
+                    {event.entryRules}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Event Info Details */}
@@ -143,10 +170,20 @@ export default async function EventDetailPage({ params }: PageProps) {
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-xs text-neutral-500 block">เวลาเริ่มงาน</span>
+                  <span className="text-xs text-neutral-500 block">เวลาประตูเปิด (Doors Open)</span>
                   <p className="font-medium text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
                     <ClockIcon className="w-4 h-4 text-neutral-400 shrink-0" />
-                    <span>{event.startTime} น.</span>
+                    <span>{event.doorsOpenTime ? `${event.doorsOpenTime} น.` : "ระบุหน้างาน"}</span>
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-neutral-500 block">เวลาแสดง (Show Time)</span>
+                  <p className="font-medium text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
+                    <ClockIcon className="w-4 h-4 text-neutral-400 shrink-0" />
+                    <span>
+                      {event.showStartTime || event.startTime} น.
+                      {event.showEndTime ? ` - ${event.showEndTime} น.` : ""}
+                    </span>
                   </p>
                 </div>
                 <div className="space-y-1">
@@ -175,12 +212,12 @@ export default async function EventDetailPage({ params }: PageProps) {
                     </h3>
                   </div>
                   <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.venue)}`}
+                    href={event.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.venue)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shadow-sm self-start sm:self-auto"
                   >
-                    <span>เปิดใน Google Maps (นำทาง)</span>
+                    <span>📍 เปิด Google Maps นำทาง ↗</span>
                     <ArrowRightIcon className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -282,6 +319,8 @@ export default async function EventDetailPage({ params }: PageProps) {
               <TicketPurchaseForm
                 eventId={event.id}
                 ticketPrice={Number(event.ticketPrice)}
+                studentDiscountActive={event.studentDiscountActive}
+                studentPrice={event.studentPrice ? Number(event.studentPrice) : null}
                 availableQuantity={availableQuantity}
                 isSoldOut={isSoldOut}
               />

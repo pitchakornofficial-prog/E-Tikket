@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>รายชื่อผู้ซื้อบัตร & ตรวจสอบการเข้างาน — E-TIKKET ผู้จัดงาน</title>
+  <title>รายชื่อผู้ซื้อบัตร (Ticket Buyers & Orders) — E-TIKKET ผู้จัดงาน</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=11">
 </head>
-<body data-prototype-page="organizer-orders" data-prototype-id="org-orders-v4">
+<body data-prototype-page="organizer-orders" data-prototype-id="org-orders-v5">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
       <span class="prototype-tag">PHAT PROTOTYPE</span>
       <span class="prototype-note">Organizer Portal Architecture</span>
-      <span>Page: <strong>O3. Attendees & Door List</strong></span>
-      <span>ID: <strong>org-orders-v4</strong></span>
+      <span>Page: <strong>O3. Ticket Buyers & Orders</strong></span>
+      <span>ID: <strong>org-orders-v5</strong></span>
     </div>
     <nav class="prototype-nav">
       <!-- Public Journey Links -->
@@ -40,8 +40,8 @@
       <span style="color:#555;">|</span>
       <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
       <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
-      <a href="organizer-orders.html" class="active" data-prototype-target="org-orders-v4">O3. Attendees</a>
-      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-orders.html" class="active" data-prototype-target="org-orders-v5">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v5">O4. Gate Token</a>
       <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
     </nav>
   </div>
@@ -105,24 +105,24 @@
       <!-- Page Header -->
       <div class="admin-page-header">
         <div>
-          <h1 class="admin-page-title">รายชื่อผู้ซื้อบัตร & ตรวจสอบการเข้างาน (Attendees & Door List)</h1>
-          <p class="admin-page-sub">ค้นหาข้อมูลผู้ซื้อ ตรวจสอบสถานะการเข้างาน (INSIDE/OUTSIDE) และดาวน์โหลดรายชื่อสำรองหน้างาน (Rule ORG-04)</p>
+          <h1 class="admin-page-title">รายชื่อผู้ซื้อบัตร (Ticket Buyers & Orders)</h1>
+          <p class="admin-page-sub">ตรวจสอบข้อมูลคำสั่งซื้อ รายชื่อผู้ซื้อบัตร (ชื่อ เบอร์ อีเมล) และส่งออกรายชื่อสำหรับจัดทำบัญชี (ระบบปิดซ่อน QR Code ทางเข้างานเพื่อความปลอดภัย)</p>
         </div>
         <div class="header-action-group">
           <button type="button" class="btn btn-lime btn-sm" onclick="exportAttendeesCSV()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>ดาวน์โหลด CSV (Export Door List)</span>
+            <span>ดาวน์โหลด CSV (Export Buyers List)</span>
           </button>
         </div>
       </div>
 
-      <!-- Quick Attendance Stats Cards (Matching Admin Stats Grid) -->
+      <!-- Quick Buyer Orders Stats Cards -->
       <div class="stats-cards-grid" style="margin-bottom: 24px;">
         <div class="stat-card">
           <div class="stat-card-header">
-            <span class="stat-lbl">ยอดผู้ซื้อบัตรทั้งหมด (Total Attendees)</span>
+            <span class="stat-lbl">ยอดจำหน่ายบัตรทั้งหมด (Total Tickets Sold)</span>
             <div class="stat-icon-badge">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
             </div>
           </div>
           <div class="stat-card-value">649 <span class="val-sub">/ 800 ใบ</span></div>
@@ -133,43 +133,43 @@
 
         <div class="stat-card highlight">
           <div class="stat-card-header">
-            <span class="stat-lbl">เช็คอินอยู่ในงาน (INSIDE)</span>
+            <span class="stat-lbl">คำสั่งซื้อที่ชำระสำเร็จ (Paid Orders)</span>
             <div class="stat-icon-badge lime">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
           </div>
-          <div class="stat-card-value text-lime-dark">412 <span class="val-sub">คน</span></div>
+          <div class="stat-card-value text-lime-dark">480 <span class="val-sub">ออเดอร์</span></div>
           <div class="stat-card-trend">
-            <span class="trend-up">63.5% ของผู้ซื้อบัตรเข้างานแล้ว</span>
+            <span class="trend-up">ชำระสำเร็จ 100% ผ่าน PromptPay อัตโนมัติ</span>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-card-header">
-            <span class="stat-lbl">ยังไม่มา / ออกชั่วคราว (OUTSIDE)</span>
+            <span class="stat-lbl">รายรับรวมจากผู้ซื้อ (Total Ticket Revenue)</span>
             <div class="stat-icon-badge">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             </div>
           </div>
-          <div class="stat-card-value" style="color: #d97706;">237 <span class="val-sub">คน</span></div>
+          <div class="stat-card-value" style="color: #0f172a;">฿227,150 <span class="val-sub">บาท</span></div>
           <div class="stat-card-trend">
-            <span class="trend-sub">ยังไม่เข้างาน 236 คน • ออกชั่วคราว 1 คน</span>
+            <span class="trend-sub">บัตรทั่วไป ฿185,150 • บัตรนักศึกษา ฿42,000</span>
           </div>
         </div>
       </div>
 
-      <!-- Advanced Filter and Search Container (Matching Admin Filter Bar) -->
+      <!-- Advanced Filter and Search Container -->
       <div class="admin-filter-container">
-        <!-- Row 1: Search & Status Filter Pills & Export -->
+        <!-- Row 1: Search & Tier Filter Pills & Export -->
         <div class="filter-row-primary">
           <div class="search-input-wrap">
             <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="attendee-search" placeholder="ค้นหาด้วย Order Ref, ชื่อผู้ซื้อ, เบอร์โทร, อีเมล หรือรหัสตั๋ว TK-..." class="admin-search-field" oninput="applyFilters()">
+            <input type="text" id="attendee-search" placeholder="ค้นหาด้วย Order ID, ชื่อผู้ซื้อ, เบอร์โทร, อีเมล หรือรหัสตั๋ว..." class="admin-search-field" oninput="applyFilters()">
           </div>
-          <div class="filter-pills-group" id="entry-status-pills">
-            <button type="button" class="filter-pill active" data-status="ALL" onclick="setEntryStatusFilter('ALL', this)">ทั้งหมด (6)</button>
-            <button type="button" class="filter-pill" data-status="INSIDE" onclick="setEntryStatusFilter('INSIDE', this)">อยู่ในงาน (INSIDE: 3)</button>
-            <button type="button" class="filter-pill warning" data-status="OUTSIDE" onclick="setEntryStatusFilter('OUTSIDE', this)">ยังไม่เข้างาน (OUTSIDE: 3)</button>
+          <div class="filter-pills-group" id="tier-filter-pills">
+            <button type="button" class="filter-pill active" data-tier="ALL" onclick="setTierFilterPill('ALL', this)">ทั้งหมด (6)</button>
+            <button type="button" class="filter-pill" data-tier="GENERAL" onclick="setTierFilterPill('GENERAL', this)">บัตรทั่วไป (4)</button>
+            <button type="button" class="filter-pill" data-tier="STUDENT" onclick="setTierFilterPill('STUDENT', this)">ส่วนลดนักศึกษา @ubu (2)</button>
           </div>
           <button type="button" class="btn btn-outline btn-sm" onclick="exportAttendeesCSV()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -208,208 +208,236 @@
       </div>
 
       <!-- Results Count Bar -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
-        <span class="order-count-badge">แสดง <strong id="visible-attendees-count" style="color: var(--text-main);">6</strong> จากทั้งหมด 6 รายชื่อ (โควตารวม 800 ใบ)</span>
-        <span style="font-size: 11px; color: var(--text-muted);">คลิก "ดูตั๋ว QR" เพื่อเปิดพรีวิวตั๋วหรือประวัติการสแกนเข้า-ออก</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; flex-wrap: wrap; gap: 8px;">
+        <span class="order-count-badge">แสดง <strong id="visible-attendees-count" style="color: var(--text-main);">6</strong> จากทั้งหมด 6 รายการคำสั่งซื้อ</span>
+        <span style="font-size: 11px; color: var(--text-muted); display: inline-flex; align-items: center; gap: 4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          ระบบปิดซ่อน QR Code ทางเข้างานเพื่อความปลอดภัยของผู้ซื้อ • แสดงเฉพาะข้อมูลผู้ซื้อเท่านั้น
+        </span>
       </div>
 
-      <!-- Attendees Support Table Card (Matching Admin Data Table) -->
+      <!-- Attendees Orders Table Card -->
       <div class="admin-card table-card">
         <div class="table-responsive">
           <table class="admin-data-table">
             <thead>
               <tr>
-                <th>Order Ref / วันที่สั่งซื้อ</th>
-                <th>ข้อมูลผู้ซื้อ (Buyer)</th>
-                <th>งานคอนเสิร์ต & ประเภท</th>
-                <th>รหัสตั๋ว (Ticket #)</th>
-                <th>สถานะเข้างาน (Door Status)</th>
+                <th>Order ID / วันที่</th>
+                <th>ข้อมูลผู้ซื้อ (Buyer Details)</th>
+                <th>คอนเสิร์ต & ประเภทบัตร</th>
+                <th>รหัสตั๋ว (Ticket Ref)</th>
+                <th>จำนวน & ยอดเงิน (Qty & Total)</th>
+                <th>สถานะชำระเงิน</th>
                 <th style="text-align: right;">การกระทำ</th>
               </tr>
             </thead>
             <tbody id="attendee-table-body">
-              <!-- Attendee 1: General inside -->
-              <tr class="attendee-row" data-status="INSIDE" data-tier="GENERAL">
+              <!-- Order 1: General -->
+              <tr class="attendee-row" data-tier="GENERAL" data-event="INDIE">
                 <td>
                   <span class="tx-id-text">#ORD-10291</span>
-                  <span class="tx-sub-ref">24 ต.ค. 2026, 14:10</span>
+                  <span class="tx-sub-ref">24 ต.ค. 2026, 14:10 น.</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
                     <strong style="color: var(--text-main); font-size: 13px;">นายสมชาย รัตนวงศ์</strong>
-                    <span class="cust-meta">somchai.r@gmail.com</span>
-                    <span class="cust-meta">081-829-1122</span>
+                    <span class="cust-meta">✉ somchai.r@gmail.com</span>
+                    <span class="cust-meta">📞 081-829-1122</span>
                   </div>
                 </td>
                 <td>
                   <span class="event-name-tag">Indie Rock Revival 2026</span>
-                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (฿350)</span>
+                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (General)</span>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 700; color: #000000;">TK-88210-01</span>
+                  <span style="font-family: monospace; font-weight: 700; color: #000000; font-size: 12px;">TK-88210-01</span>
                 </td>
                 <td>
-                  <span class="badge badge-success">INSIDE (19:42:15)</span>
-                  <span class="cust-meta" style="margin-top: 2px;">Gate 1 (ประตูผ่าน)</span>
+                  <strong style="font-size: 13px; color: var(--text-main);">1 ใบ</strong>
+                  <span style="display: block; font-size: 12px; color: var(--text-muted);">฿350.00</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ชำระสำเร็จ</span>
+                  <span class="cust-meta" style="margin-top: 2px;">PromptPay Auto</span>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="viewTicketModal('สมชาย รัตนวงศ์', 'TK-88210-01', 'บัตรเข้างานทั่วไป (General Admission)', 'INSIDE', '19:42:15 (Gate 1)')">
-                    <span>ดูตั๋ว QR</span>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="viewBuyerModal('ORD-10291', 'นายสมชาย รัตนวงศ์', 'somchai.r@gmail.com', '081-829-1122', 'Indie Rock Revival 2026', 'บัตรทั่วไป (General Admission)', '1 ใบ', '฿350.00', '24 ต.ค. 2026, 14:10 น.', 'TK-88210-01')">
+                    <span>ดูข้อมูลผู้ซื้อ</span>
                   </button>
                 </td>
               </tr>
 
-              <!-- Attendee 2: Student inside -->
-              <tr class="attendee-row" data-status="INSIDE" data-tier="STUDENT">
+              <!-- Order 2: Student -->
+              <tr class="attendee-row" data-tier="STUDENT" data-event="INDIE">
                 <td>
                   <span class="tx-id-text">#ORD-10289</span>
-                  <span class="tx-sub-ref">24 ต.ค. 2026, 12:35</span>
+                  <span class="tx-sub-ref">24 ต.ค. 2026, 12:35 น.</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
                     <strong style="color: var(--text-main); font-size: 13px;">น.ส. อภิญญา กิจเจริญ</strong>
-                    <span class="cust-meta">apinya.k@hotmail.com</span>
-                    <span class="cust-meta">089-110-3444</span>
+                    <span class="cust-meta">✉ apinya.k@ubu.ac.th</span>
+                    <span class="cust-meta">📞 089-110-3444</span>
                   </div>
                 </td>
                 <td>
                   <span class="event-name-tag">Indie Rock Revival 2026</span>
-                  <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; margin-top: 3px;">ส่วนลดนักศึกษา @ubu (฿250 &times; 2)</span>
+                  <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; margin-top: 3px;">ส่วนลดนักศึกษา @ubu</span>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 600;">TK-77402-01<br>TK-77402-02</span>
+                  <span style="font-family: monospace; font-weight: 600; font-size: 12px;">TK-77402-01<br>TK-77402-02</span>
                 </td>
                 <td>
-                  <span class="badge badge-success">INSIDE (19:41:03)</span>
-                  <span class="cust-meta" style="margin-top: 2px;">Gate 2 (เข้าพร้อมกัน 2 คน)</span>
+                  <strong style="font-size: 13px; color: var(--text-main);">2 ใบ</strong>
+                  <span style="display: block; font-size: 12px; color: var(--text-muted);">฿500.00 (฿250/ใบ)</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ชำระสำเร็จ</span>
+                  <span class="cust-meta" style="margin-top: 2px;">OTP Verified</span>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="viewTicketModal('อภิญญา กิจเจริญ', 'TK-77402-01 / 02', 'ส่วนลดนักศึกษา (Student Pass)', 'INSIDE', '19:41:03 (Gate 2)')">
-                    <span>ดูตั๋ว QR</span>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="viewBuyerModal('ORD-10289', 'น.ส. อภิญญา กิจเจริญ', 'apinya.k@ubu.ac.th', '089-110-3444', 'Indie Rock Revival 2026', 'ส่วนลดนักศึกษา (@ubu.ac.th)', '2 ใบ', '฿500.00', '24 ต.ค. 2026, 12:35 น.', 'TK-77402-01, TK-77402-02')">
+                    <span>ดูข้อมูลผู้ซื้อ</span>
                   </button>
                 </td>
               </tr>
 
-              <!-- Attendee 3: General Re-entry Out -->
-              <tr class="attendee-row" data-status="OUTSIDE" data-tier="GENERAL">
+              <!-- Order 3: General -->
+              <tr class="attendee-row" data-tier="GENERAL" data-event="INDIE">
                 <td>
                   <span class="tx-id-text">#ORD-10280</span>
-                  <span class="tx-sub-ref">23 ต.ค. 2026, 18:20</span>
+                  <span class="tx-sub-ref">23 ต.ค. 2026, 18:20 น.</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
                     <strong style="color: var(--text-main); font-size: 13px;">นายกฤต พงษ์ศิริ</strong>
-                    <span class="cust-meta">krit.p@yahoo.com</span>
-                    <span class="cust-meta">092-445-6789</span>
+                    <span class="cust-meta">✉ krit.p@yahoo.com</span>
+                    <span class="cust-meta">📞 092-445-6789</span>
                   </div>
                 </td>
                 <td>
                   <span class="event-name-tag">Indie Rock Revival 2026</span>
-                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (฿350)</span>
+                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (General)</span>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 600;">TK-66190-01</span>
+                  <span style="font-family: monospace; font-weight: 600; font-size: 12px;">TK-66190-01</span>
                 </td>
                 <td>
-                  <span class="badge badge-dark">OUTSIDE (ออกชั่วคราว)</span>
-                  <span class="cust-meta" style="margin-top: 2px;">สแกนออก 19:38 (สามารถ Re-entry ได้)</span>
+                  <strong style="font-size: 13px; color: var(--text-main);">1 ใบ</strong>
+                  <span style="display: block; font-size: 12px; color: var(--text-muted);">฿350.00</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ชำระสำเร็จ</span>
+                  <span class="cust-meta" style="margin-top: 2px;">PromptPay Auto</span>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="viewTicketModal('กฤต พงษ์ศิริ', 'TK-66190-01', 'บัตรเข้างานทั่วไป (General Admission)', 'OUTSIDE', 'ออกชั่วคราว 19:38:50')">
-                    <span>ดูตั๋ว QR</span>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="viewBuyerModal('ORD-10280', 'นายกฤต พงษ์ศิริ', 'krit.p@yahoo.com', '092-445-6789', 'Indie Rock Revival 2026', 'บัตรทั่วไป (General Admission)', '1 ใบ', '฿350.00', '23 ต.ค. 2026, 18:20 น.', 'TK-66190-01')">
+                    <span>ดูข้อมูลผู้ซื้อ</span>
                   </button>
                 </td>
               </tr>
 
-              <!-- Attendee 4: General outside -->
-              <tr class="attendee-row" data-status="OUTSIDE" data-tier="GENERAL">
+              <!-- Order 4: General -->
+              <tr class="attendee-row" data-tier="GENERAL" data-event="INDIE">
                 <td>
                   <span class="tx-id-text">#ORD-10275</span>
-                  <span class="tx-sub-ref">23 ต.ค. 2026, 16:05</span>
+                  <span class="tx-sub-ref">23 ต.ค. 2026, 16:05 น.</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
                     <strong style="color: var(--text-main); font-size: 13px;">นายธีรภัทร ชาญวิทย์</strong>
-                    <span class="cust-meta">theerapat.c@outlook.com</span>
-                    <span class="cust-meta">084-555-8899</span>
+                    <span class="cust-meta">✉ theerapat.c@outlook.com</span>
+                    <span class="cust-meta">📞 084-555-8899</span>
                   </div>
                 </td>
                 <td>
                   <span class="event-name-tag">Indie Rock Revival 2026</span>
-                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (฿350 &times; 2)</span>
+                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (General)</span>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 600;">TK-66185-01<br>TK-66185-02</span>
+                  <span style="font-family: monospace; font-weight: 600; font-size: 12px;">TK-66185-01<br>TK-66185-02</span>
                 </td>
                 <td>
-                  <span class="badge badge-warning">OUTSIDE (ยังไม่เข้างาน)</span>
-                  <span class="cust-meta" style="margin-top: 2px;">ยังไม่มีประวัติสแกน</span>
+                  <strong style="font-size: 13px; color: var(--text-main);">2 ใบ</strong>
+                  <span style="display: block; font-size: 12px; color: var(--text-muted);">฿700.00 (฿350/ใบ)</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ชำระสำเร็จ</span>
+                  <span class="cust-meta" style="margin-top: 2px;">PromptPay Auto</span>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="viewTicketModal('ธีรภัทร ชาญวิทย์', 'TK-66185-01 / 02', 'บัตรเข้างานทั่วไป (General Admission)', 'OUTSIDE', 'ยังไม่เข้างาน')">
-                    <span>ดูตั๋ว QR</span>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="viewBuyerModal('ORD-10275', 'นายธีรภัทร ชาญวิทย์', 'theerapat.c@outlook.com', '084-555-8899', 'Indie Rock Revival 2026', 'บัตรทั่วไป (General Admission)', '2 ใบ', '฿700.00', '23 ต.ค. 2026, 16:05 น.', 'TK-66185-01, TK-66185-02')">
+                    <span>ดูข้อมูลผู้ซื้อ</span>
                   </button>
                 </td>
               </tr>
 
-              <!-- Attendee 5: General outside -->
-              <tr class="attendee-row" data-status="OUTSIDE" data-tier="GENERAL">
+              <!-- Order 5: General -->
+              <tr class="attendee-row" data-tier="GENERAL" data-event="INDIE">
                 <td>
                   <span class="tx-id-text">#ORD-10271</span>
-                  <span class="tx-sub-ref">23 ต.ค. 2026, 15:40</span>
+                  <span class="tx-sub-ref">23 ต.ค. 2026, 15:40 น.</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
                     <strong style="color: var(--text-main); font-size: 13px;">น.ส. วรรณภา ศรีสุข</strong>
-                    <span class="cust-meta">wannapa.s@gmail.com</span>
-                    <span class="cust-meta">086-778-9900</span>
+                    <span class="cust-meta">✉ wannapa.s@gmail.com</span>
+                    <span class="cust-meta">📞 086-778-9900</span>
                   </div>
                 </td>
                 <td>
                   <span class="event-name-tag">Indie Rock Revival 2026</span>
-                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (฿350)</span>
+                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (General)</span>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 600;">TK-66170-01</span>
+                  <span style="font-family: monospace; font-weight: 600; font-size: 12px;">TK-66170-01</span>
                 </td>
                 <td>
-                  <span class="badge badge-warning">OUTSIDE (ยังไม่เข้างาน)</span>
-                  <span class="cust-meta" style="margin-top: 2px;">ยังไม่มีประวัติสแกน</span>
+                  <strong style="font-size: 13px; color: var(--text-main);">1 ใบ</strong>
+                  <span style="display: block; font-size: 12px; color: var(--text-muted);">฿350.00</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ชำระสำเร็จ</span>
+                  <span class="cust-meta" style="margin-top: 2px;">PromptPay Auto</span>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="viewTicketModal('วรรณภา ศรีสุข', 'TK-66170-01', 'บัตรเข้างานทั่วไป (General Admission)', 'OUTSIDE', 'ยังไม่เข้างาน')">
-                    <span>ดูตั๋ว QR</span>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="viewBuyerModal('ORD-10271', 'น.ส. วรรณภา ศรีสุข', 'wannapa.s@gmail.com', '086-778-9900', 'Indie Rock Revival 2026', 'บัตรทั่วไป (General Admission)', '1 ใบ', '฿350.00', '23 ต.ค. 2026, 15:40 น.', 'TK-66170-01')">
+                    <span>ดูข้อมูลผู้ซื้อ</span>
                   </button>
                 </td>
               </tr>
 
-              <!-- Attendee 6: General inside -->
-              <tr class="attendee-row" data-status="INSIDE" data-tier="GENERAL">
+              <!-- Order 6: Student -->
+              <tr class="attendee-row" data-tier="STUDENT" data-event="INDIE">
                 <td>
                   <span class="tx-id-text">#ORD-10266</span>
-                  <span class="tx-sub-ref">23 ต.ค. 2026, 11:15</span>
+                  <span class="tx-sub-ref">23 ต.ค. 2026, 11:15 น.</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
                     <strong style="color: var(--text-main); font-size: 13px;">นายณัฐพงษ์ บุญเรือง</strong>
-                    <span class="cust-meta">nuttapong.b@gmail.com</span>
-                    <span class="cust-meta">081-223-4455</span>
+                    <span class="cust-meta">✉ nuttapong.b@ubu.ac.th</span>
+                    <span class="cust-meta">📞 081-223-4455</span>
                   </div>
                 </td>
                 <td>
                   <span class="event-name-tag">Indie Rock Revival 2026</span>
-                  <span class="badge-tag-tier general" style="margin-top: 3px;">บัตรทั่วไป (฿350)</span>
+                  <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; margin-top: 3px;">ส่วนลดนักศึกษา @ubu</span>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 600;">TK-77390-01</span>
+                  <span style="font-family: monospace; font-weight: 600; font-size: 12px;">TK-77390-01</span>
                 </td>
                 <td>
-                  <span class="badge badge-success">INSIDE (18:55:20)</span>
-                  <span class="cust-meta" style="margin-top: 2px;">Gate 1 (ผ่านแล้ว)</span>
+                  <strong style="font-size: 13px; color: var(--text-main);">1 ใบ</strong>
+                  <span style="display: block; font-size: 12px; color: var(--text-muted);">฿250.00</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ชำระสำเร็จ</span>
+                  <span class="cust-meta" style="margin-top: 2px;">OTP Verified</span>
                 </td>
                 <td style="text-align: right;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="viewTicketModal('ณัฐพงษ์ บุญเรือง', 'TK-77390-01', 'บัตรเข้างานทั่วไป (General Admission)', 'INSIDE', '18:55:20 (Gate 1)')">
-                    <span>ดูตั๋ว QR</span>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="viewBuyerModal('ORD-10266', 'นายณัฐพงษ์ บุญเรือง', 'nuttapong.b@ubu.ac.th', '081-223-4455', 'Indie Rock Revival 2026', 'ส่วนลดนักศึกษา (@ubu.ac.th)', '1 ใบ', '฿250.00', '23 ต.ค. 2026, 11:15 น.', 'TK-77390-01')">
+                    <span>ดูข้อมูลผู้ซื้อ</span>
                   </button>
                 </td>
               </tr>
@@ -421,40 +449,81 @@
     </div>
   </main>
 
-  <!-- Ticket QR & Attendee Details Modal -->
-  <div id="ticket-modal" class="admin-modal-overlay" style="display: none;">
-    <div class="admin-modal-dialog" style="max-width: 480px;">
+  <!-- Buyer & Order Details Modal (QR Code is strictly masked/protected) -->
+  <div id="buyer-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 500px;">
       <div class="modal-dialog-header">
-        <h3 class="modal-dialog-title" id="modal-buyer-name">ข้อมูลตั๋วและสถานะเข้างาน</h3>
-        <button type="button" class="modal-close-btn" onclick="closeTicketModal()">&times;</button>
+        <h3 class="modal-dialog-title" id="modal-header-title">รายละเอียดข้อมูลผู้ซื้อ</h3>
+        <button type="button" class="modal-close-btn" onclick="closeBuyerModal()">&times;</button>
       </div>
-      <div class="modal-dialog-body" style="text-align: center;">
-        <div style="background-color: #000; padding: 20px; border-radius: var(--radius-md); display: inline-block; margin-bottom: 16px;">
-          <img src="qr-sample.svg" alt="QR Code" style="width: 150px; height: 150px; display: block;">
-          <span id="modal-ticket-id" style="font-family: monospace; color: var(--lime-accent); font-weight: 700; font-size: 13px; display: block; margin-top: 8px;">TK-88210-01</span>
+      <div class="modal-dialog-body">
+        
+        <!-- Protected / Masked QR Code Container -->
+        <div style="background-color: #0b1120; padding: 20px 16px; border-radius: var(--radius-md); text-align: center; margin-bottom: 18px; border: 1.5px dashed #334155; position: relative; overflow: hidden;">
+          <!-- Blur background visual -->
+          <div style="filter: blur(12px); opacity: 0.15; display: flex; justify-content: center; pointer-events: none;">
+            <img src="qr-sample.svg" alt="QR Masked" style="width: 120px; height: 120px;">
+          </div>
+          <!-- Security Shield overlay -->
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; background: rgba(11, 17, 32, 0.88);">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: rgba(204, 255, 0, 0.15); border: 1.5px solid var(--lime-accent); display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ccff00" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <strong style="color: #ffffff; font-size: 13px; font-weight: 700; display: block;">🔒 QR Code ถูกปิดซ่อนไว้ (Security Masked)</strong>
+            <p style="color: #94a3b8; font-size: 11px; margin: 4px 0 0 0; max-width: 320px; line-height: 1.4;">
+              ระบบปิดซ่อนภาพ QR Code ทางเข้างานในหน้านี้ เพื่อความปลอดภัยสูงสุดของผู้ซื้อบัตร และป้องกันการรั่วไหลก่อนถึงหน้างาน
+            </p>
+            <span id="modal-ticket-ref-pill" style="font-family: monospace; color: var(--lime-accent); font-weight: 700; font-size: 11px; margin-top: 8px; background: rgba(0,0,0,0.6); padding: 3px 10px; border-radius: 4px; border: 1px solid rgba(204,255,0,0.3);">TK-88210-01</span>
+          </div>
         </div>
 
-        <div class="modal-info-box" style="text-align: left;">
-          <div class="modal-row">
-            <span style="color: var(--text-muted);">ประเภทตั๋ว:</span>
-            <strong id="modal-ticket-tier">VIP Table Pass</strong>
+        <!-- Buyer & Order Details Breakdown -->
+        <div class="modal-info-box" style="text-align: left; background: #fafbfc; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px;">
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">หมายเลขคำสั่งซื้อ (Order ID):</span>
+            <strong id="modal-order-id" style="font-family: monospace; color: var(--text-main);">#ORD-10291</strong>
           </div>
-          <div class="modal-row">
-            <span style="color: var(--text-muted);">สถานะปัจจุบัน:</span>
-            <span id="modal-ticket-status" class="badge badge-success">INSIDE</span>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">ชื่อผู้ซื้อ (Buyer Name):</span>
+            <strong id="modal-buyer-name" style="color: var(--text-main);">นายสมชาย รัตนวงศ์</strong>
           </div>
-          <div class="modal-row">
-            <span style="color: var(--text-muted);">บันทึกการสแกนล่าสุด:</span>
-            <span id="modal-ticket-log" style="font-weight: 600;">19:42:15 (Gate 1)</span>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">อีเมลผู้รับตั๋ว:</span>
+            <span id="modal-buyer-email" style="font-weight: 600; color: var(--text-main);">somchai.r@gmail.com</span>
           </div>
-          <div class="modal-row">
-            <span style="color: var(--text-muted);">รหัสการเข้ารหัส:</span>
-            <span style="font-family: monospace; font-size: 11px;">SHA256+CSPRNG Valid</span>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">เบอร์โทรศัพท์ติดต่อ:</span>
+            <span id="modal-buyer-phone" style="font-weight: 600; color: var(--text-main);">081-829-1122</span>
+          </div>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">งานคอนเสิร์ต:</span>
+            <span id="modal-event-name" style="font-weight: 600; color: var(--text-main);">Indie Rock Revival 2026</span>
+          </div>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">ประเภทบัตร:</span>
+            <span id="modal-ticket-tier" style="font-weight: 600; color: var(--text-main);">บัตรทั่วไป (General Admission)</span>
+          </div>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">จำนวนบัตร:</span>
+            <strong id="modal-ticket-qty" style="color: var(--text-main);">1 ใบ</strong>
+          </div>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">ยอดเงินที่ชำระ (Total Paid):</span>
+            <strong id="modal-total-paid" style="color: #16a34a; font-size: 14px;">฿350.00</strong>
+          </div>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px;">
+            <span style="color: var(--text-muted);">สถานะการชำระ:</span>
+            <span class="badge badge-lime" style="font-size: 11px;">ชำระเงินเรียบร้อย 100%</span>
+          </div>
+          <div class="modal-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+            <span style="color: var(--text-muted);">วัน-เวลาที่สั่งซื้อ:</span>
+            <span id="modal-order-date" style="color: var(--text-muted); font-size: 12px;">24 ต.ค. 2026, 14:10 น.</span>
           </div>
         </div>
+
       </div>
       <div class="modal-dialog-footer">
-        <button type="button" class="btn btn-outline btn-sm" onclick="closeTicketModal()">ปิดหน้าต่าง</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeBuyerModal()">ปิดหน้าต่าง</button>
       </div>
     </div>
   </div>
@@ -466,12 +535,13 @@
   </div>
 
   <script>
-    let activeEntryStatus = 'ALL';
+    let activeTierFilter = 'ALL';
 
-    function setEntryStatusFilter(status, btn) {
-      activeEntryStatus = status;
-      document.querySelectorAll('#entry-status-pills .filter-pill').forEach(b => b.classList.remove('active'));
+    function setTierFilterPill(tier, btn) {
+      activeTierFilter = tier;
+      document.querySelectorAll('#tier-filter-pills .filter-pill').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      document.getElementById('tier-select').value = tier;
       applyFilters();
     }
 
@@ -483,14 +553,12 @@
 
       rows.forEach(row => {
         const text = row.innerText.toLowerCase();
-        const rowStatus = row.dataset.status;
         const rowTier = row.dataset.tier;
 
         const matchesQuery = !q || text.includes(q);
-        const matchesStatus = activeEntryStatus === 'ALL' || rowStatus === activeEntryStatus;
-        const matchesTier = tier === 'ALL' || rowTier === tier;
+        const matchesTier = (activeTierFilter === 'ALL' || rowTier === activeTierFilter) && (tier === 'ALL' || rowTier === tier);
 
-        if (matchesQuery && matchesStatus && matchesTier) {
+        if (matchesQuery && matchesTier) {
           row.style.display = '';
           visibleCount++;
         } else {
@@ -505,8 +573,8 @@
       document.getElementById('attendee-search').value = '';
       document.getElementById('tier-select').value = 'ALL';
       document.getElementById('event-select').value = 'INDIE';
-      const allBtn = document.querySelector('#entry-status-pills .filter-pill[data-status="ALL"]');
-      if (allBtn) setEntryStatusFilter('ALL', allBtn);
+      const allBtn = document.querySelector('#tier-filter-pills .filter-pill[data-tier="ALL"]');
+      if (allBtn) setTierFilterPill('ALL', allBtn);
       else applyFilters();
     }
 
@@ -516,39 +584,46 @@
       applyFilters();
     }
 
-    function viewTicketModal(name, ticketId, tier, status, log) {
-      document.getElementById('modal-buyer-name').textContent = 'ข้อมูลตั๋ว: ' + name;
-      document.getElementById('modal-ticket-id').textContent = ticketId;
+    function viewBuyerModal(orderId, name, email, phone, eventName, tier, qty, total, date, ticketRef) {
+      document.getElementById('modal-header-title').textContent = 'รายละเอียดคำสั่งซื้อ: ' + orderId;
+      document.getElementById('modal-order-id').textContent = '#' + orderId;
+      document.getElementById('modal-buyer-name').textContent = name;
+      document.getElementById('modal-buyer-email').textContent = email;
+      document.getElementById('modal-buyer-phone').textContent = phone;
+      document.getElementById('modal-event-name').textContent = eventName;
       document.getElementById('modal-ticket-tier').textContent = tier;
-      document.getElementById('modal-ticket-status').textContent = status;
-      document.getElementById('modal-ticket-status').className = status === 'INSIDE' ? 'badge badge-success' : 'badge badge-warning';
-      document.getElementById('modal-ticket-log').textContent = log;
-      document.getElementById('ticket-modal').style.display = 'flex';
+      document.getElementById('modal-ticket-qty').textContent = qty;
+      document.getElementById('modal-total-paid').textContent = total;
+      document.getElementById('modal-order-date').textContent = date;
+      document.getElementById('modal-ticket-ref-pill').textContent = ticketRef;
+      document.getElementById('buyer-modal').style.display = 'flex';
     }
 
-    function closeTicketModal() {
-      document.getElementById('ticket-modal').style.display = 'none';
+    function closeBuyerModal() {
+      document.getElementById('buyer-modal').style.display = 'none';
     }
 
     function exportAttendeesCSV() {
-      const csvHeader = "\uFEFFOrder ID,Buyer Name,Email,Phone,Ticket Tier,Ticket Number,Entry Status,Order Date\n";
+      const csvHeader = "\uFEFFOrder ID,Buyer Name,Email,Phone,Event,Ticket Tier,Ticket Reference,Quantity,Total Paid (THB),Payment Method,Order Date\n";
       const sampleData = [
-        "ORD-10291,นายสมชาย รัตนวงศ์,somchai.r@gmail.com,0818291122,General Admission,TK-88210-01,INSIDE,2026-10-24 14:10",
-        "ORD-10289,น.ส. อภิญญา กิจเจริญ,apinya.k@hotmail.com,0891103444,Student Pass (@ubu),TK-77402-01,INSIDE,2026-10-24 12:35",
-        "ORD-10280,นายกฤต พงษ์ศิริ,krit.p@yahoo.com,0924456789,General Admission,TK-66190-01,OUTSIDE,2026-10-23 18:20",
-        "ORD-10275,นายธีรภัทร ชาญวิทย์,theerapat.c@outlook.com,0845558899,General Admission,TK-66185-01,OUTSIDE,2026-10-23 16:05"
+        "ORD-10291,นายสมชาย รัตนวงศ์,somchai.r@gmail.com,0818291122,Indie Rock Revival 2026,General Admission,TK-88210-01,1,350.00,PromptPay Auto,2026-10-24 14:10",
+        "ORD-10289,น.ส. อภิญญา กิจเจริญ,apinya.k@ubu.ac.th,0891103444,Indie Rock Revival 2026,Student Pass (@ubu),TK-77402-01 / TK-77402-02,2,500.00,PromptPay Auto (OTP),2026-10-24 12:35",
+        "ORD-10280,นายกฤต พงษ์ศิริ,krit.p@yahoo.com,0924456789,Indie Rock Revival 2026,General Admission,TK-66190-01,1,350.00,PromptPay Auto,2026-10-23 18:20",
+        "ORD-10275,นายธีรภัทร ชาญวิทย์,theerapat.c@outlook.com,0845558899,Indie Rock Revival 2026,General Admission,TK-66185-01 / TK-66185-02,2,700.00,PromptPay Auto,2026-10-23 16:05",
+        "ORD-10271,น.ส. วรรณภา ศรีสุข,wannapa.s@gmail.com,0867789900,Indie Rock Revival 2026,General Admission,TK-66170-01,1,350.00,PromptPay Auto,2026-10-23 15:40",
+        "ORD-10266,นายณัฐพงษ์ บุญเรือง,nuttapong.b@ubu.ac.th,0812234455,Indie Rock Revival 2026,Student Pass (@ubu),TK-77390-01,1,250.00,PromptPay Auto (OTP),2026-10-23 11:15"
       ].join("\n");
 
       const blob = new Blob([csvHeader + sampleData], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
-      link.setAttribute("download", "attendees_indie_rock_2026.csv");
+      link.setAttribute("download", "ticket_buyers_indie_rock_2026.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      showToast("ส่งออกไฟล์ attendees_indie_rock_2026.csv สำเร็จ! (UTF-8 with BOM รองรับ Excel)");
+      showToast("ส่งออกไฟล์ ticket_buyers_indie_rock_2026.csv สำเร็จ! (UTF-8 with BOM รองรับ Excel)");
     }
 
     function showToast(msg) {

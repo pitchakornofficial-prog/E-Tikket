@@ -41,6 +41,19 @@ export async function GET(request: Request) {
           soldTickets: event.totalTickets - availableTickets,
           status: event.status,
           imageUrl: event.imageUrl,
+          posterVerticalUrl: event.posterVerticalUrl || event.imageUrl,
+          posterHorizontalUrl: event.posterHorizontalUrl || event.imageUrl,
+          artists: event.artists || "",
+          genre: event.genre || event.category,
+          doorsOpenTime: event.doorsOpenTime || "",
+          showStartTime: event.showStartTime || event.startTime,
+          showEndTime: event.showEndTime || "",
+          saleStartAt: event.saleStartAt ? event.saleStartAt.toISOString() : null,
+          saleEndAt: event.saleEndAt ? event.saleEndAt.toISOString() : null,
+          googleMapsUrl: event.googleMapsUrl || "",
+          entryRules: event.entryRules || "",
+          studentDiscountActive: event.studentDiscountActive,
+          studentPrice: event.studentPrice ? Number(event.studentPrice) : null,
           organizer: event.organizer,
         };
       }),
@@ -66,13 +79,26 @@ export async function POST(request: Request) {
     const {
       name,
       category,
+      genre,
+      artists,
       description,
+      entryRules,
       venue,
+      googleMapsUrl,
       eventDate,
       startTime,
+      doorsOpenTime,
+      showStartTime,
+      showEndTime,
+      saleStartAt,
+      saleEndAt,
       ticketPrice,
       totalTickets,
       imageUrl,
+      posterVerticalUrl,
+      posterHorizontalUrl,
+      studentDiscountActive,
+      studentPrice,
       organizerId,
       status,
     } = body;
@@ -81,7 +107,6 @@ export async function POST(request: Request) {
       !name ||
       !venue ||
       !eventDate ||
-      !startTime ||
       ticketPrice === undefined ||
       totalTickets === undefined ||
       !organizerId
@@ -114,17 +139,35 @@ export async function POST(request: Request) {
       );
     }
 
+    const finalStartTime = (startTime || showStartTime || "19:00").trim();
+    const vertUrl = (posterVerticalUrl || imageUrl || "/poster-summer.svg").trim();
+    const horizUrl = (posterHorizontalUrl || imageUrl || vertUrl).trim();
+    const studPriceNum = studentPrice !== undefined && studentPrice !== null && studentPrice !== "" ? parseFloat(studentPrice) : null;
+
     const createdEvent = await prisma.event.create({
       data: {
         name: name.trim(),
-        category: (category || "Concert").trim(),
+        category: (genre || category || "Concert").trim(),
+        genre: (genre || category || "Concert").trim(),
+        artists: (artists || "").trim(),
         description: (description || "").trim(),
+        entryRules: (entryRules || "").trim(),
         venue: venue.trim(),
+        googleMapsUrl: (googleMapsUrl || "").trim(),
         eventDate: new Date(eventDate),
-        startTime: startTime.trim(),
+        startTime: finalStartTime,
+        doorsOpenTime: (doorsOpenTime || "").trim(),
+        showStartTime: (showStartTime || finalStartTime).trim(),
+        showEndTime: (showEndTime || "").trim(),
+        saleStartAt: saleStartAt ? new Date(saleStartAt) : null,
+        saleEndAt: saleEndAt ? new Date(saleEndAt) : null,
         ticketPrice: priceNum,
         totalTickets: ticketsNum,
-        imageUrl: (imageUrl || "/poster-summer.svg").trim(),
+        imageUrl: vertUrl,
+        posterVerticalUrl: vertUrl,
+        posterHorizontalUrl: horizUrl,
+        studentDiscountActive: Boolean(studentDiscountActive),
+        studentPrice: studPriceNum !== null && !isNaN(studPriceNum) ? studPriceNum : null,
         organizerId: organizer.id,
         status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
       },

@@ -105,6 +105,7 @@ export async function GET(request: Request, { params }: RouteParams) {
           customerEmail: order.customerEmail,
           customerPhone: order.customerPhone,
           quantity: order.quantity,
+          ticketTier: order.ticketTier || "GENERAL",
           totalAmount: Number(order.totalAmount),
           organizerRevenue: Number(order.organizerRevenue),
           status: order.status,
@@ -132,6 +133,19 @@ export async function GET(request: Request, { params }: RouteParams) {
         category: event.category,
         status: event.status,
         imageUrl: event.imageUrl,
+        posterVerticalUrl: event.posterVerticalUrl || event.imageUrl,
+        posterHorizontalUrl: event.posterHorizontalUrl || event.imageUrl,
+        artists: event.artists || "",
+        genre: event.genre || event.category,
+        doorsOpenTime: event.doorsOpenTime || "",
+        showStartTime: event.showStartTime || event.startTime,
+        showEndTime: event.showEndTime || "",
+        saleStartAt: event.saleStartAt ? event.saleStartAt.toISOString() : null,
+        saleEndAt: event.saleEndAt ? event.saleEndAt.toISOString() : null,
+        googleMapsUrl: event.googleMapsUrl || "",
+        entryRules: event.entryRules || "",
+        studentDiscountActive: event.studentDiscountActive,
+        studentPrice: event.studentPrice ? Number(event.studentPrice) : null,
         createdAt: event.createdAt.toISOString(),
         checkersCount: event._count.checkers,
       },
@@ -140,6 +154,7 @@ export async function GET(request: Request, { params }: RouteParams) {
         totalTickets: event.totalTickets,
         totalRevenue,
         organizerRevenue,
+        paidOrdersCount: event.orders.filter((o) => o.status === "PAID").length,
         insideCount,
         outsideCount,
         cancelledCount,
@@ -187,13 +202,24 @@ export async function PUT(request: Request, { params }: RouteParams) {
     const {
       name,
       category,
+      genre,
+      artists,
       description,
+      entryRules,
       venue,
+      googleMapsUrl,
       eventDate,
       startTime,
+      doorsOpenTime,
+      showStartTime,
+      showEndTime,
+      saleStartAt,
+      saleEndAt,
       ticketPrice,
       totalTickets,
       imageUrl,
+      posterVerticalUrl,
+      posterHorizontalUrl,
       status,
     } = body;
 
@@ -203,12 +229,11 @@ export async function PUT(request: Request, { params }: RouteParams) {
       !venue ||
       typeof venue !== "string" ||
       !eventDate ||
-      !startTime ||
       ticketPrice === undefined ||
       totalTickets === undefined
     ) {
       return jsonResponse(
-        { error: "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, สถานที่, วันที่, เวลา, ราคา, จำนวนบัตร)" },
+        { error: "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, สถานที่, วันที่, ราคา, จำนวนบัตร)" },
         { status: 400 }
       );
     }
@@ -222,6 +247,10 @@ export async function PUT(request: Request, { params }: RouteParams) {
         { status: 400 }
       );
     }
+
+    const finalStartTime = (startTime || showStartTime || existingEvent.startTime).trim();
+    const vertUrl = (posterVerticalUrl || imageUrl || existingEvent.posterVerticalUrl || existingEvent.imageUrl).trim();
+    const horizUrl = (posterHorizontalUrl || imageUrl || vertUrl).trim();
 
     // Check if tickets have already been sold
     const soldTicketsCount = await prisma.ticket.count({
@@ -253,7 +282,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       // 3. Prevent altering eventDate or startTime
       const existingDateStr = existingEvent.eventDate.toISOString().slice(0, 10);
       const newDateStr = new Date(eventDate).toISOString().slice(0, 10);
-      if (existingDateStr !== newDateStr || existingEvent.startTime !== startTime.trim()) {
+      if (existingDateStr !== newDateStr || existingEvent.startTime !== finalStartTime) {
         return jsonResponse(
           {
             error: "ไม่สามารถแก้ไขวันและเวลาจัดงานได้ เนื่องจากมีตั๋วออกให้ผู้ซื้อแล้ว",
@@ -284,14 +313,26 @@ export async function PUT(request: Request, { params }: RouteParams) {
       where: { id },
       data: {
         name: name.trim(),
-        category: category?.trim() || "Concert",
-        description: description?.trim() || "",
+        category: (genre || category || existingEvent.category || "Concert").trim(),
+        genre: (genre || category || existingEvent.genre || "Concert").trim(),
+        artists: artists !== undefined ? artists.trim() : existingEvent.artists,
+        description: description !== undefined ? description.trim() : existingEvent.description,
+        entryRules: entryRules !== undefined ? entryRules.trim() : existingEvent.entryRules,
         venue: venue.trim(),
+        googleMapsUrl: googleMapsUrl !== undefined ? googleMapsUrl.trim() : existingEvent.googleMapsUrl,
         eventDate: new Date(eventDate),
-        startTime: startTime.trim(),
+        startTime: finalStartTime,
+        doorsOpenTime: doorsOpenTime !== undefined ? doorsOpenTime.trim() : existingEvent.doorsOpenTime,
+        showStartTime: showStartTime !== undefined ? showStartTime.trim() : (finalStartTime || existingEvent.showStartTime),
+        showEndTime: showEndTime !== undefined ? showEndTime.trim() : existingEvent.showEndTime,
+        saleStartAt: saleStartAt !== undefined ? (saleStartAt ? new Date(saleStartAt) : null) : existingEvent.saleStartAt,
+        saleEndAt: saleEndAt !== undefined ? (saleEndAt ? new Date(saleEndAt) : null) : existingEvent.saleEndAt,
         ticketPrice: priceNum,
         totalTickets: ticketsNum,
-        imageUrl: imageUrl?.trim() || "",
+        imageUrl: vertUrl,
+        posterVerticalUrl: vertUrl,
+        posterHorizontalUrl: horizUrl,
+        // studentDiscountActive & studentPrice intentionally omitted to preserve admin-only control (AC-03)
         status:
           status === "PUBLISHED"
             ? "PUBLISHED"

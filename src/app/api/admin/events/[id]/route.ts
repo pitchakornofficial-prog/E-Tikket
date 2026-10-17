@@ -31,13 +31,26 @@ export async function PUT(request: Request, { params }: RouteParams) {
     const {
       name,
       category,
+      genre,
+      artists,
       description,
+      entryRules,
       venue,
+      googleMapsUrl,
       eventDate,
       startTime,
+      doorsOpenTime,
+      showStartTime,
+      showEndTime,
+      saleStartAt,
+      saleEndAt,
       ticketPrice,
       totalTickets,
       imageUrl,
+      posterVerticalUrl,
+      posterHorizontalUrl,
+      studentDiscountActive,
+      studentPrice,
       organizerId,
       status,
     } = body;
@@ -46,7 +59,6 @@ export async function PUT(request: Request, { params }: RouteParams) {
       !name ||
       !venue ||
       !eventDate ||
-      !startTime ||
       ticketPrice === undefined ||
       totalTickets === undefined ||
       !organizerId
@@ -79,19 +91,37 @@ export async function PUT(request: Request, { params }: RouteParams) {
       );
     }
 
+    const finalStartTime = (startTime || showStartTime || existingEvent.startTime).trim();
+    const vertUrl = (posterVerticalUrl || imageUrl || existingEvent.posterVerticalUrl || existingEvent.imageUrl).trim();
+    const horizUrl = (posterHorizontalUrl || imageUrl || vertUrl).trim();
+    const studPriceNum = studentPrice !== undefined && studentPrice !== null && studentPrice !== "" ? parseFloat(studentPrice) : null;
+
     // Update event
     const updatedEvent = await prisma.event.update({
       where: { id },
       data: {
         name: name.trim(),
-        category: (category || "Concert").trim(),
-        description: (description || "").trim(),
+        category: (genre || category || existingEvent.category || "Concert").trim(),
+        genre: (genre || category || existingEvent.genre || "Concert").trim(),
+        artists: artists !== undefined ? artists.trim() : existingEvent.artists,
+        description: description !== undefined ? description.trim() : existingEvent.description,
+        entryRules: entryRules !== undefined ? entryRules.trim() : existingEvent.entryRules,
         venue: venue.trim(),
+        googleMapsUrl: googleMapsUrl !== undefined ? googleMapsUrl.trim() : existingEvent.googleMapsUrl,
         eventDate: new Date(eventDate),
-        startTime: startTime.trim(),
+        startTime: finalStartTime,
+        doorsOpenTime: doorsOpenTime !== undefined ? doorsOpenTime.trim() : existingEvent.doorsOpenTime,
+        showStartTime: showStartTime !== undefined ? showStartTime.trim() : (finalStartTime || existingEvent.showStartTime),
+        showEndTime: showEndTime !== undefined ? showEndTime.trim() : existingEvent.showEndTime,
+        saleStartAt: saleStartAt !== undefined ? (saleStartAt ? new Date(saleStartAt) : null) : existingEvent.saleStartAt,
+        saleEndAt: saleEndAt !== undefined ? (saleEndAt ? new Date(saleEndAt) : null) : existingEvent.saleEndAt,
         ticketPrice: priceNum,
         totalTickets: ticketsNum,
-        imageUrl: (imageUrl || "/poster-summer.svg").trim(),
+        imageUrl: vertUrl,
+        posterVerticalUrl: vertUrl,
+        posterHorizontalUrl: horizUrl,
+        studentDiscountActive: studentDiscountActive !== undefined ? Boolean(studentDiscountActive) : existingEvent.studentDiscountActive,
+        studentPrice: studentPrice !== undefined ? (studPriceNum !== null && !isNaN(studPriceNum) ? studPriceNum : null) : existingEvent.studentPrice,
         organizerId: organizer.id,
         status: status === "PUBLISHED" ? "PUBLISHED" : status === "ARCHIVED" ? "ARCHIVED" : "DRAFT",
       },

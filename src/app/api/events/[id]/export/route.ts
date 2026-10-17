@@ -45,22 +45,10 @@ export async function GET(request: Request, { params }: RouteParams) {
                 customerEmail: true,
                 customerPhone: true,
                 quantity: true,
+                ticketTier: true,
                 totalAmount: true,
                 status: true,
                 createdAt: true,
-              },
-            },
-            scans: {
-              orderBy: { scannedAt: "desc" },
-              take: 1,
-              select: {
-                scannedAt: true,
-                action: true,
-                result: true,
-                checkerName: true,
-                staff: {
-                  select: { name: true },
-                },
               },
             },
           },
@@ -108,6 +96,7 @@ export async function GET(request: Request, { params }: RouteParams) {
         "ชื่อผู้ซื้อ",
         "อีเมล",
         "เบอร์โทรศัพท์",
+        "ประเภทบัตร",
         "จำนวนบัตร",
         "ยอดชำระรวม (บาท)",
         "ค่าธรรมเนียมระบบ (บาท)",
@@ -118,6 +107,8 @@ export async function GET(request: Request, { params }: RouteParams) {
 
       const rows = event.orders.map((order, idx) => {
         const ticketNumbers = order.tickets.map((t) => t.ticketNumber).join(", ");
+        const tierText =
+          order.ticketTier === "STUDENT" ? "ส่วนลดนักศึกษา @ubu" : "บัตรทั่วไป";
         const statusText =
           order.status === "PAID"
             ? "ชำระเงินสำเร็จ (PAID)"
@@ -138,6 +129,7 @@ export async function GET(request: Request, { params }: RouteParams) {
           order.customerName,
           order.customerEmail,
           order.customerPhone,
+          tierText,
           order.quantity,
           Number(order.totalAmount).toFixed(2),
           Number(order.platformFeeAmount).toFixed(2),
@@ -152,52 +144,43 @@ export async function GET(request: Request, { params }: RouteParams) {
       return createCSVDownloadResponse(csvContent, filename);
     }
 
-    // Default: attendees list (per-ticket check-in sheet)
+    // Default: attendees / buyers list (strictly buyer details without door status)
     const headers = [
       "ลำดับ",
       "เลขที่บัตร",
-      "สถานะบัตร",
-      "ชื่อผู้เข้างาน / ผู้ซื้อ",
+      "ประเภทบัตร",
+      "ชื่อผู้ซื้อ",
       "อีเมล",
       "เบอร์โทรศัพท์",
       "รหัสคำสั่งซื้อ",
       "วันเวลาสั่งซื้อ",
-      "การสแกนล่าสุด",
-      "เวลาสแกนล่าสุด",
-      "เจ้าหน้าที่ผู้ตรวจล่าสุด",
+      "สถานะคำสั่งซื้อ",
     ];
 
     const rows = event.tickets.map((ticket, idx) => {
-      const ticketStatusText =
-        ticket.status === "INSIDE"
-          ? "เข้างานแล้ว (INSIDE)"
-          : ticket.status === "OUTSIDE"
-          ? "ยังไม่เข้างาน (OUTSIDE)"
-          : "ยกเลิก (CANCELLED)";
-
-      const lastScan = ticket.scans[0] || null;
-      const lastScanAction = lastScan
-        ? lastScan.action === "CHECK_IN"
-          ? "เข้างาน (CHECK_IN)"
-          : "ออกชั่วคราว (CHECK_OUT)"
-        : "-";
-      const lastScanTime = lastScan ? formatDateTime(lastScan.scannedAt) : "-";
-      const lastScanStaff = lastScan
-        ? lastScan.checkerName || lastScan.staff?.name || "Staff"
-        : "-";
+      const tierText =
+        ticket.order.ticketTier === "STUDENT"
+          ? "ส่วนลดนักศึกษา @ubu"
+          : "บัตรทั่วไป";
+      const orderStatusText =
+        ticket.order.status === "PAID"
+          ? "ชำระเงินสำเร็จ (PAID)"
+          : ticket.order.status === "WAITING_FOR_VERIFY"
+          ? "รอตรวจสอบสลิป (WAITING_FOR_VERIFY)"
+          : ticket.order.status === "PENDING_PAYMENT"
+          ? "รอชำระเงิน (PENDING_PAYMENT)"
+          : ticket.order.status;
 
       return [
         idx + 1,
         ticket.ticketNumber,
-        ticketStatusText,
+        tierText,
         ticket.order.customerName,
         ticket.order.customerEmail,
         ticket.order.customerPhone,
         ticket.order.id,
         formatDateTime(ticket.order.createdAt),
-        lastScanAction,
-        lastScanTime,
-        lastScanStaff,
+        orderStatusText,
       ];
     });
 

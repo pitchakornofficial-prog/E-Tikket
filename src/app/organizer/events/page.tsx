@@ -16,7 +16,6 @@ import {
   XIcon,
   AlertTriangleIcon,
   ArrowRightIcon,
-  CheckIcon,
   BarChartIcon,
   PlusIcon,
   EditIcon,
@@ -35,6 +34,19 @@ interface EventSummary {
   category: string;
   status: "DRAFT" | "PUBLISHED" | "COMPLETED" | "CANCELLED";
   imageUrl: string;
+  posterVerticalUrl?: string;
+  posterHorizontalUrl?: string;
+  artists?: string;
+  genre?: string;
+  doorsOpenTime?: string;
+  showStartTime?: string;
+  showEndTime?: string;
+  saleStartAt?: string | null;
+  saleEndAt?: string | null;
+  googleMapsUrl?: string;
+  entryRules?: string;
+  studentDiscountActive?: boolean;
+  studentPrice?: number | null;
   createdAt: string;
   soldTickets: number;
   insideCount: number;
@@ -62,6 +74,7 @@ interface OrderDetail {
   customerEmail: string;
   customerPhone: string;
   quantity: number;
+  ticketTier?: string;
   totalAmount: number;
   organizerRevenue: number;
   status: "PENDING_PAYMENT" | "WAITING_FOR_VERIFY" | "PAID" | "CANCELLED" | "EXPIRED";
@@ -77,6 +90,7 @@ interface EventDetailResponse {
     totalTickets: number;
     totalRevenue: number;
     organizerRevenue: number;
+    paidOrdersCount?: number;
     insideCount: number;
     outsideCount: number;
     cancelledCount: number;
@@ -155,24 +169,48 @@ export default function OrganizerEventsPage() {
     id?: string;
     name: string;
     category: string;
+    genre: string;
+    artists: string;
     description: string;
+    entryRules: string;
     venue: string;
+    googleMapsUrl: string;
     eventDate: string;
     startTime: string;
+    doorsOpenTime: string;
+    showStartTime: string;
+    showEndTime: string;
+    saleStartAt: string;
+    saleEndAt: string;
     ticketPrice: string;
     totalTickets: string;
     imageUrl: string;
+    posterVerticalUrl: string;
+    posterHorizontalUrl: string;
+    proposedStudentPrice: string;
     status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   }>({
     name: "",
     category: "Concert",
+    genre: "Indie / Rock",
+    artists: "",
     description: "",
+    entryRules: "จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน ห้ามนำเครื่องดื่มแอลกอฮอล์ภายนอกเข้างาน",
     venue: "",
+    googleMapsUrl: "",
     eventDate: new Date().toISOString().slice(0, 10),
     startTime: "19:00",
+    doorsOpenTime: "17:00",
+    showStartTime: "19:00",
+    showEndTime: "23:00",
+    saleStartAt: "",
+    saleEndAt: "",
     ticketPrice: "500",
     totalTickets: "100",
-    imageUrl: "",
+    imageUrl: "/poster-indie.svg",
+    posterVerticalUrl: "/poster-indie.svg",
+    posterHorizontalUrl: "/poster-indie.svg",
+    proposedStudentPrice: "250",
     status: "DRAFT",
   });
   const [formLoading, setFormLoading] = useState(false);
@@ -184,13 +222,25 @@ export default function OrganizerEventsPage() {
     setFormData({
       name: "",
       category: "Concert",
+      genre: "Indie / Rock",
+      artists: "",
       description: "",
+      entryRules: "จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน ห้ามนำเครื่องดื่มแอลกอฮอล์ภายนอกเข้างาน",
       venue: "",
+      googleMapsUrl: "",
       eventDate: new Date().toISOString().slice(0, 10),
       startTime: "19:00",
+      doorsOpenTime: "17:00",
+      showStartTime: "19:00",
+      showEndTime: "23:00",
+      saleStartAt: "",
+      saleEndAt: "",
       ticketPrice: "500",
       totalTickets: "100",
-      imageUrl: "",
+      imageUrl: "/poster-indie.svg",
+      posterVerticalUrl: "/poster-indie.svg",
+      posterHorizontalUrl: "/poster-indie.svg",
+      proposedStudentPrice: "250",
       status: "DRAFT",
     });
     setFormSoldTickets(0);
@@ -204,13 +254,25 @@ export default function OrganizerEventsPage() {
       id: ev.id,
       name: ev.name,
       category: ev.category || "Concert",
+      genre: ev.genre || ev.category || "Indie / Rock",
+      artists: ev.artists || "",
       description: ev.description || "",
+      entryRules: ev.entryRules || "จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน",
       venue: ev.venue || "",
+      googleMapsUrl: ev.googleMapsUrl || "",
       eventDate: ev.eventDate ? ev.eventDate.slice(0, 10) : "",
       startTime: ev.startTime || "19:00",
+      doorsOpenTime: ev.doorsOpenTime || "17:00",
+      showStartTime: ev.showStartTime || ev.startTime || "19:00",
+      showEndTime: ev.showEndTime || "23:00",
+      saleStartAt: ev.saleStartAt ? ev.saleStartAt.slice(0, 16) : "",
+      saleEndAt: ev.saleEndAt ? ev.saleEndAt.slice(0, 16) : "",
       ticketPrice: String(ev.ticketPrice),
       totalTickets: String(ev.totalTickets),
-      imageUrl: ev.imageUrl || "",
+      imageUrl: ev.imageUrl || "/poster-indie.svg",
+      posterVerticalUrl: ev.posterVerticalUrl || ev.imageUrl || "/poster-indie.svg",
+      posterHorizontalUrl: ev.posterHorizontalUrl || ev.imageUrl || "/poster-indie.svg",
+      proposedStudentPrice: ev.studentPrice ? String(ev.studentPrice) : "250",
       status:
         ev.status === "PUBLISHED"
           ? "PUBLISHED"
@@ -896,7 +958,7 @@ export default function OrganizerEventsPage() {
                   {/* Event Stats Summary Bar */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div className="p-3.5 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
-                      <span className="text-[11px] text-neutral-500">ยอดขายบัตร</span>
+                      <span className="text-[11px] text-neutral-500">ยอดจำหน่ายบัตร</span>
                       <div className="text-base sm:text-lg font-black text-neutral-900 dark:text-white font-mono">
                         {modalData.stats.soldTickets} / {modalData.stats.totalTickets}
                       </div>
@@ -910,22 +972,22 @@ export default function OrganizerEventsPage() {
                     </div>
 
                     <div className="p-3.5 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
-                      <span className="text-[11px] text-neutral-500">เช็คอินแล้ว (INSIDE)</span>
+                      <span className="text-[11px] text-neutral-500">คำสั่งซื้อที่ชำระสำเร็จ</span>
                       <div className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">
-                        {modalData.stats.insideCount} ใบ
+                        {modalData.stats.paidOrdersCount ?? modalData.orders.filter((o) => o.status === "PAID").length} ออเดอร์
                       </div>
                       <span className="text-[10px] text-neutral-400">
-                        ({modalData.stats.checkinRatePercent}% ของบัตรที่ขาย)
+                        (ชำระเงินสำเร็จ 100%)
                       </span>
                     </div>
 
                     <div className="p-3.5 bg-neutral-50 dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800">
-                      <span className="text-[11px] text-neutral-500">ยังไม่เข้างาน (OUTSIDE)</span>
+                      <span className="text-[11px] text-neutral-500">ยอดขายรวมจากผู้ซื้อ</span>
                       <div className="text-base sm:text-lg font-black text-neutral-900 dark:text-white font-mono">
-                        {modalData.stats.outsideCount} ใบ
+                        ฿{modalData.stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </div>
                       <span className="text-[10px] text-neutral-400">
-                        {modalData.stats.cancelledCount > 0 && `(ยกเลิก ${modalData.stats.cancelledCount} ใบ)`}
+                        ราคาบัตร ฿{modalData.event.ticketPrice.toLocaleString()} / ใบ
                       </span>
                     </div>
 
@@ -935,7 +997,7 @@ export default function OrganizerEventsPage() {
                         ฿{modalData.stats.organizerRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </div>
                       <span className="text-[10px] text-neutral-400">
-                        ยอดขายรวม ฿{modalData.stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        หลังหักค่าธรรมเนียมระบบ 5%
                       </span>
                     </div>
                   </div>
@@ -1115,28 +1177,34 @@ export default function OrganizerEventsPage() {
 
                                   {/* Tickets list */}
                                   <td className="py-3.5 px-4 align-top">
-                                    <div className="font-bold text-neutral-900 dark:text-white mb-1.5">
-                                      {ord.quantity} ใบ
+                                    <div className="flex items-center gap-1.5 mb-1.5">
+                                      <span className="font-bold text-neutral-900 dark:text-white">
+                                        {ord.quantity} ใบ
+                                      </span>
+                                      {ord.ticketTier === "STUDENT" ? (
+                                        <span className="inline-block px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                          ส่วนลดนักศึกษา
+                                        </span>
+                                      ) : (
+                                        <span className="inline-block px-1.5 py-0.2 rounded text-[9px] font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">
+                                          บัตรทั่วไป
+                                        </span>
+                                      )}
                                     </div>
                                     <div className="flex flex-wrap gap-1.5 max-w-xs">
                                       {ord.tickets.map((t) => (
                                         <div key={t.id} className="inline-flex items-center gap-1">
                                           <span
                                             className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border ${
-                                              t.status === "INSIDE"
-                                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 font-bold"
-                                                : t.status === "CANCELLED"
+                                              t.status === "CANCELLED"
                                                 ? "bg-rose-500/10 text-rose-500 border-rose-500/20 line-through opacity-70"
                                                 : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
                                             }`}
-                                            title={`บัตร ${t.ticketNumber} (${t.status})`}
+                                            title={`บัตร ${t.ticketNumber}`}
                                           >
-                                            {t.status === "INSIDE" && (
-                                              <CheckIcon className="w-2.5 h-2.5 shrink-0" />
-                                            )}
                                             <span>{t.ticketNumber}</span>
                                           </span>
-                                          {ord.status === "PAID" && t.status === "OUTSIDE" && (
+                                          {ord.status === "PAID" && t.status !== "CANCELLED" && (
                                             <button
                                               type="button"
                                               onClick={() => {
@@ -1249,14 +1317,14 @@ export default function OrganizerEventsPage() {
               <div>
                 <h2 className="text-base font-bold text-neutral-900 dark:text-white flex items-center gap-2">
                   <CalendarIcon className="w-4 h-4" />
-                  <span>{formData.id ? "แก้ไขข้อมูลคอนเสิร์ต" : "สร้างคอนเสิร์ตใหม่"}</span>
+                  <span>{formData.id ? "แก้ไขข้อมูลคอนเสิร์ต" : "สร้างคอนเสิร์ตใหม่ (Create Event)"}</span>
                 </h2>
                 <p className="text-xs text-neutral-500">
                   {formData.id
                     ? formSoldTickets > 0
                       ? `ปรับปรุงข้อมูลคอนเสิร์ต (ข้อมูลสำคัญถูกล็อกเนื่องจากมีผู้ซื้อแล้ว ${formSoldTickets} ใบ)`
                       : "ปรับปรุงข้อมูล วันที่ ราคาบัตร หรือจำนวนที่เปิดจำหน่าย"
-                    : "กรอกข้อมูลเพื่อเปิดรอบการจำหน่ายบัตรคอนเสิร์ตของคุณ"}
+                    : "กรอกข้อมูล กำหนดตั๋ว และส่งให้แอดมินอนุมัติ"}
                 </p>
               </div>
               <button
@@ -1269,7 +1337,7 @@ export default function OrganizerEventsPage() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleFormSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-xs">
+            <form onSubmit={handleFormSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 text-xs">
               {formData.id && formSoldTickets > 0 && (
                 <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs flex items-start gap-2">
                   <AlertTriangleIcon className="w-4 h-4 shrink-0 mt-0.5" />
@@ -1289,34 +1357,370 @@ export default function OrganizerEventsPage() {
                 </div>
               )}
 
-              {/* Event Name */}
-              <div className="space-y-1">
-                <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                  ชื่อคอนเสิร์ต / ชื่องาน <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="เช่น Friday Night Live Session #4"
-                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
-                />
-              </div>
+              {/* Step 1: General Info & Artists */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-800 pb-1.5">
+                  1. ข้อมูลคอนเสิร์ตและศิลปิน (Event Info & Artists)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="sm:col-span-2 space-y-1">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      ชื่อคอนเสิร์ต / ชื่องาน <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="เช่น Acoustic Night Under The Stars 2026"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
 
-              {/* Category & Status */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      แนวเพลง / หมวดหมู่งาน <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      value={formData.genre}
+                      onChange={(e) => setFormData({ ...formData, genre: e.target.value, category: e.target.value })}
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                    >
+                      <option value="Indie / Rock">Indie / Rock</option>
+                      <option value="Folk / Acoustic">Folk / Acoustic</option>
+                      <option value="EDM / Beats">EDM / Beats</option>
+                      <option value="Jazz / Soul">Jazz / Soul</option>
+                      <option value="Pop / Mainstream">Pop / Mainstream</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="space-y-1">
-                  <label className="font-bold text-neutral-700 dark:text-neutral-300">หมวดหมู่</label>
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                    รายชื่อศิลปิน / วงดนตรี (Artists Lineup) <span className="text-rose-500">*</span>
+                  </label>
                   <input
                     type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    placeholder="เช่น Indie Pop, Rock, Acoustic"
+                    required
+                    value={formData.artists}
+                    onChange={(e) => setFormData({ ...formData, artists: e.target.value })}
+                    placeholder="เช่น Anatomy Rabbit, Moving and Cut, Safeplanet"
                     className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
                   />
                 </div>
 
+                <div className="space-y-1">
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">คำบรรยายและไฮไลท์การแสดง (Description) <span className="text-rose-500">*</span></label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="ระบุเรื่องราว ธีมงาน ไฮไลท์การแสดงพิเศษ..."
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg p-3 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white resize-y"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">เงื่อนไขและกฎการเข้างาน (Entry Rules & Policy)</label>
+                  <textarea
+                    rows={2}
+                    value={formData.entryRules}
+                    onChange={(e) => setFormData({ ...formData, entryRules: e.target.value })}
+                    placeholder="เช่น จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน ห้ามนำเครื่องดื่มภายนอกเข้างาน..."
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg p-3 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white resize-y"
+                  />
+                </div>
+              </div>
+
+              {/* Step 2: Venue & Google Maps Link */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-800 pb-1.5">
+                  2. สถานที่จัดงานและลิงก์ Google Maps (Venue & Map)
+                </h3>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      สถานที่จัดงาน (Venue) <span className="text-rose-500">*</span>
+                    </label>
+                    {formSoldTickets > 0 && (
+                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                        🔒 ล็อก
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    disabled={formSoldTickets > 0}
+                    value={formData.venue}
+                    onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                    placeholder="เช่น The Rock Pub (Bangkok) หรือ Jam Factory เจริญนคร"
+                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white ${
+                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                    }`}
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                    ลิงก์ Google Maps (สำหรับนำทางลูกค้า)
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={formData.googleMapsUrl}
+                      onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })}
+                      placeholder="https://maps.app.goo.gl/... หรือ https://goo.gl/maps/..."
+                      className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono text-[11px]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const target = formData.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.venue)}`;
+                        if (target) window.open(target, "_blank", "noopener,noreferrer");
+                      }}
+                      className="px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 rounded-lg text-neutral-800 dark:text-white font-semibold text-[11px] whitespace-nowrap"
+                    >
+                      📍 ทดสอบเปิด Map ↗
+                    </button>
+                  </div>
+                  <span className="text-[10px] text-neutral-500">
+                    * ลิงก์นี้จะปรากฏเป็นปุ่มเปิดแผนที่นำทางบนหน้าเว็บสำหรับลูกค้าและในตั๋วอิเล็กทรอนิกส์
+                  </span>
+                </div>
+              </div>
+
+              {/* Step 3: Timings (Show & Sale Window) */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-800 pb-1.5">
+                  3. กำหนดการแสดงและช่วงเวลาเปิดขายบัตร (Timings & Sale Window)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                        วันที่จัดงาน <span className="text-rose-500">*</span>
+                      </label>
+                      {formSoldTickets > 0 && (
+                        <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">🔒 ล็อก</span>
+                      )}
+                    </div>
+                    <input
+                      type="date"
+                      required
+                      disabled={formSoldTickets > 0}
+                      value={formData.eventDate}
+                      onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                      className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white ${
+                        formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                      }`}
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                      เวลาประตูเปิด (Doors Open)
+                    </label>
+                    <input
+                      type="time"
+                      value={formData.doorsOpenTime}
+                      onChange={(e) => setFormData({ ...formData, doorsOpenTime: e.target.value })}
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                        เวลาเริ่มงาน (HH:MM) <span className="text-rose-500">*</span>
+                      </label>
+                      {formSoldTickets > 0 && (
+                        <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">🔒 ล็อก</span>
+                      )}
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      disabled={formSoldTickets > 0}
+                      value={formData.startTime}
+                      onChange={(e) => setFormData({ ...formData, startTime: e.target.value, showStartTime: e.target.value })}
+                      placeholder="19:00"
+                      className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white ${
+                        formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-lg space-y-2">
+                  <span className="font-bold text-neutral-800 dark:text-neutral-200 block text-[11px]">
+                    ⏰ ช่วงเวลาจำหน่ายบัตร (Ticket Sale Window)
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-neutral-600 dark:text-neutral-400 text-[11px]">วัน-เวลาเริ่มเปิดขาย</label>
+                      <input
+                        type="datetime-local"
+                        value={formData.saleStartAt}
+                        onChange={(e) => setFormData({ ...formData, saleStartAt: e.target.value })}
+                        className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-neutral-600 dark:text-neutral-400 text-[11px]">วัน-เวลาปิดจำหน่าย</label>
+                      <input
+                        type="datetime-local"
+                        value={formData.saleEndAt}
+                        onChange={(e) => setFormData({ ...formData, saleEndAt: e.target.value })}
+                        className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 4: Dual Posters */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-800 pb-1.5">
+                  4. รูปภาพโปสเตอร์งาน 2 รูปแบบ (Dual Posters: Vertical & Horizontal)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3 border border-neutral-300 dark:border-neutral-700 rounded-lg space-y-2 bg-neutral-50 dark:bg-neutral-900/40">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-neutral-900 dark:text-white text-[11px]">
+                        🖼️ 1. โปสเตอร์แนวตั้ง (Portrait 4:5) *
+                      </span>
+                      <span className="text-[10px] text-neutral-500">การ์ดหน้าแรก</span>
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={formData.posterVerticalUrl}
+                      onChange={(e) => setFormData({ ...formData, posterVerticalUrl: e.target.value, imageUrl: e.target.value })}
+                      placeholder="/poster-indie.svg หรือ https://..."
+                      className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white font-mono text-[11px]"
+                    />
+                  </div>
+
+                  <div className="p-3 border border-neutral-300 dark:border-neutral-700 rounded-lg space-y-2 bg-neutral-50 dark:bg-neutral-900/40">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-neutral-900 dark:text-white text-[11px]">
+                        📐 2. แบนเนอร์แนวนอน (Landscape 16:9) *
+                      </span>
+                      <span className="text-[10px] text-neutral-500">ภาพหัวเรื่อง</span>
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={formData.posterHorizontalUrl}
+                      onChange={(e) => setFormData({ ...formData, posterHorizontalUrl: e.target.value })}
+                      placeholder="/poster-indie.svg หรือ https://..."
+                      className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white font-mono text-[11px]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 5: Pricing, Quota & Admin-locked Student Privilege */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-800 pb-1.5">
+                  5. กำหนดราคา โควตาบัตร & สิทธิ์นักศึกษา
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                        ราคาบัตรปกติ (บาท) <span className="text-rose-500">*</span>
+                      </label>
+                      {formSoldTickets > 0 && (
+                        <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">🔒 ล็อก</span>
+                      )}
+                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      required
+                      disabled={formSoldTickets > 0}
+                      value={formData.ticketPrice}
+                      onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
+                      placeholder="450"
+                      className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white font-mono ${
+                        formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
+                      }`}
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="font-bold text-neutral-700 dark:text-neutral-300">
+                        จำนวนบัตรทั้งหมด (ใบ) <span className="text-rose-500">*</span>
+                      </label>
+                      {formSoldTickets > 0 && (
+                        <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                          ขยายโควตาได้
+                        </span>
+                      )}
+                    </div>
+                    <input
+                      type="number"
+                      min={formSoldTickets > 0 ? formInitialTotalTickets : 1}
+                      step="1"
+                      required
+                      value={formData.totalTickets}
+                      onChange={(e) => setFormData({ ...formData, totalTickets: e.target.value })}
+                      placeholder="150"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white font-mono"
+                    />
+                  </div>
+                </div>
+
+                {/* Student Privilege Box (AC-03: Locked in Organizer View) */}
+                <div className="p-3.5 bg-neutral-50 dark:bg-neutral-900/40 border border-dashed border-neutral-300 dark:border-neutral-700 rounded-lg space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label className="flex items-center gap-2 font-bold text-neutral-500 cursor-not-allowed">
+                      <input type="checkbox" disabled checked={false} className="w-4 h-4 opacity-50 cursor-not-allowed" />
+                      <span>เปิดให้สิทธิ์ส่วนลดพิเศษสำหรับนักศึกษา (Student Privilege)</span>
+                    </label>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700">
+                      🔒 สิทธิ์เฉพาะแอดมิน (Admin Only) - ผู้จัดไม่สามารถเปิดเองได้
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-neutral-500 leading-relaxed">
+                    * เพื่อความถูกต้องและปลอดภัยในการยืนยันตัวตนด้วย OTP ทางอีเมลสถาบัน (@ubu.ac.th) บนหน้า Checkout ผู้จัดงานไม่สามารถเปิดสิทธิ์นี้ได้เอง ผู้ดูแลระบบ (Admin) จะเป็นผู้พิจารณาตรวจสอบและเปิดใช้งานให้ในขั้นตอนอนุมัติคอนเสิร์ต
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="space-y-1 opacity-75">
+                      <label className="text-[11px] text-neutral-600 dark:text-neutral-400 font-medium">
+                        ราคาบัตรนักศึกษาที่เสนอขอ (บาท / ใบ)
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.proposedStudentPrice}
+                        onChange={(e) => setFormData({ ...formData, proposedStudentPrice: e.target.value })}
+                        placeholder="เสนอราคาให้แอดมินพิจารณา เช่น 250"
+                        className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white text-xs font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1 opacity-75">
+                      <label className="text-[11px] text-neutral-600 dark:text-neutral-400 font-medium">
+                        โดเมนอีเมลสถาบันที่ระบบรองรับ
+                      </label>
+                      <input
+                        type="text"
+                        readOnly
+                        value="@ubu.ac.th (ยืนยัน OTP ตอนซื้อตั๋ว)"
+                        className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-500 font-mono text-xs cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status Selection */}
                 <div className="space-y-1">
                   <label className="font-bold text-neutral-700 dark:text-neutral-300">สถานะงาน</label>
                   <select
@@ -1329,164 +1733,6 @@ export default function OrganizerEventsPage() {
                     {formData.id && <option value="ARCHIVED">จัดเก็บ / ปิดรอบ (ARCHIVED)</option>}
                   </select>
                 </div>
-              </div>
-
-              {/* Venue */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                    สถานที่จัดงาน (Venue) <span className="text-rose-500">*</span>
-                  </label>
-                  {formSoldTickets > 0 && (
-                    <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                      🔒 ล็อก (มีตั๋วออกในระบบแล้ว)
-                    </span>
-                  )}
-                </div>
-                <input
-                  type="text"
-                  required
-                  disabled={formSoldTickets > 0}
-                  value={formData.venue}
-                  onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                  placeholder="เช่น Jam Factory เจริญนคร, Decommune ทองหล่อ"
-                  className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white ${
-                    formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
-                  }`}
-                />
-              </div>
-
-              {/* Date & Time */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                      วันที่จัดงาน <span className="text-rose-500">*</span>
-                    </label>
-                    {formSoldTickets > 0 && (
-                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                        🔒 ล็อก
-                      </span>
-                    )}
-                  </div>
-                  <input
-                    type="date"
-                    required
-                    disabled={formSoldTickets > 0}
-                    value={formData.eventDate}
-                    onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
-                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white ${
-                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
-                    }`}
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                      เวลาเริ่มงาน (HH:MM) <span className="text-rose-500">*</span>
-                    </label>
-                    {formSoldTickets > 0 && (
-                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                        🔒 ล็อก
-                      </span>
-                    )}
-                  </div>
-                  <input
-                    type="text"
-                    required
-                    disabled={formSoldTickets > 0}
-                    value={formData.startTime}
-                    onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                    placeholder="19:00"
-                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white ${
-                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Price & Quota */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                      ราคาบัตร (บาท) <span className="text-rose-500">*</span>
-                    </label>
-                    {formSoldTickets > 0 && (
-                      <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                        🔒 ล็อก
-                      </span>
-                    )}
-                  </div>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    required
-                    disabled={formSoldTickets > 0}
-                    value={formData.ticketPrice}
-                    onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
-                    placeholder="450"
-                    className={`w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono ${
-                      formSoldTickets > 0 ? "opacity-60 cursor-not-allowed bg-neutral-100 dark:bg-neutral-800/50" : ""
-                    }`}
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                      จำนวนบัตรทั้งหมด (ใบ) <span className="text-rose-500">*</span>
-                    </label>
-                    {formSoldTickets > 0 && (
-                      <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
-                        ขยายโควตาได้ (ขั้นต่ำ {formInitialTotalTickets})
-                      </span>
-                    )}
-                  </div>
-                  <input
-                    type="number"
-                    min={formSoldTickets > 0 ? formInitialTotalTickets : 1}
-                    step="1"
-                    required
-                    value={formData.totalTickets}
-                    onChange={(e) => setFormData({ ...formData, totalTickets: e.target.value })}
-                    placeholder="150"
-                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono"
-                  />
-                  {formSoldTickets > 0 && (
-                    <p className="text-[10px] text-neutral-500">
-                      * ปรับเพิ่มโควตาได้ แต่ไม่สามารถปรับลดต่ำกว่าโควตาเดิม ({formInitialTotalTickets} ใบ)
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Poster Image URL */}
-              <div className="space-y-1">
-                <label className="font-bold text-neutral-700 dark:text-neutral-300">
-                  URL รูปภาพโปสเตอร์ (Image URL)
-                </label>
-                <input
-                  type="url"
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  placeholder="https://images.unsplash.com/photo-..."
-                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white font-mono text-[11px]"
-                />
-              </div>
-
-              {/* Description */}
-              <div className="space-y-1">
-                <label className="font-bold text-neutral-700 dark:text-neutral-300">รายละเอียดงาน (Description)</label>
-                <textarea
-                  rows={4}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="รายละเอียดงาน เงื่อนไขการเข้างาน รายชื่อศิลปิน ฯลฯ"
-                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg p-3 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:border-black dark:focus:border-white resize-y"
-                />
               </div>
 
               {/* Footer Actions */}

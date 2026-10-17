@@ -53,6 +53,8 @@ export async function GET(request: Request) {
       checkers: checkers.map((c) => ({
         id: c.id,
         name: c.name,
+        phone: c.phone || null,
+        pin: c.pin || null,
         gateNote: c.gateNote,
         accessToken: c.accessToken,
         isActive: c.isActive,
@@ -85,7 +87,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { name, eventId, gateNote } = body;
+    const { name, eventId, gateNote, phone, pin } = body;
 
     if (!name || typeof name !== "string" || name.trim().length === 0) {
       return jsonResponse(
@@ -124,11 +126,19 @@ export async function POST(request: Request) {
     const token = generateSecureToken(32);
     const tokenHash = hashToken(token);
 
+    // Generate 4-digit PIN if not supplied
+    const finalPin =
+      pin && typeof pin === "string" && pin.trim().length === 4
+        ? pin.trim()
+        : Math.floor(1000 + Math.random() * 9000).toString();
+
     const checker = await prisma.ticketChecker.create({
       data: {
         organizerId: auth.session.sub,
         eventId: event.id,
         name: name.trim(),
+        phone: phone && typeof phone === "string" ? phone.trim() : null,
+        pin: finalPin,
         gateNote: gateNote ? gateNote.trim() : null,
         tokenHash,
         accessToken: token,
@@ -157,6 +167,8 @@ export async function POST(request: Request) {
         checker: {
           id: checker.id,
           name: checker.name,
+          phone: checker.phone || null,
+          pin: checker.pin || null,
           gateNote: checker.gateNote,
           accessToken: checker.accessToken,
           isActive: checker.isActive,

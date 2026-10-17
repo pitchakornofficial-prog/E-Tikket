@@ -26,37 +26,84 @@ export async function GET(request: Request) {
   if (eventId === "ALL") {
     const myEvents = await prisma.event.findMany({
       where: { organizerId: auth.session.sub },
-      select: { id: true, name: true },
+      select: { id: true, name: true, totalTickets: true },
     });
 
     const eventIds = myEvents.map((e) => e.id);
 
-    const recentScans = await prisma.ticketScan.findMany({
-      where: { eventId: { in: eventIds } },
-      orderBy: { scannedAt: "desc" },
-      take: 50,
-      include: {
-        event: {
-          select: {
-            id: true,
-            name: true,
+    const [tickets, allScansCount, checkInCount, checkOutCount, rejectedCount, recentScans] =
+      await Promise.all([
+        prisma.ticket.findMany({
+          where: { eventId: { in: eventIds } },
+          select: { status: true },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId: { in: eventIds } },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId: { in: eventIds }, action: "CHECK_IN", result: "VALID" },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId: { in: eventIds }, action: "CHECK_OUT", result: "VALID" },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId: { in: eventIds }, result: { not: "VALID" } },
+        }),
+        prisma.ticketScan.findMany({
+          where: { eventId: { in: eventIds } },
+          orderBy: { scannedAt: "desc" },
+          take: 100,
+          include: {
+            event: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            ticket: {
+              select: {
+                ticketNumber: true,
+                order: {
+                  select: {
+                    customerName: true,
+                    ticketTier: true,
+                  },
+                },
+              },
+            },
+            checker: {
+              select: {
+                id: true,
+                name: true,
+                gateNote: true,
+              },
+            },
+            staff: {
+              select: {
+                name: true,
+              },
+            },
           },
-        },
-        ticket: {
-          select: {
-            ticketNumber: true,
-          },
-        },
-        staff: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+        }),
+      ]);
+
+    const insideCount = tickets.filter((t) => t.status === "INSIDE").length;
+    const outsideCount = tickets.filter((t) => t.status === "OUTSIDE").length;
+    const totalSold = tickets.length;
+    const capacity = myEvents.reduce((acc, e) => acc + (e.totalTickets || 0), 0);
 
     return jsonResponse(
       {
+        stats: {
+          totalSold,
+          capacity,
+          insideCount,
+          outsideCount,
+          allScansCount,
+          checkInCount,
+          checkOutCount,
+          rejectedCount,
+        },
         scans: recentScans.map((s) => ({
           id: s.id,
           eventId: s.event.id,
@@ -65,8 +112,12 @@ export async function GET(request: Request) {
           result: s.result,
           scannedAt: s.scannedAt.toISOString(),
           ticketNumber: s.ticket?.ticketNumber || null,
-          staffName: s.checkerName || s.staff.name,
-          checkerName: s.checkerName || null,
+          attendeeName: s.ticket?.order?.customerName || null,
+          ticketTier: s.ticket?.order?.ticketTier || "GENERAL",
+          gateNote: s.checker?.gateNote || null,
+          checkerId: s.checker?.id || null,
+          staffName: s.checker?.name || s.checkerName || s.staff.name,
+          checkerName: s.checkerName || s.checker?.name || null,
         })),
       },
       { status: 200 },
@@ -103,24 +154,61 @@ export async function GET(request: Request) {
       );
     }
 
-    // Fetch recent 30 scans for this event
-    const recentScans = await prisma.ticketScan.findMany({
-      where: { eventId },
-      orderBy: { scannedAt: "desc" },
-      take: 30,
-      include: {
-        ticket: {
-          select: {
-            ticketNumber: true,
+    // Fetch stats and recent scans for this event
+    const [tickets, allScansCount, checkInCount, checkOutCount, rejectedCount, recentScans] =
+      await Promise.all([
+        prisma.ticket.findMany({
+          where: { eventId },
+          select: { status: true },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId, action: "CHECK_IN", result: "VALID" },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId, action: "CHECK_OUT", result: "VALID" },
+        }),
+        prisma.ticketScan.count({
+          where: { eventId, result: { not: "VALID" } },
+        }),
+        prisma.ticketScan.findMany({
+          where: { eventId },
+          orderBy: { scannedAt: "desc" },
+          take: 100,
+          include: {
+            ticket: {
+              select: {
+                ticketNumber: true,
+                order: {
+                  select: {
+                    customerName: true,
+                    ticketTier: true,
+                  },
+                },
+              },
+            },
+            checker: {
+              select: {
+                id: true,
+                name: true,
+                gateNote: true,
+              },
+            },
+            staff: {
+              select: {
+                name: true,
+              },
+            },
           },
-        },
-        staff: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+        }),
+      ]);
+
+    const insideCount = tickets.filter((t) => t.status === "INSIDE").length;
+    const outsideCount = tickets.filter((t) => t.status === "OUTSIDE").length;
+    const totalSold = tickets.length;
+    const capacity = event.totalTickets || 0;
 
     return jsonResponse(
       {
@@ -131,6 +219,16 @@ export async function GET(request: Request) {
           startTime: event.startTime,
           venue: event.venue,
         },
+        stats: {
+          totalSold,
+          capacity,
+          insideCount,
+          outsideCount,
+          allScansCount,
+          checkInCount,
+          checkOutCount,
+          rejectedCount,
+        },
         scans: recentScans.map((s) => ({
           id: s.id,
           eventId: event.id,
@@ -139,8 +237,12 @@ export async function GET(request: Request) {
           result: s.result,
           scannedAt: s.scannedAt.toISOString(),
           ticketNumber: s.ticket?.ticketNumber || null,
-          staffName: s.checkerName || s.staff.name,
-          checkerName: s.checkerName || null,
+          attendeeName: s.ticket?.order?.customerName || null,
+          ticketTier: s.ticket?.order?.ticketTier || "GENERAL",
+          gateNote: s.checker?.gateNote || null,
+          checkerId: s.checker?.id || null,
+          staffName: s.checker?.name || s.checkerName || s.staff.name,
+          checkerName: s.checkerName || s.checker?.name || null,
         })),
       },
       { status: 200 },

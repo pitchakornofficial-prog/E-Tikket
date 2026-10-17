@@ -37,8 +37,10 @@ Durable domain understanding, vocabulary, business rules, and invariants for the
 15. **Organizer Edit Reverts Review:** เมื่อ Organizer แก้ไขบทความที่ PUBLISHED แล้ว สถานะจะเปลี่ยนเป็น PENDING_REVIEW อัตโนมัติ Admin แก้ไขบทความใดก็ได้โดยคง PUBLISHED
 16. **Admin Article Superuser:** Admin จัดการบทความทั้งหมดได้ (แก้ไข, ลบ, unpublish) รวมถึงบทความของ Organizer
 17. **Organizer Event Modification Gate:** การแก้ไขคอนเสิร์ตที่เปิดขาย (Published) แล้วในส่วนข้อมูลสำคัญ (วัน/เวลา, สถานที่, ราคา, ลดโควตา) ต้องผ่านการอนุมัติใหม่จาก Admin ข้อมูลทั่วไป (รายละเอียด, โปสเตอร์) แก้ไขได้ทันที
-18. **Multi-tier Ticket Quota Isolation:** คอนเสิร์ตรองรับประเภทตั๋ว 1–4 ระดับ (Multi-tier) โดยแต่ละระดับมีราคาและโควตาแยกอิสระจากกัน
-19. **Scanner Token Delegation:** สตาฟประจำประตูสแกนบัตรผ่าน Scanner Token URL/PIN เฉพาะงานได้โดยตรงโดยไม่ต้องล็อกอินบัญชี Organizer ป้องกันการเข้าถึงข้อมูลทางการเงินหรือการตั้งค่าคอนเสิร์ต
+18. **Single-tier Base & Admin-Controlled Student Privilege:** คอนเสิร์ตเน้นบัตรปกติราคาเดียว (Single-tier General Admission) พร้อมระบบส่วนลดพิเศษสำหรับนักศึกษา (Student Privilege) ที่ผู้จัดไม่สามารถเปิดเองได้ (Admin-controlled only) และต้องยืนยันตัวตนผ่าน OTP ด้วยอีเมลสถาบัน (`@ubu.ac.th`) ในหน้าสั่งซื้อ
+19. **Scanner Staff Delegation Only:** ผู้จัดงานมีหน้าที่เพิ่มเจ้าหน้าที่และออกสิทธิ์สแกนเนอร์เท่านั้น เจ้าหน้าที่ทำได้เฉพาะการสแกนบัตรหน้างานผ่าน Scanner Token URL/PIN โดยไม่มีสิทธิ์ดูแดชบอร์ด รายรับ หรือข้อมูลส่วนตัวของผู้ซื้อบัตร
+20. **Organizer Orders QR Masking & Decoupled Gate Status:** หน้ารายชื่อคำสั่งซื้อของผู้จัดงานจะปิดซ่อนภาพ QR Code ทางเข้างาน (`Security Masked`) และแสดงเฉพาะรายละเอียดการซื้อเพื่อการจัดทำบัญชี โดยไม่นำสถานะการเข้างาน (Door Status INSIDE/OUTSIDE) มาปะปน
+21. **Dual Posters & Structured Timings:** คอนเสิร์ตรองรับโปสเตอร์ 2 รูปแบบ คือ แนวตั้ง (Portrait 4:5) สำหรับการ์ดแคตตาล็อกและรายการค้นหา และแนวนอน (Landscape 16:9) สำหรับ Hero Banner หน้ารายละเอียดงานและหน้า Checkout พร้อมข้อมูลเวลาเปิดประตู เวลาเริ่ม-จบแสดง และลิงก์ Google Maps นำทาง
 
 ## Verification Policy
 

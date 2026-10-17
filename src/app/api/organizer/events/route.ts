@@ -77,6 +77,19 @@ export async function GET(request: Request) {
         category: ev.category,
         status: ev.status,
         imageUrl: ev.imageUrl,
+        posterVerticalUrl: ev.posterVerticalUrl || ev.imageUrl,
+        posterHorizontalUrl: ev.posterHorizontalUrl || ev.imageUrl,
+        artists: ev.artists || "",
+        genre: ev.genre || ev.category,
+        doorsOpenTime: ev.doorsOpenTime || "",
+        showStartTime: ev.showStartTime || ev.startTime,
+        showEndTime: ev.showEndTime || "",
+        saleStartAt: ev.saleStartAt ? ev.saleStartAt.toISOString() : null,
+        saleEndAt: ev.saleEndAt ? ev.saleEndAt.toISOString() : null,
+        googleMapsUrl: ev.googleMapsUrl || "",
+        entryRules: ev.entryRules || "",
+        studentDiscountActive: ev.studentDiscountActive,
+        studentPrice: ev.studentPrice ? Number(ev.studentPrice) : null,
         createdAt: ev.createdAt.toISOString(),
         soldTickets,
         insideCount,
@@ -115,13 +128,24 @@ export async function POST(request: Request) {
     const {
       name,
       category,
+      genre,
+      artists,
       description,
+      entryRules,
       venue,
+      googleMapsUrl,
       eventDate,
       startTime,
+      doorsOpenTime,
+      showStartTime,
+      showEndTime,
+      saleStartAt,
+      saleEndAt,
       ticketPrice,
       totalTickets,
       imageUrl,
+      posterVerticalUrl,
+      posterHorizontalUrl,
       status,
     } = body;
 
@@ -131,12 +155,11 @@ export async function POST(request: Request) {
       !venue ||
       typeof venue !== "string" ||
       !eventDate ||
-      !startTime ||
       ticketPrice === undefined ||
       totalTickets === undefined
     ) {
       return jsonResponse(
-        { error: "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, สถานที่, วันที่, เวลา, ราคา, จำนวนบัตร)" },
+        { error: "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (ชื่อ, สถานที่, วันที่, ราคา, จำนวนบัตร)" },
         { status: 400 },
       );
     }
@@ -151,17 +174,34 @@ export async function POST(request: Request) {
       );
     }
 
+    const finalStartTime = (startTime || showStartTime || "19:00").trim();
+    const vertUrl = (posterVerticalUrl || imageUrl || "/poster-indie.svg").trim();
+    const horizUrl = (posterHorizontalUrl || imageUrl || vertUrl).trim();
+
     const createdEvent = await prisma.event.create({
       data: {
         name: name.trim(),
-        category: category?.trim() || "Concert",
-        description: description?.trim() || "",
+        category: (genre || category || "Concert").trim(),
+        genre: (genre || category || "Concert").trim(),
+        artists: (artists || "").trim(),
+        description: (description || "").trim(),
+        entryRules: (entryRules || "").trim(),
         venue: venue.trim(),
+        googleMapsUrl: (googleMapsUrl || "").trim(),
         eventDate: new Date(eventDate),
-        startTime: startTime.trim(),
+        startTime: finalStartTime,
+        doorsOpenTime: (doorsOpenTime || "").trim(),
+        showStartTime: (showStartTime || finalStartTime).trim(),
+        showEndTime: (showEndTime || "").trim(),
+        saleStartAt: saleStartAt ? new Date(saleStartAt) : null,
+        saleEndAt: saleEndAt ? new Date(saleEndAt) : null,
         ticketPrice: priceNum,
         totalTickets: ticketsNum,
-        imageUrl: imageUrl?.trim() || "",
+        imageUrl: vertUrl,
+        posterVerticalUrl: vertUrl,
+        posterHorizontalUrl: horizUrl,
+        studentDiscountActive: false, // AC-03: Organizers cannot activate student privilege
+        studentPrice: null,
         status: status === "PUBLISHED" ? "PUBLISHED" : "DRAFT",
         organizerId: auth.session.sub,
       },

@@ -135,8 +135,24 @@ export async function POST(request: Request) {
         return { error: "INSUFFICIENT_INVENTORY" as const };
       }
 
-      // 3. Compute price, platform fee (default 5.00%), and organizer revenue
-      const totalAmount = new Prisma.Decimal(event.ticketPrice).mul(quantity);
+      // 3. Compute price, student discount (AC-06, AC-07), platform fee, and organizer revenue
+      let isStudentOrder = false;
+      let effectivePrice = event.ticketPrice;
+
+      if (event.studentDiscountActive && event.studentPrice && customerEmail.endsWith("@ubu.ac.th")) {
+        const verifiedOtp = await tx.otpVerification.findFirst({
+          where: {
+            email: customerEmail,
+            verified: true,
+          },
+        });
+        if (verifiedOtp) {
+          isStudentOrder = true;
+          effectivePrice = event.studentPrice;
+        }
+      }
+
+      const totalAmount = new Prisma.Decimal(effectivePrice).mul(quantity);
       const platformFeePercent = new Prisma.Decimal(5.0);
       const platformFeeAmount = totalAmount.mul(platformFeePercent).div(100);
       const organizerRevenue = totalAmount.sub(platformFeeAmount);
@@ -152,6 +168,7 @@ export async function POST(request: Request) {
           customerEmail,
           customerPhone,
           quantity,
+          ticketTier: isStudentOrder ? "STUDENT" : "GENERAL",
           totalAmount,
           platformFeePercent,
           platformFeeAmount,

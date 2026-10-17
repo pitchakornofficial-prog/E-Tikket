@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ลิงก์สแกนเนอร์หน้างาน — E-TIKKET ผู้จัดงาน</title>
+  <title>จัดการเจ้าหน้าที่สแกนบัตร & ประวัติการสแกน — E-TIKKET ผู้จัดงาน</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=11">
 </head>
-<body data-prototype-page="organizer-scanner" data-prototype-id="org-scanner-v4">
+<body data-prototype-page="organizer-scanner" data-prototype-id="org-scanner-v5">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
       <span class="prototype-tag">PHAT PROTOTYPE</span>
       <span class="prototype-note">Organizer Portal Architecture</span>
-      <span>Page: <strong>O4. Gate Scanner Access & Audit</strong></span>
-      <span>ID: <strong>org-scanner-v4</strong></span>
+      <span>Page: <strong>O4. Gate Staff Delegation & Scan Audit</strong></span>
+      <span>ID: <strong>org-scanner-v5</strong></span>
     </div>
     <nav class="prototype-nav">
       <!-- Public Journey Links -->
@@ -40,8 +40,8 @@
       <span style="color:#555;">|</span>
       <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
       <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
-      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
-      <a href="organizer-scanner.html" class="active" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v5">O3. Attendees</a>
+      <a href="organizer-scanner.html" class="active" data-prototype-target="org-scanner-v5">O4. Gate Token</a>
       <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
     </nav>
   </div>
@@ -105,8 +105,8 @@
       <!-- Page Header -->
       <div class="admin-page-header">
         <div>
-          <h1 class="admin-page-title">จัดการสแกนเนอร์หน้าประตู (Gate Scanner & Staff Access)</h1>
-          <p class="admin-page-sub">สร้างลิงก์ Token/PIN สำหรับทีมงานสแกนบัตรเข้างาน โดยไม่ต้องใช้รหัสผ่านผู้จัดงาน (Rule 19)</p>
+          <h1 class="admin-page-title">จัดการเจ้าหน้าที่สแกนบัตร & ประวัติการสแกน (Gate Staff & Scan Audit)</h1>
+          <p class="admin-page-sub">ผู้จัดมีหน้าที่เพิ่มเจ้าหน้าที่และออกสิทธิ์เข้าใช้งานเท่านั้น เจ้าหน้าที่ทำได้เฉพาะสแกนบัตรหน้างาน และผู้จัดสามารถดูประวัติการสแกนพร้อมตัวกรองได้</p>
         </div>
         <div class="header-action-group">
           <select id="scanner-event-select" class="admin-select-input" style="font-weight: 700;">
@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <!-- Quick Attendance Stats Cards (Matching Admin Stats Grid) -->
+      <!-- Quick Attendance Stats Cards -->
       <div class="stats-cards-grid" style="margin-bottom: 24px;">
         <div class="stat-card">
           <div class="stat-card-header">
@@ -138,7 +138,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
           </div>
-          <div class="stat-card-value text-lime-dark">412 <span class="val-sub">คน</span></div>
+          <div class="stat-card-value text-lime-dark" id="stat-inside-count">412 <span class="val-sub">คน</span></div>
           <div class="stat-card-trend">
             <span class="trend-up">63.5% ของผู้ซื้อบัตรเข้างานแล้ว</span>
           </div>
@@ -151,101 +151,227 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
           </div>
-          <div class="stat-card-value" style="color: #d97706;">237 <span class="val-sub">คน</span></div>
+          <div class="stat-card-value" style="color: #d97706;" id="stat-outside-count">237 <span class="val-sub">คน</span></div>
           <div class="stat-card-trend">
             <span class="trend-sub">ยังไม่เข้างาน 236 คน • ออกชั่วคราว 1 คน</span>
           </div>
         </div>
-      </div>
 
-      <!-- Staff Token Generator Box (Rule 19) -->
-      <div class="token-share-card" style="margin-bottom: 24px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 28px; flex-wrap: wrap;">
-          <div style="flex: 1; min-width: 320px;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <span class="badge badge-success">GATE ACCESS ACTIVE</span>
-              <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">ผูกกับ: Indie Rock Revival 2026 (Gate 1 & Gate 2)</span>
-            </div>
-            <h2 style="font-size: 19px; font-weight: 800; margin: 0 0 8px 0;">ลิงก์และ QR Code สำหรับการ์ดหน้าประตู (Gate Staff Link)</h2>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0 0 18px 0;">
-              ส่งลิงก์นี้ให้ทีมงานสแกนบัตรผ่าน LINE หรือให้ทีมงานใช้กล้องมือถือสแกน QR Code เพื่อเปิดหน้าสแกนเนอร์ได้ทันที โดย<strong>ไม่ต้องล็อกอิน</strong> และไม่สามารถมองเห็นข้อมูลยอดขายหรือข้อมูลทางการเงินได้
-            </p>
-
-            <!-- URL Field & Copy -->
-            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">Scanner Token URL (สตาฟเปิดบนมือถือ)</label>
-            <div class="token-link-input-group">
-              <input type="text" id="scanner-url-field" readonly value="https://e-tikket.com/scanner.html?token=scan_tok_indie2026_gate1" class="token-link-field">
-              <button type="button" class="btn btn-lime btn-sm" onclick="copyScannerLink()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span>คัดลอกลิงก์</span>
-              </button>
-            </div>
-
-            <!-- PIN Code Fallback -->
-            <div style="margin-top: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-              <span style="font-size: 13px; font-weight: 600;">หรือกรอกรหัส PIN หน้าประตู:</span>
-              <span style="display: inline-block; padding: 4px 14px; background: #000000; color: var(--lime-accent); font-family: monospace; font-size: 16px; font-weight: 800; border-radius: var(--radius-pill); letter-spacing: 0.15em; border: 1px solid #262626;">8492</span>
-              <span style="font-size: 11px; color: var(--text-muted);">(มีอายุถึงจบงาน 23:59 น.)</span>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">สถิติการสแกนทั้งหมด (Total Scans)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M2 9V5a2 2 0 0 1 2-2h4"></path><path d="M16 3h4a2 2 0 0 1 2 2v4"></path><path d="M22 15v4a2 2 0 0 1-2 2h-4"></path><path d="M8 21H4a2 2 0 0 1-2-2v-4"></path></svg>
             </div>
           </div>
-
-          <!-- Staff QR Code & Launch Button -->
-          <div style="text-align: center; background: #000000; color: #ffffff; border: 1px solid #262626; border-radius: var(--radius-card); padding: 22px 28px; min-width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
-            <div style="width: 120px; height: 120px; background: #fff; border: 1px solid #262626; margin: 0 auto 12px auto; padding: 8px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://e-tikket.com/scanner.html?token=scan_tok_indie2026_gate1" alt="Scanner QR" style="width: 100%; height: 100%; object-fit: contain;">
-            </div>
-            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 14px; font-weight: 500;">สตาฟสแกน QR นี้เพื่อเริ่มงาน</div>
-            <a href="scanner.html" target="_blank" class="scanner-launch-btn" style="background-color: var(--lime-accent); color: #000000; border-color: var(--lime-accent);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-              <span>เปิดหน้าสแกนเนอร์</span>
-            </a>
+          <div class="stat-card-value" style="color: #0f172a;" id="stat-total-scans">486 <span class="val-sub">ครั้ง</span></div>
+          <div class="stat-card-trend">
+            <span class="trend-sub">เข้า 412 • ออก 68 • ปฏิเสธ 6 ครั้ง</span>
           </div>
         </div>
       </div>
 
-      <!-- Live Gate Activity Feed (Matching Admin Table Card) -->
+      <!-- SECTION 1: Gate Staff Delegation (ผู้จัดมีหน้าที่เพิ่มเจ้าหน้าที่ได้อย่างเดียว) -->
+      <div class="admin-card" style="margin-bottom: 24px; border: 1.5px solid var(--border-subtle); padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <h2 style="font-size: 18px; font-weight: 800; margin: 0;">1. จัดการรายชื่อเจ้าหน้าที่สแกนบัตร (Gate Staff Management)</h2>
+              <span class="badge badge-lime" style="font-size: 10px; padding: 2px 8px;">ผู้จัดเพิ่มสิทธิ์อย่างเดียว</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5;">
+              ผู้จัดงานมีหน้าที่เพิ่มเจ้าหน้าที่และออกลิงก์ Token เฉพาะจุดตรวจ โดย<strong>เจ้าหน้าที่สามารถทำได้แค่สแกนบัตรเข้า-ออกเท่านั้น</strong> ไม่สามารถดูยอดเงิน รายรับ หรือข้อมูลส่วนตัวของลูกค้ารายอื่นได้
+            </p>
+          </div>
+          <button type="button" class="btn btn-lime btn-sm" onclick="openAddStaffModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ เพิ่มเจ้าหน้าที่สแกนบัตร</span>
+          </button>
+        </div>
+
+        <!-- Security Rule Notice Box -->
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span style="font-size: 12px; color: #334155;">
+            <strong>ขอบเขตสิทธิ์เจ้าหน้าที่ (Staff Restriction Policy):</strong> เมื่อเจ้าหน้าที่เปิดลิงก์บนสมาร์ตโฟน จะเข้าสู่หน้าจอเปิดกล้องสแกนเนอร์ (`scanner.html`) ทันที โดยระบบจำกัดสิทธิ์ให้ทำได้เพียง <em>"สแกนบัตรตรวจคนเข้า-ออก"</em> เท่านั้น ไม่สามารถดูข้อมูลหลังบ้านใดๆ ได้ทั้งสิ้น
+          </span>
+        </div>
+
+        <!-- Staff Table -->
+        <div class="table-responsive">
+          <table class="admin-data-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>รหัสเจ้าหน้าที่</th>
+                <th>ชื่อเจ้าหน้าที่</th>
+                <th>ประตู / จุดตรวจ</th>
+                <th>ลิงก์สแกนเนอร์ & PIN</th>
+                <th>ยอดสแกน</th>
+                <th>สถานะสิทธิ์</th>
+                <th style="text-align: right;">การกระทำ</th>
+              </tr>
+            </thead>
+            <tbody id="staff-table-body">
+              <!-- Staff 1 -->
+              <tr id="staff-row-1">
+                <td><span style="font-family: monospace; font-weight: 700;">#STF-01</span></td>
+                <td>
+                  <strong>นายสมศักดิ์ วงศ์มณี</strong>
+                  <span class="cust-meta">081-445-9988</span>
+                </td>
+                <td><span class="badge badge-dark">Gate 1 (Riverfront Main)</span></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-family: monospace; font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">.../scanner.html?token=stf_01_g1</span>
+                    <span style="font-family: monospace; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">PIN 8492</span>
+                  </div>
+                </td>
+                <td><strong>248 ครั้ง</strong></td>
+                <td><span class="badge badge-lime" id="staff-status-1">ใช้งานได้ (ACTIVE)</span></td>
+                <td style="text-align: right; white-space: nowrap;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="copyStaffLink('https://e-tikket.com/scanner.html?token=stf_01_g1', 'นายสมศักดิ์ (Gate 1)')">คัดลอกลิงก์</button>
+                  <a href="scanner.html" target="_blank" class="btn btn-outline btn-xs" title="ดูหน้าจอเครื่องสแกนของเจ้าหน้าที่">ดูหน้าสแกน ↗</a>
+                  <button type="button" class="btn btn-outline btn-xs" style="color: #dc2626;" onclick="toggleStaffStatus(1)">ระงับสิทธิ์</button>
+                </td>
+              </tr>
+
+              <!-- Staff 2 -->
+              <tr id="staff-row-2">
+                <td><span style="font-family: monospace; font-weight: 700;">#STF-02</span></td>
+                <td>
+                  <strong>น.ส. รินดา พรหมสถิตย์</strong>
+                  <span class="cust-meta">089-223-1144</span>
+                </td>
+                <td><span class="badge badge-dark">Gate 2 (Side Entrance)</span></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-family: monospace; font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">.../scanner.html?token=stf_02_g2</span>
+                    <span style="font-family: monospace; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">PIN 5180</span>
+                  </div>
+                </td>
+                <td><strong>182 ครั้ง</strong></td>
+                <td><span class="badge badge-lime" id="staff-status-2">ใช้งานได้ (ACTIVE)</span></td>
+                <td style="text-align: right; white-space: nowrap;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="copyStaffLink('https://e-tikket.com/scanner.html?token=stf_02_g2', 'น.ส. รินดา (Gate 2)')">คัดลอกลิงก์</button>
+                  <a href="scanner.html" target="_blank" class="btn btn-outline btn-xs">ดูหน้าสแกน ↗</a>
+                  <button type="button" class="btn btn-outline btn-xs" style="color: #dc2626;" onclick="toggleStaffStatus(2)">ระงับสิทธิ์</button>
+                </td>
+              </tr>
+
+              <!-- Staff 3 -->
+              <tr id="staff-row-3">
+                <td><span style="font-family: monospace; font-weight: 700;">#STF-03</span></td>
+                <td>
+                  <strong>นายวรวุฒิ นิ่มนวล</strong>
+                  <span class="cust-meta">086-778-0011</span>
+                </td>
+                <td><span class="badge badge-dark">VIP & Artist Gate</span></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-family: monospace; font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">.../scanner.html?token=stf_03_vip</span>
+                    <span style="font-family: monospace; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">PIN 9931</span>
+                  </div>
+                </td>
+                <td><strong>56 ครั้ง</strong></td>
+                <td><span class="badge badge-lime" id="staff-status-3">ใช้งานได้ (ACTIVE)</span></td>
+                <td style="text-align: right; white-space: nowrap;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="copyStaffLink('https://e-tikket.com/scanner.html?token=stf_03_vip', 'นายวรวุฒิ (VIP Gate)')">คัดลอกลิงก์</button>
+                  <a href="scanner.html" target="_blank" class="btn btn-outline btn-xs">ดูหน้าสแกน ↗</a>
+                  <button type="button" class="btn btn-outline btn-xs" style="color: #dc2626;" onclick="toggleStaffStatus(3)">ระงับสิทธิ์</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Scan Audit History with Advanced Filters (ในหน้านี้ให้ผู้จัดดูประวัติการสแกนได้ พร้อมดูตัวกรอง) -->
       <div class="admin-card table-card">
         <div class="card-head-row">
           <div>
-            <h2 class="card-title-main">ประวัติการสแกนบัตรแบบเรียลไทม์ (Live Scan Audit Stream)</h2>
-            <span class="card-title-sub">บันทึกทุกเหตุการณ์: เข้างาน, ออกชั่วคราว, บัตรซ้ำ และบัตรไม่ถูกต้อง (Rule 12)</span>
+            <h2 class="card-title-main">2. ประวัติการสแกนบัตรแบบเรียลไทม์ (Live Scan Audit Stream)</h2>
+            <span class="card-title-sub">ผู้จัดงานสามารถตรวจสอบประวัติการสแกนของเจ้าหน้าที่ทุกประตูได้แบบ Real-time พร้อมตัวกรองครบวงจร</span>
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
             <span class="gateway-live-pill" style="padding: 3px 10px; font-size: 11px;">
-              <span class="status-live-dot"></span> สด
+              <span class="status-live-dot"></span> สด Real-time
             </span>
             <button type="button" class="btn btn-lime btn-sm" onclick="simulateNewScan()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-              <span>+ จำลองการสแกนสด</span>
+              <span>+ จำลองสแกนสด</span>
             </button>
           </div>
         </div>
 
+        <!-- Filter Controls for Scan History -->
+        <div class="admin-filter-container" style="margin: 16px 20px 14px 20px;">
+          <!-- Row 1: Search & Result Status Filter Pills -->
+          <div class="filter-row-primary">
+            <div class="search-input-wrap">
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="scan-search-input" placeholder="ค้นหาด้วยรหัสตั๋ว (TK-...), ชื่อผู้ถือบัตร, หรือชื่อเจ้าหน้าที่..." class="admin-search-field" oninput="applyScanFilters()">
+            </div>
+            <div class="filter-pills-group" id="scan-result-pills">
+              <button type="button" class="filter-pill active" data-action="ALL" onclick="setScanActionPill('ALL', this)">ทั้งหมด (<span id="count-all">8</span>)</button>
+              <button type="button" class="filter-pill" data-action="CHECK_IN" onclick="setScanActionPill('CHECK_IN', this)">เข้างาน CHECK_IN (5)</button>
+              <button type="button" class="filter-pill" data-action="CHECK_OUT" onclick="setScanActionPill('CHECK_OUT', this)">ออกชั่วคราว CHECK_OUT (1)</button>
+              <button type="button" class="filter-pill warning" data-action="REJECTED" onclick="setScanActionPill('REJECTED', this)">ถูกปฏิเสธ REJECTED (2)</button>
+            </div>
+          </div>
+
+          <!-- Row 2: Gate dropdown, Staff dropdown, and Reset -->
+          <div class="filter-row-secondary">
+            <div class="filter-controls-inline">
+              <span class="filter-label-inline">จุดตรวจ / ประตู:</span>
+              <select id="scan-gate-filter" class="admin-select-input" onchange="applyScanFilters()">
+                <option value="ALL">ทุกประตู (All Gates)</option>
+                <option value="GATE_1">Gate 1 (Riverfront Main)</option>
+                <option value="GATE_2">Gate 2 (Side Entrance)</option>
+                <option value="GATE_VIP">VIP & Artist Gate</option>
+              </select>
+
+              <span class="filter-label-inline" style="margin-left: 8px;">เจ้าหน้าที่ผู้สแกน:</span>
+              <select id="scan-staff-filter" class="admin-select-input" onchange="applyScanFilters()">
+                <option value="ALL">เจ้าหน้าที่ทั้งหมด (All Staff)</option>
+                <option value="STF-01">นายสมศักดิ์ (#STF-01)</option>
+                <option value="STF-02">น.ส. รินดา (#STF-02)</option>
+                <option value="STF-03">นายวรวุฒิ (#STF-03)</option>
+              </select>
+
+              <button type="button" class="btn btn-outline btn-xs" style="margin-left: 8px;" onclick="resetScanFilters()">
+                ล้างตัวกรอง
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scan History Table -->
         <div class="table-responsive">
           <table class="admin-data-table">
             <thead>
               <tr>
                 <th>เวลาสแกน</th>
-                <th>ผลการตรวจสอบ</th>
+                <th>เหตุการณ์</th>
                 <th>ผู้ถือตั๋ว & ประเภท</th>
                 <th>รหัสตั๋ว (Ticket #)</th>
-                <th>จุดตรวจ / สตาฟ</th>
-                <th>สถานะตั๋ว</th>
+                <th>จุดตรวจ / ประตู</th>
+                <th>เจ้าหน้าที่ผู้สแกน</th>
+                <th>ผลการตรวจสอบ</th>
               </tr>
             </thead>
             <tbody id="scanner-audit-table-body">
-              <!-- Scan 1: Inside -->
-              <tr class="tx-row">
+              <!-- Log 1: Check In Normal -->
+              <tr class="scan-log-row" data-action="CHECK_IN" data-gate="GATE_1" data-staff="STF-01">
                 <td>
                   <span class="time-main">19:42:15</span>
-                  <span class="time-sub">25 ต.ค. 2026</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
                 </td>
                 <td>
                   <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
-                    <strong>สมชาย รัตนวงศ์</strong>
+                    <strong>นายสมชาย รัตนวงศ์</strong>
                     <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
                   </div>
                 </td>
@@ -254,26 +380,29 @@
                 </td>
                 <td>
                   <div>Gate 1 (Riverfront Main)</div>
-                  <span class="cust-meta">Staff ID: #STF-01</span>
                 </td>
                 <td>
-                  <span style="font-size: 12px; font-weight: 700; color: #059669;">ผ่าน (INSIDE)</span>
+                  <strong style="color: var(--text-main);">นายสมศักดิ์ (#STF-01)</strong>
+                  <span class="cust-meta">Device: Samsung S24</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">✓ ผ่านเข้างาน (INSIDE)</span>
                 </td>
               </tr>
 
-              <!-- Scan 2: Inside -->
-              <tr class="tx-row">
+              <!-- Log 2: Check In Student -->
+              <tr class="scan-log-row" data-action="CHECK_IN" data-gate="GATE_2" data-staff="STF-02">
                 <td>
                   <span class="time-main">19:41:03</span>
-                  <span class="time-sub">25 ต.ค. 2026</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
                 </td>
                 <td>
                   <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
-                    <strong>อภิญญา กิจเจริญ</strong>
-                    <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; width: fit-content; margin-top: 2px;">ส่วนลดนักศึกษา (@ubu)</span>
+                    <strong>น.ส. อภิญญา กิจเจริญ</strong>
+                    <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; width: fit-content; margin-top: 2px;">ส่วนลดนักศึกษา @ubu</span>
                   </div>
                 </td>
                 <td>
@@ -281,25 +410,28 @@
                 </td>
                 <td>
                   <div>Gate 2 (Side Entrance)</div>
-                  <span class="cust-meta">Staff ID: #STF-02</span>
                 </td>
                 <td>
-                  <span style="font-size: 12px; font-weight: 700; color: #059669;">ผ่าน (INSIDE)</span>
+                  <strong style="color: var(--text-main);">น.ส. รินดา (#STF-02)</strong>
+                  <span class="cust-meta">Device: iPhone 15</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">✓ ผ่านเข้างาน (INSIDE)</span>
                 </td>
               </tr>
 
-              <!-- Scan 3: Outside (Re-entry out) -->
-              <tr class="tx-row">
+              <!-- Log 3: Check Out Re-entry -->
+              <tr class="scan-log-row" data-action="CHECK_OUT" data-gate="GATE_1" data-staff="STF-01">
                 <td>
                   <span class="time-main">19:38:50</span>
-                  <span class="time-sub">25 ต.ค. 2026</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
                 </td>
                 <td>
                   <span class="badge badge-dark" style="font-family: monospace;">CHECK_OUT</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
-                    <strong>กฤต พงษ์ศิริ</strong>
+                    <strong>นายกฤต พงษ์ศิริ</strong>
                     <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
                   </div>
                 </td>
@@ -308,26 +440,29 @@
                 </td>
                 <td>
                   <div>Gate 1 (Riverfront Main)</div>
-                  <span class="cust-meta">ออกชั่วคราว</span>
                 </td>
                 <td>
-                  <span style="font-size: 12px; font-weight: 700; color: #d97706;">ออกชั่วคราว (OUTSIDE)</span>
+                  <strong style="color: var(--text-main);">นายสมศักดิ์ (#STF-01)</strong>
+                  <span class="cust-meta">ออกชั่วคราว (Re-entry)</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #d97706;">🚪 ออกชั่วคราว (OUTSIDE)</span>
                 </td>
               </tr>
 
-              <!-- Scan 4: Duplicate Reject -->
-              <tr class="tx-row" style="background-color: #fff1f2;">
+              <!-- Log 4: Rejected Duplicate Scan -->
+              <tr class="scan-log-row" data-action="REJECTED" data-gate="GATE_1" data-staff="STF-01" style="background-color: #fff1f2;">
                 <td>
                   <span class="time-main" style="color: #991b1b;">19:35:12</span>
-                  <span class="time-sub">25 ต.ค. 2026</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
                 </td>
                 <td>
                   <span class="badge badge-danger" style="font-family: monospace;">REJECTED</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
-                    <strong style="color: #991b1b;">สแกนซ้ำ (ALREADY CHECKED IN)</strong>
-                    <span class="cust-meta" style="color: #b91c1c;">ตั๋วใบนี้อยู่ในงานแล้ว ไม่สามารถใช้ซ้ำได้</span>
+                    <strong style="color: #991b1b;">สแกนซ้ำ (ALREADY INSIDE)</strong>
+                    <span class="cust-meta" style="color: #b91c1c;">ตั๋วใบนี้ผ่านเข้างานแล้วเวลา 19:41 น.</span>
                   </div>
                 </td>
                 <td>
@@ -335,37 +470,133 @@
                 </td>
                 <td>
                   <div>Gate 1 (Riverfront Main)</div>
-                  <span class="cust-meta">Staff ID: #STF-01</span>
                 </td>
                 <td>
-                  <span style="font-size: 12px; font-weight: 700; color: #e11d48;">ปฏิเสธการเข้า</span>
+                  <strong style="color: var(--text-main);">นายสมศักดิ์ (#STF-01)</strong>
+                  <span class="cust-meta">Device: Samsung S24</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #e11d48;">✕ ปฏิเสธการเข้า (ตั๋วซ้ำ)</span>
                 </td>
               </tr>
 
-              <!-- Scan 5: Invalid Token -->
-              <tr class="tx-row" style="background-color: #fff1f2;">
+              <!-- Log 5: Rejected Invalid Ticket -->
+              <tr class="scan-log-row" data-action="REJECTED" data-gate="GATE_2" data-staff="STF-02" style="background-color: #fff1f2;">
                 <td>
                   <span class="time-main" style="color: #991b1b;">19:30:05</span>
-                  <span class="time-sub">25 ต.ค. 2026</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
                 </td>
                 <td>
                   <span class="badge badge-danger" style="font-family: monospace;">INVALID</span>
                 </td>
                 <td>
                   <div class="customer-info-cell">
-                    <strong style="color: #991b1b;">รหัสบัตรไม่ถูกต้อง (INVALID HASH)</strong>
+                    <strong style="color: #991b1b;">รหัสตั๋วไม่ถูกต้อง (INVALID HASH)</strong>
                     <span class="cust-meta" style="color: #b91c1c;">ไม่พบข้อมูลตั๋วในระบบ</span>
                   </div>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 700; color: #991b1b;">TK-INVALID-00</span>
+                  <span style="font-family: monospace; font-weight: 700; color: #991b1b;">TK-INVALID-99</span>
                 </td>
                 <td>
                   <div>Gate 2 (Side Entrance)</div>
-                  <span class="cust-meta">Staff ID: #STF-02</span>
                 </td>
                 <td>
-                  <span style="font-size: 12px; font-weight: 700; color: #e11d48;">ไม่ผ่าน</span>
+                  <strong style="color: var(--text-main);">น.ส. รินดา (#STF-02)</strong>
+                  <span class="cust-meta">Device: iPhone 15</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #e11d48;">✕ ปฏิเสธ (ไม่มีในระบบ)</span>
+                </td>
+              </tr>
+
+              <!-- Log 6: Check In VIP -->
+              <tr class="scan-log-row" data-action="CHECK_IN" data-gate="GATE_VIP" data-staff="STF-03">
+                <td>
+                  <span class="time-main">19:25:40</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>นายธีรภัทร ชาญวิทย์</strong>
+                    <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700;">TK-66185-01</span>
+                </td>
+                <td>
+                  <div>VIP & Artist Gate</div>
+                </td>
+                <td>
+                  <strong style="color: var(--text-main);">นายวรวุฒิ (#STF-03)</strong>
+                  <span class="cust-meta">VIP Fast Lane</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">✓ ผ่านเข้างาน (INSIDE)</span>
+                </td>
+              </tr>
+
+              <!-- Log 7: Check In General -->
+              <tr class="scan-log-row" data-action="CHECK_IN" data-gate="GATE_1" data-staff="STF-01">
+                <td>
+                  <span class="time-main">19:20:18</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>น.ส. วรรณภา ศรีสุข</strong>
+                    <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700;">TK-66170-01</span>
+                </td>
+                <td>
+                  <div>Gate 1 (Riverfront Main)</div>
+                </td>
+                <td>
+                  <strong style="color: var(--text-main);">นายสมศักดิ์ (#STF-01)</strong>
+                  <span class="cust-meta">Device: Samsung S24</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">✓ ผ่านเข้างาน (INSIDE)</span>
+                </td>
+              </tr>
+
+              <!-- Log 8: Check In Student -->
+              <tr class="scan-log-row" data-action="CHECK_IN" data-gate="GATE_2" data-staff="STF-02">
+                <td>
+                  <span class="time-main">19:15:30</span>
+                  <span class="time-sub">24 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>นายณัฐพงษ์ บุญเรือง</strong>
+                    <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; width: fit-content; margin-top: 2px;">ส่วนลดนักศึกษา @ubu</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700;">TK-77390-01</span>
+                </td>
+                <td>
+                  <div>Gate 2 (Side Entrance)</div>
+                </td>
+                <td>
+                  <strong style="color: var(--text-main);">น.ส. รินดา (#STF-02)</strong>
+                  <span class="cust-meta">Device: iPhone 15</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">✓ ผ่านเข้างาน (INSIDE)</span>
                 </td>
               </tr>
             </tbody>
@@ -376,6 +607,49 @@
     </div>
   </main>
 
+  <!-- Add Staff Modal (ผู้จัดเพิ่มเจ้าหน้าที่) -->
+  <div id="add-staff-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog" style="max-width: 460px;">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title">+ เพิ่มเจ้าหน้าที่สแกนบัตรหน้างาน</h3>
+        <button type="button" class="modal-close-btn" onclick="closeAddStaffModal()">&times;</button>
+      </div>
+      <div class="modal-dialog-body">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+          ระบบจะสร้างลิงก์และรหัส PIN ให้เจ้าหน้าที่ใช้งานผ่านเว็บเบราว์เซอร์บนสมาร์ตโฟน โดยเจ้าหน้าที่จะสามารถสแกนบัตรได้อย่างเดียวเท่านั้น
+        </p>
+        <form id="add-staff-form" onsubmit="event.preventDefault(); saveNewStaff();">
+          <div class="form-group">
+            <label class="form-label">ชื่อ-นามสกุล เจ้าหน้าที่ *</label>
+            <input type="text" id="new-staff-name" class="form-control" placeholder="เช่น นายประวิทย์ มีสุข" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">เบอร์โทรศัพท์ติดต่อ *</label>
+            <input type="tel" id="new-staff-phone" class="form-control" placeholder="เช่น 081-998-7766" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ประจำจุดตรวจ / ประตู *</label>
+            <select id="new-staff-gate" class="form-control" required>
+              <option value="GATE_1">Gate 1 (Riverfront Main ประตูหลัก)</option>
+              <option value="GATE_2">Gate 2 (Side Entrance ประตูด้านข้าง)</option>
+              <option value="GATE_VIP">VIP & Artist Gate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">กำหนดรหัส PIN สแกนเนอร์ (4 หลัก)</label>
+            <input type="text" id="new-staff-pin" class="form-control" maxlength="4" placeholder="สุ่มอัตโนมัติ เช่น 3491" value="7823" style="font-family: monospace; font-weight: 700; letter-spacing: 0.1em;">
+          </div>
+          <div class="modal-dialog-footer" style="padding: 12px 0 0 0; margin-top: 14px;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="closeAddStaffModal()">ยกเลิก</button>
+            <button type="submit" class="btn btn-lime btn-sm">
+              <span>สร้างสิทธิ์เจ้าหน้าที่</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Prototype Toast Notification -->
   <div id="prototype-toast" class="prototype-toast">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CCFF00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -383,13 +657,141 @@
   </div>
 
   <script>
-    function copyScannerLink() {
-      const field = document.getElementById('scanner-url-field');
-      navigator.clipboard.writeText(field.value).then(() => {
-        showToast("คัดลอกลิงก์ Token ให้สตาฟสแกนเนอร์แล้ว!");
+    let activeActionFilter = 'ALL';
+    let staffCount = 3;
+
+    function copyStaffLink(url, staffName) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast("คัดลอกลิงก์สแกนเนอร์ของ " + staffName + " แล้ว!");
       }).catch(() => {
-        showToast("คัดลอกลิงก์ Token ให้สตาฟสแกนเนอร์แล้ว!");
+        showToast("คัดลอกลิงก์สแกนเนอร์ของ " + staffName + " แล้ว!");
       });
+    }
+
+    function toggleStaffStatus(id) {
+      const statusEl = document.getElementById('staff-status-' + id);
+      if (!statusEl) return;
+      if (statusEl.textContent.includes('ACTIVE')) {
+        statusEl.textContent = 'ระงับสิทธิ์ (REVOKED)';
+        statusEl.className = 'badge badge-dark';
+        statusEl.style.color = '#ef4444';
+        statusEl.style.border = '1px solid #ef4444';
+        showToast("ระงับสิทธิ์เจ้าหน้าที่ STF-0" + id + " เรียบร้อยแล้ว (ไม่สามารถสแกนได้)");
+      } else {
+        statusEl.textContent = 'ใช้งานได้ (ACTIVE)';
+        statusEl.className = 'badge badge-lime';
+        statusEl.style.color = '';
+        statusEl.style.border = '';
+        showToast("เปิดใช้งานสิทธิ์เจ้าหน้าที่ STF-0" + id + " แล้ว");
+      }
+    }
+
+    function openAddStaffModal() {
+      document.getElementById('new-staff-name').value = '';
+      document.getElementById('new-staff-phone').value = '';
+      document.getElementById('new-staff-pin').value = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('add-staff-modal').style.display = 'flex';
+    }
+
+    function closeAddStaffModal() {
+      document.getElementById('add-staff-modal').style.display = 'none';
+    }
+
+    function saveNewStaff() {
+      const name = document.getElementById('new-staff-name').value.trim();
+      const phone = document.getElementById('new-staff-phone').value.trim();
+      const gateSelect = document.getElementById('new-staff-gate');
+      const gateVal = gateSelect.value;
+      const gateText = gateSelect.options[gateSelect.selectedIndex].text.split(' ')[0] + ' ' + gateSelect.options[gateSelect.selectedIndex].text.split(' ')[1];
+      const pin = document.getElementById('new-staff-pin').value.trim() || '1234';
+
+      if (!name || !phone) return;
+
+      staffCount++;
+      const staffId = staffCount < 10 ? 'STF-0' + staffCount : 'STF-' + staffCount;
+      const tokenUrl = `https://e-tikket.com/scanner.html?token=stf_${staffCount}_custom`;
+
+      const tbody = document.getElementById('staff-table-body');
+      const tr = document.createElement('tr');
+      tr.id = 'staff-row-' + staffCount;
+      tr.innerHTML = `
+        <td><span style="font-family: monospace; font-weight: 700;">#${staffId}</span></td>
+        <td>
+          <strong>${name}</strong>
+          <span class="cust-meta">${phone}</span>
+        </td>
+        <td><span class="badge badge-dark">${gateText}</span></td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-family: monospace; font-size: 11px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">.../scanner.html?token=stf_${staffCount}</span>
+            <span style="font-family: monospace; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 4px;">PIN ${pin}</span>
+          </div>
+        </td>
+        <td><strong>0 ครั้ง</strong></td>
+        <td><span class="badge badge-lime" id="staff-status-${staffCount}">ใช้งานได้ (ACTIVE)</span></td>
+        <td style="text-align: right; white-space: nowrap;">
+          <button type="button" class="btn btn-outline btn-xs" onclick="copyStaffLink('${tokenUrl}', '${name}')">คัดลอกลิงก์</button>
+          <a href="scanner.html" target="_blank" class="btn btn-outline btn-xs">ดูหน้าสแกน ↗</a>
+          <button type="button" class="btn btn-outline btn-xs" style="color: #dc2626;" onclick="toggleStaffStatus(${staffCount})">ระงับสิทธิ์</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+
+      // Add to filter dropdown
+      const staffFilter = document.getElementById('scan-staff-filter');
+      const opt = document.createElement('option');
+      opt.value = staffId;
+      opt.textContent = `${name} (#${staffId})`;
+      staffFilter.appendChild(opt);
+
+      closeAddStaffModal();
+      showToast(`✓ เพิ่มเจ้าหน้าที่ "${name}" (${staffId}) ประจำ ${gateText} เรียบร้อยแล้ว!`);
+    }
+
+    // Filter Logic for Live Scan History
+    function setScanActionPill(action, btn) {
+      activeActionFilter = action;
+      document.querySelectorAll('#scan-result-pills .filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyScanFilters();
+    }
+
+    function applyScanFilters() {
+      const q = document.getElementById('scan-search-input').value.toLowerCase().trim();
+      const gate = document.getElementById('scan-gate-filter').value;
+      const staff = document.getElementById('scan-staff-filter').value;
+
+      const rows = document.querySelectorAll('.scan-log-row');
+      let visible = 0;
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const rowAction = row.dataset.action;
+        const rowGate = row.dataset.gate;
+        const rowStaff = row.dataset.staff;
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesAction = activeActionFilter === 'ALL' || rowAction === activeActionFilter;
+        const matchesGate = gate === 'ALL' || rowGate === gate;
+        const matchesStaff = staff === 'ALL' || rowStaff === staff;
+
+        if (matchesQuery && matchesAction && matchesGate && matchesStaff) {
+          row.style.display = '';
+          visible++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function resetScanFilters() {
+      document.getElementById('scan-search-input').value = '';
+      document.getElementById('scan-gate-filter').value = 'ALL';
+      document.getElementById('scan-staff-filter').value = 'ALL';
+      const allBtn = document.querySelector('#scan-result-pills .filter-pill[data-action="ALL"]');
+      if (allBtn) setScanActionPill('ALL', allBtn);
+      else applyScanFilters();
     }
 
     function simulateNewScan() {
@@ -398,7 +800,10 @@
       const randomTicket = 'TK-' + Math.floor(10000 + Math.random() * 90000) + '-01';
       
       const newRow = document.createElement('tr');
-      newRow.className = 'tx-row';
+      newRow.className = 'scan-log-row';
+      newRow.dataset.action = 'CHECK_IN';
+      newRow.dataset.gate = 'GATE_1';
+      newRow.dataset.staff = 'STF-01';
       newRow.style.backgroundColor = '#f7fee7';
       newRow.innerHTML = `
         <td>
@@ -419,15 +824,32 @@
         </td>
         <td>
           <div>Gate 1 (Riverfront Main)</div>
-          <span class="cust-meta">Staff ID: #STF-01</span>
         </td>
         <td>
-          <span style="font-size: 12px; font-weight: 700; color: #059669;">ผ่าน (INSIDE)</span>
+          <strong style="color: var(--text-main);">นายสมศักดิ์ (#STF-01)</strong>
+          <span class="cust-meta">Device: Samsung S24</span>
+        </td>
+        <td>
+          <span style="font-size: 12px; font-weight: 700; color: #059669;">✓ ผ่านเข้างาน (INSIDE)</span>
         </td>
       `;
 
       tbody.insertBefore(newRow, tbody.firstChild);
-      showToast("สแกนบัตร " + randomTicket + " ผ่านเรียบร้อยแล้ว!");
+
+      // Increment counters
+      const insideEl = document.getElementById('stat-inside-count');
+      if (insideEl) {
+        let insideVal = parseInt(insideEl.textContent) || 412;
+        insideEl.innerHTML = (insideVal + 1) + ' <span class="val-sub">คน</span>';
+      }
+      const scansEl = document.getElementById('stat-total-scans');
+      if (scansEl) {
+        let totalScans = parseInt(scansEl.textContent) || 486;
+        scansEl.innerHTML = (totalScans + 1) + ' <span class="val-sub">ครั้ง</span>';
+      }
+
+      showToast("สแกนบัตร " + randomTicket + " โดย #STF-01 ผ่านเรียบร้อยแล้ว!");
+      applyScanFilters();
     }
 
     function showToast(msg) {

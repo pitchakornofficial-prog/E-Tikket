@@ -31,16 +31,29 @@ interface AdminEventItem {
   id: string;
   name: string;
   category: string;
+  genre?: string;
+  artists?: string;
   description: string;
+  entryRules?: string;
   venue: string;
+  googleMapsUrl?: string;
   eventDate: string;
   startTime: string;
+  doorsOpenTime?: string;
+  showStartTime?: string;
+  showEndTime?: string;
+  saleStartAt?: string | null;
+  saleEndAt?: string | null;
   ticketPrice: string;
   totalTickets: number;
   availableTickets: number;
   soldTickets: number;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   imageUrl: string;
+  posterVerticalUrl?: string;
+  posterHorizontalUrl?: string;
+  studentDiscountActive?: boolean;
+  studentPrice?: number | null;
   organizer: {
     id: string;
     name: string;
@@ -118,13 +131,26 @@ export default function AdminEventsPage() {
     name: "",
     category: "Indie Pop",
     customCategory: "",
+    genre: "Indie / Rock",
+    artists: "",
     description: "",
+    entryRules: "จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน",
     venue: "",
+    googleMapsUrl: "",
     eventDate: "",
     startTime: "19:00",
+    doorsOpenTime: "17:00",
+    showStartTime: "19:00",
+    showEndTime: "23:00",
+    saleStartAt: "",
+    saleEndAt: "",
     ticketPrice: "450",
     totalTickets: "100",
     imageUrl: "/poster-summer.svg",
+    posterVerticalUrl: "/poster-summer.svg",
+    posterHorizontalUrl: "/poster-summer.svg",
+    studentDiscountActive: false,
+    studentPrice: "250",
     organizerId: "",
     status: "PUBLISHED",
   });
@@ -172,13 +198,26 @@ export default function AdminEventsPage() {
       name: "",
       category: "Indie Pop",
       customCategory: "",
+      genre: "Indie / Rock",
+      artists: "",
       description: "",
+      entryRules: "จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน",
       venue: "",
+      googleMapsUrl: "",
       eventDate: "",
       startTime: "19:00",
+      doorsOpenTime: "17:00",
+      showStartTime: "19:00",
+      showEndTime: "23:00",
+      saleStartAt: "",
+      saleEndAt: "",
       ticketPrice: "450",
       totalTickets: "100",
       imageUrl: "/poster-summer.svg",
+      posterVerticalUrl: "/poster-summer.svg",
+      posterHorizontalUrl: "/poster-summer.svg",
+      studentDiscountActive: false,
+      studentPrice: "250",
       organizerId: organizers[0]?.id || "",
       status: "PUBLISHED",
     });
@@ -194,13 +233,26 @@ export default function AdminEventsPage() {
       name: event.name,
       category: isPreset ? event.category : "อื่นๆ",
       customCategory: isPreset ? "" : event.category,
+      genre: event.genre || event.category || "Indie / Rock",
+      artists: event.artists || "",
       description: event.description || "",
+      entryRules: event.entryRules || "",
       venue: event.venue,
+      googleMapsUrl: event.googleMapsUrl || "",
       eventDate: event.eventDate,
       startTime: event.startTime,
+      doorsOpenTime: event.doorsOpenTime || "17:00",
+      showStartTime: event.showStartTime || event.startTime || "19:00",
+      showEndTime: event.showEndTime || "23:00",
+      saleStartAt: event.saleStartAt ? event.saleStartAt.slice(0, 16) : "",
+      saleEndAt: event.saleEndAt ? event.saleEndAt.slice(0, 16) : "",
       ticketPrice: String(parseFloat(event.ticketPrice)),
       totalTickets: String(event.totalTickets),
       imageUrl: event.imageUrl || "/poster-summer.svg",
+      posterVerticalUrl: event.posterVerticalUrl || event.imageUrl || "/poster-summer.svg",
+      posterHorizontalUrl: event.posterHorizontalUrl || event.imageUrl || "/poster-summer.svg",
+      studentDiscountActive: Boolean(event.studentDiscountActive),
+      studentPrice: event.studentPrice ? String(event.studentPrice) : "250",
       organizerId: event.organizer.id,
       status: event.status,
     });
@@ -220,8 +272,10 @@ export default function AdminEventsPage() {
     const payload = {
       ...formData,
       category: finalCategory,
+      genre: formData.genre || finalCategory,
       ticketPrice: parseFloat(formData.ticketPrice),
       totalTickets: parseInt(formData.totalTickets, 10),
+      studentPrice: formData.studentDiscountActive && formData.studentPrice ? parseFloat(formData.studentPrice) : null,
     };
 
     try {
@@ -700,26 +754,40 @@ export default function AdminEventsPage() {
               )}
 
               <form onSubmit={handleFormSubmit} className="space-y-4 text-xs">
-                {/* Name */}
-                <div className="space-y-1">
-                  <label className="text-neutral-700 dark:text-neutral-300 font-medium">ชื่อคอนเสิร์ต / งานแสดง *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="เช่น Summer Acoustic Night 2026"
-                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
-                  />
+                {/* Row 1: Name & Artists */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">ชื่อคอนเสิร์ต / ชื่องาน *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="เช่น Summer Acoustic Night 2026"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">รายชื่อศิลปิน / Lineup *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.artists}
+                      onChange={(e) => setFormData({ ...formData, artists: e.target.value })}
+                      placeholder="เช่น Anatomy Rabbit, Safeplanet"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
                 </div>
 
-                {/* Category & Status */}
+                {/* Row 2: Genre & Status */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">หมวดหมู่ *</label>
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">หมวดหมู่ / แนวเพลง *</label>
                     <select
                       value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value, genre: e.target.value })}
                       className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
                     >
                       <option value="Indie Pop">Indie Pop</option>
@@ -752,7 +820,7 @@ export default function AdminEventsPage() {
                       type="text"
                       required
                       value={formData.customCategory}
-                      onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, customCategory: e.target.value, genre: e.target.value })}
                       placeholder="เช่น HipHop, Folk, Metal"
                       className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
                     />
@@ -766,7 +834,7 @@ export default function AdminEventsPage() {
                     <span>มอบหมายให้ผู้จัดงาน (ORGANIZER) รับผิดชอบ *</span>
                   </label>
                   <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mb-1.5">
-                    ผู้จัดงานคนนี้จะเป็นเพียงคนเดียวที่สามารถล็อกอินเข้าสู่ระบบและสแกนบัตรงานนี้ได้
+                    ผู้จัดงานคนนี้จะเป็นเพียงคนเดียวที่สามารถจัดการคำสั่งซื้อและมอบหมายเจ้าหน้าที่ตรวจบัตรได้
                   </p>
                   <select
                     required
@@ -782,8 +850,46 @@ export default function AdminEventsPage() {
                   </select>
                 </div>
 
-                {/* Date & Time */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* Venue & Maps Link */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">สถานที่จัดงาน *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.venue}
+                      onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                      placeholder="เช่น The Rock Pub (Bangkok)"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">ลิงก์ Google Maps *</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={formData.googleMapsUrl}
+                        onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })}
+                        placeholder="https://maps.app.goo.gl/..."
+                        className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white font-mono text-[11px] focus:outline-none focus:border-black dark:focus:border-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const target = formData.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.venue)}`;
+                          if (target) window.open(target, "_blank", "noopener,noreferrer");
+                        }}
+                        className="px-2.5 py-1.5 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-white rounded whitespace-nowrap text-[11px] font-semibold"
+                      >
+                        📍 Map ↗
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Timings */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="space-y-1">
                     <label className="text-neutral-700 dark:text-neutral-300 font-medium">วันที่จัดงาน *</label>
                     <input
@@ -795,35 +901,53 @@ export default function AdminEventsPage() {
                     />
                   </div>
                   <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">เวลาเปิดประตู (Doors)</label>
+                    <input
+                      type="time"
+                      value={formData.doorsOpenTime}
+                      onChange={(e) => setFormData({ ...formData, doorsOpenTime: e.target.value })}
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
+                  <div className="space-y-1">
                     <label className="text-neutral-700 dark:text-neutral-300 font-medium">เวลาเริ่มงาน *</label>
                     <input
                       type="text"
                       required
                       value={formData.startTime}
-                      onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, startTime: e.target.value, showStartTime: e.target.value })}
                       placeholder="18:00"
                       className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
                     />
                   </div>
                 </div>
 
-                {/* Venue */}
-                <div className="space-y-1">
-                  <label className="text-neutral-700 dark:text-neutral-300 font-medium">สถานที่จัดงาน *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.venue}
-                    onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                    placeholder="เช่น River Warehouse, The Underground Club"
-                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
-                  />
+                {/* Sale Window */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200 dark:border-neutral-800 rounded">
+                  <div className="space-y-1">
+                    <label className="text-neutral-600 dark:text-neutral-400 font-medium text-[11px]">⏰ วัน-เวลาเริ่มเปิดขายบัตร</label>
+                    <input
+                      type="datetime-local"
+                      value={formData.saleStartAt}
+                      onChange={(e) => setFormData({ ...formData, saleStartAt: e.target.value })}
+                      className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-neutral-600 dark:text-neutral-400 font-medium text-[11px]">⏰ วัน-เวลาปิดการจำหน่ายบัตร</label>
+                    <input
+                      type="datetime-local"
+                      value={formData.saleEndAt}
+                      onChange={(e) => setFormData({ ...formData, saleEndAt: e.target.value })}
+                      className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white text-xs"
+                    />
+                  </div>
                 </div>
 
                 {/* Price & Tickets */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">ราคาบัตร (บาท) *</label>
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">ราคาบัตรทั่วไป (บาท) *</label>
                     <input
                       type="number"
                       required
@@ -831,23 +955,98 @@ export default function AdminEventsPage() {
                       step="1"
                       value={formData.ticketPrice}
                       onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
-                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white font-mono focus:outline-none focus:border-black dark:focus:border-white"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">จำนวนบัตรทั้งหมด *</label>
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">โควตาบัตรทั้งหมด (ใบ) *</label>
                     <input
                       type="number"
                       required
                       min="1"
                       value={formData.totalTickets}
                       onChange={(e) => setFormData({ ...formData, totalTickets: e.target.value })}
-                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white font-mono focus:outline-none focus:border-black dark:focus:border-white"
                     />
                   </div>
                 </div>
 
-                {/* Description */}
+                {/* Row 7: Student Privilege Control Box (ADMIN EXCLUSIVE - AC-04) */}
+                <div className="p-3.5 bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/30 rounded-lg space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.studentDiscountActive}
+                        onChange={(e) => setFormData({ ...formData, studentDiscountActive: e.target.checked })}
+                        className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+                      />
+                      <span>เปิดให้สิทธิ์ส่วนลดพิเศษสำหรับนักศึกษา (Student Privilege) สอดคล้องหน้า Checkout OTP</span>
+                    </label>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white">
+                      🛡️ แอดมินเป็นผู้ควบคุมสิทธิ์ (Admin Controlled)
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                    * สิทธิ์นี้แอดมินเป็นผู้เปิด/ปิดแต่เพียงผู้เดียว เมื่อเปิดใช้งาน ผู้ซื้อที่ใช้อีเมลสถาบัน (@ubu.ac.th) จะต้องยืนยัน OTP ก่อนได้รับสิทธิ์ราคาพิเศษ
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                        ราคานักศึกษา (บาท)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={formData.studentPrice}
+                        onChange={(e) => setFormData({ ...formData, studentPrice: e.target.value })}
+                        placeholder="เช่น 179"
+                        className="w-full bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-900 dark:text-white text-xs font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                        โดเมนอีเมลสถาบันที่ตรวจสอบ OTP
+                      </label>
+                      <input
+                        type="text"
+                        readOnly
+                        value="@ubu.ac.th"
+                        className="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-neutral-600 dark:text-neutral-400 font-mono text-xs cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dual Posters */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">1. โปสเตอร์แนวตั้ง (Portrait 4:5)</label>
+                    <input
+                      type="text"
+                      value={formData.posterVerticalUrl}
+                      onChange={(e) => setFormData({ ...formData, posterVerticalUrl: e.target.value, imageUrl: e.target.value })}
+                      placeholder="/poster-summer.svg หรือ URL"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white font-mono text-[11px] focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-neutral-700 dark:text-neutral-300 font-medium">2. แบนเนอร์แนวนอน (Landscape 16:9)</label>
+                    <input
+                      type="text"
+                      value={formData.posterHorizontalUrl}
+                      onChange={(e) => setFormData({ ...formData, posterHorizontalUrl: e.target.value })}
+                      placeholder="/poster-summer.svg หรือ URL"
+                      className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white font-mono text-[11px] focus:outline-none focus:border-black dark:focus:border-white"
+                    />
+                  </div>
+                </div>
+
+                {/* Description & Entry Rules */}
                 <div className="space-y-1">
                   <label className="text-neutral-700 dark:text-neutral-300 font-medium">รายละเอียดงาน</label>
                   <textarea
@@ -859,33 +1058,15 @@ export default function AdminEventsPage() {
                   />
                 </div>
 
-                {/* Poster Image */}
                 <div className="space-y-1">
-                  <label className="text-neutral-700 dark:text-neutral-300 font-medium">รูปภาพโปสเตอร์ (URL หรือเลือกภาพตัวอย่าง)</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={formData.imageUrl}
-                      onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                      placeholder="/poster-summer.svg หรือ URL"
-                      className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFormData({
-                          ...formData,
-                          imageUrl:
-                            formData.imageUrl === "/poster-summer.svg"
-                              ? "/poster-indie.svg"
-                              : "/poster-summer.svg",
-                        })
-                      }
-                      className="px-2.5 py-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white rounded whitespace-nowrap"
-                    >
-                      สลับภาพตัวอย่าง
-                    </button>
-                  </div>
+                  <label className="text-neutral-700 dark:text-neutral-300 font-medium">เงื่อนไขและกฎการเข้างาน (Entry Rules)</label>
+                  <textarea
+                    rows={2}
+                    value={formData.entryRules}
+                    onChange={(e) => setFormData({ ...formData, entryRules: e.target.value })}
+                    placeholder="เช่น จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน"
+                    className="w-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded px-3 py-2 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:border-black dark:focus:border-white resize-none"
+                  />
                 </div>
 
                 {/* Buttons */}

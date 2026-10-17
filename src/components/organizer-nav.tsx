@@ -11,6 +11,7 @@ export function OrganizerNav() {
 
   const isScanner = pathname === "/organizer" || pathname.startsWith("/organizer/scanner");
   const isEvents = pathname.startsWith("/organizer/events");
+  const isOrders = pathname.startsWith("/organizer/orders");
   const isArticles = pathname.startsWith("/organizer/articles");
 
   return (
@@ -30,17 +31,6 @@ export function OrganizerNav() {
 
           <nav className="flex items-center justify-start sm:justify-center overflow-x-auto max-w-full gap-1 sm:gap-2 text-xs w-full sm:w-auto pt-2 sm:pt-0 border-t border-neutral-200 dark:border-neutral-900 sm:border-t-0 pb-1 sm:pb-0">
             <Link
-              href="/organizer"
-              className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 whitespace-nowrap ${
-                isScanner
-                  ? "bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white font-bold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900"
-              }`}
-            >
-              <UsersIcon className="w-3.5 h-3.5" />
-              <span>ผู้ตรวจบัตร & ประวัติสแกน</span>
-            </Link>
-            <Link
               href="/organizer/events"
               className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 whitespace-nowrap ${
                 isEvents
@@ -50,6 +40,28 @@ export function OrganizerNav() {
             >
               <CalendarIcon className="w-3.5 h-3.5" />
               <span>จัดการคอนเสิร์ต</span>
+            </Link>
+            <Link
+              href="/organizer/orders"
+              className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                isOrders
+                  ? "bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white font-bold"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900"
+              }`}
+            >
+              <UsersIcon className="w-3.5 h-3.5" />
+              <span>รายชื่อผู้ซื้อบัตร</span>
+            </Link>
+            <Link
+              href="/organizer/scanner"
+              className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                isScanner
+                  ? "bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white font-bold"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900"
+              }`}
+            >
+              <UsersIcon className="w-3.5 h-3.5" />
+              <span>ผู้ตรวจบัตร & สแกนเนอร์</span>
             </Link>
             <Link
               href="/organizer/articles"
