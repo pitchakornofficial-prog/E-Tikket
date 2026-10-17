@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลิงก์สแกนเนอร์หน้างาน — E-TIKKET ผู้จัดงาน</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=11">
+</head>
+<body data-prototype-page="organizer-scanner" data-prototype-id="org-scanner-v4">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Organizer Portal Architecture</span>
+      <span>Page: <strong>O4. Gate Scanner Access & Audit</strong></span>
+      <span>ID: <strong>org-scanner-v4</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <!-- Public Journey Links -->
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="mytickets-v3">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <!-- Admin Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" class="active" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Header Matching Exact Admin Style -->
+  <header class="admin-site-header">
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="organizer-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">ORGANIZER PORTAL</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">RP</div>
+          <span class="admin-name">The Rock Pub (Bangkok)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrollable Subnav Bar -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="organizer-dashboard.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="organizer-events.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>คอนเสิร์ตของฉัน</span>
+            <span class="tab-pill-badge">1</span>
+          </a>
+          <a href="organizer-orders.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>รายชื่อผู้ซื้อบัตร</span>
+          </a>
+          <a href="organizer-scanner.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9V5a2 2 0 0 1 2-2h4"></path><path d="M16 3h4a2 2 0 0 1 2 2v4"></path><path d="M22 15v4a2 2 0 0 1-2 2h-4"></path><path d="M8 21H4a2 2 0 0 1-2-2v-4"></path><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+            <span>ลิงก์สแกนเนอร์หน้างาน</span>
+          </a>
+          <a href="organizer-payouts.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>การเงิน & เงินโอน</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">จัดการสแกนเนอร์หน้าประตู (Gate Scanner & Staff Access)</h1>
+          <p class="admin-page-sub">สร้างลิงก์ Token/PIN สำหรับทีมงานสแกนบัตรเข้างาน โดยไม่ต้องใช้รหัสผ่านผู้จัดงาน (Rule 19)</p>
+        </div>
+        <div class="header-action-group">
+          <select id="scanner-event-select" class="admin-select-input" style="font-weight: 700;">
+            <option value="INDIE" selected>Indie Rock Revival 2026 (คอนเสิร์ตวันนี้)</option>
+            <option value="ACOUSTIC">Acoustic Sunset Unplugged</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Attendance Stats Cards (Matching Admin Stats Grid) -->
+      <div class="stats-cards-grid" style="margin-bottom: 24px;">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">ยอดผู้ซื้อบัตรทั้งหมด (Total Attendees)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            </div>
+          </div>
+          <div class="stat-card-value">649 <span class="val-sub">/ 800 ใบ</span></div>
+          <div class="stat-card-trend">
+            <span class="trend-sub">จำหน่ายแล้ว 81.1% • โควตาคงเหลือ 151 ใบ</span>
+          </div>
+        </div>
+
+        <div class="stat-card highlight">
+          <div class="stat-card-header">
+            <span class="stat-lbl">เช็คอินอยู่ในงาน (INSIDE)</span>
+            <div class="stat-icon-badge lime">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-card-value text-lime-dark">412 <span class="val-sub">คน</span></div>
+          <div class="stat-card-trend">
+            <span class="trend-up">63.5% ของผู้ซื้อบัตรเข้างานแล้ว</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">ยังไม่มา / ออกชั่วคราว (OUTSIDE)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-card-value" style="color: #d97706;">237 <span class="val-sub">คน</span></div>
+          <div class="stat-card-trend">
+            <span class="trend-sub">ยังไม่เข้างาน 236 คน • ออกชั่วคราว 1 คน</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staff Token Generator Box (Rule 19) -->
+      <div class="token-share-card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 28px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 320px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span class="badge badge-success">GATE ACCESS ACTIVE</span>
+              <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">ผูกกับ: Indie Rock Revival 2026 (Gate 1 & Gate 2)</span>
+            </div>
+            <h2 style="font-size: 19px; font-weight: 800; margin: 0 0 8px 0;">ลิงก์และ QR Code สำหรับการ์ดหน้าประตู (Gate Staff Link)</h2>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin: 0 0 18px 0;">
+              ส่งลิงก์นี้ให้ทีมงานสแกนบัตรผ่าน LINE หรือให้ทีมงานใช้กล้องมือถือสแกน QR Code เพื่อเปิดหน้าสแกนเนอร์ได้ทันที โดย<strong>ไม่ต้องล็อกอิน</strong> และไม่สามารถมองเห็นข้อมูลยอดขายหรือข้อมูลทางการเงินได้
+            </p>
+
+            <!-- URL Field & Copy -->
+            <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">Scanner Token URL (สตาฟเปิดบนมือถือ)</label>
+            <div class="token-link-input-group">
+              <input type="text" id="scanner-url-field" readonly value="https://e-tikket.com/scanner.html?token=scan_tok_indie2026_gate1" class="token-link-field">
+              <button type="button" class="btn btn-lime btn-sm" onclick="copyScannerLink()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>คัดลอกลิงก์</span>
+              </button>
+            </div>
+
+            <!-- PIN Code Fallback -->
+            <div style="margin-top: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <span style="font-size: 13px; font-weight: 600;">หรือกรอกรหัส PIN หน้าประตู:</span>
+              <span style="display: inline-block; padding: 4px 14px; background: #000000; color: var(--lime-accent); font-family: monospace; font-size: 16px; font-weight: 800; border-radius: var(--radius-pill); letter-spacing: 0.15em; border: 1px solid #262626;">8492</span>
+              <span style="font-size: 11px; color: var(--text-muted);">(มีอายุถึงจบงาน 23:59 น.)</span>
+            </div>
+          </div>
+
+          <!-- Staff QR Code & Launch Button -->
+          <div style="text-align: center; background: #000000; color: #ffffff; border: 1px solid #262626; border-radius: var(--radius-card); padding: 22px 28px; min-width: 220px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+            <div style="width: 120px; height: 120px; background: #fff; border: 1px solid #262626; margin: 0 auto 12px auto; padding: 8px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=https://e-tikket.com/scanner.html?token=scan_tok_indie2026_gate1" alt="Scanner QR" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 14px; font-weight: 500;">สตาฟสแกน QR นี้เพื่อเริ่มงาน</div>
+            <a href="scanner.html" target="_blank" class="scanner-launch-btn" style="background-color: var(--lime-accent); color: #000000; border-color: var(--lime-accent);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span>เปิดหน้าสแกนเนอร์</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Gate Activity Feed (Matching Admin Table Card) -->
+      <div class="admin-card table-card">
+        <div class="card-head-row">
+          <div>
+            <h2 class="card-title-main">ประวัติการสแกนบัตรแบบเรียลไทม์ (Live Scan Audit Stream)</h2>
+            <span class="card-title-sub">บันทึกทุกเหตุการณ์: เข้างาน, ออกชั่วคราว, บัตรซ้ำ และบัตรไม่ถูกต้อง (Rule 12)</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="gateway-live-pill" style="padding: 3px 10px; font-size: 11px;">
+              <span class="status-live-dot"></span> สด
+            </span>
+            <button type="button" class="btn btn-lime btn-sm" onclick="simulateNewScan()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              <span>+ จำลองการสแกนสด</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>เวลาสแกน</th>
+                <th>ผลการตรวจสอบ</th>
+                <th>ผู้ถือตั๋ว & ประเภท</th>
+                <th>รหัสตั๋ว (Ticket #)</th>
+                <th>จุดตรวจ / สตาฟ</th>
+                <th>สถานะตั๋ว</th>
+              </tr>
+            </thead>
+            <tbody id="scanner-audit-table-body">
+              <!-- Scan 1: Inside -->
+              <tr class="tx-row">
+                <td>
+                  <span class="time-main">19:42:15</span>
+                  <span class="time-sub">25 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>สมชาย รัตนวงศ์</strong>
+                    <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700;">TK-88210-01</span>
+                </td>
+                <td>
+                  <div>Gate 1 (Riverfront Main)</div>
+                  <span class="cust-meta">Staff ID: #STF-01</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">ผ่าน (INSIDE)</span>
+                </td>
+              </tr>
+
+              <!-- Scan 2: Inside -->
+              <tr class="tx-row">
+                <td>
+                  <span class="time-main">19:41:03</span>
+                  <span class="time-sub">25 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>อภิญญา กิจเจริญ</strong>
+                    <span class="badge-tag-tier early" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0; width: fit-content; margin-top: 2px;">ส่วนลดนักศึกษา (@ubu)</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700;">TK-77402-02</span>
+                </td>
+                <td>
+                  <div>Gate 2 (Side Entrance)</div>
+                  <span class="cust-meta">Staff ID: #STF-02</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #059669;">ผ่าน (INSIDE)</span>
+                </td>
+              </tr>
+
+              <!-- Scan 3: Outside (Re-entry out) -->
+              <tr class="tx-row">
+                <td>
+                  <span class="time-main">19:38:50</span>
+                  <span class="time-sub">25 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-dark" style="font-family: monospace;">CHECK_OUT</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>กฤต พงษ์ศิริ</strong>
+                    <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700;">TK-66190-01</span>
+                </td>
+                <td>
+                  <div>Gate 1 (Riverfront Main)</div>
+                  <span class="cust-meta">ออกชั่วคราว</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #d97706;">ออกชั่วคราว (OUTSIDE)</span>
+                </td>
+              </tr>
+
+              <!-- Scan 4: Duplicate Reject -->
+              <tr class="tx-row" style="background-color: #fff1f2;">
+                <td>
+                  <span class="time-main" style="color: #991b1b;">19:35:12</span>
+                  <span class="time-sub">25 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-danger" style="font-family: monospace;">REJECTED</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong style="color: #991b1b;">สแกนซ้ำ (ALREADY CHECKED IN)</strong>
+                    <span class="cust-meta" style="color: #b91c1c;">ตั๋วใบนี้อยู่ในงานแล้ว ไม่สามารถใช้ซ้ำได้</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700; color: #991b1b;">TK-77402-02</span>
+                </td>
+                <td>
+                  <div>Gate 1 (Riverfront Main)</div>
+                  <span class="cust-meta">Staff ID: #STF-01</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #e11d48;">ปฏิเสธการเข้า</span>
+                </td>
+              </tr>
+
+              <!-- Scan 5: Invalid Token -->
+              <tr class="tx-row" style="background-color: #fff1f2;">
+                <td>
+                  <span class="time-main" style="color: #991b1b;">19:30:05</span>
+                  <span class="time-sub">25 ต.ค. 2026</span>
+                </td>
+                <td>
+                  <span class="badge badge-danger" style="font-family: monospace;">INVALID</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong style="color: #991b1b;">รหัสบัตรไม่ถูกต้อง (INVALID HASH)</strong>
+                    <span class="cust-meta" style="color: #b91c1c;">ไม่พบข้อมูลตั๋วในระบบ</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-family: monospace; font-weight: 700; color: #991b1b;">TK-INVALID-00</span>
+                </td>
+                <td>
+                  <div>Gate 2 (Side Entrance)</div>
+                  <span class="cust-meta">Staff ID: #STF-02</span>
+                </td>
+                <td>
+                  <span style="font-size: 12px; font-weight: 700; color: #e11d48;">ไม่ผ่าน</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Prototype Toast Notification -->
+  <div id="prototype-toast" class="prototype-toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CCFF00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-message">คัดลอกลิงก์สแกนเนอร์แล้ว!</span>
+  </div>
+
+  <script>
+    function copyScannerLink() {
+      const field = document.getElementById('scanner-url-field');
+      navigator.clipboard.writeText(field.value).then(() => {
+        showToast("คัดลอกลิงก์ Token ให้สตาฟสแกนเนอร์แล้ว!");
+      }).catch(() => {
+        showToast("คัดลอกลิงก์ Token ให้สตาฟสแกนเนอร์แล้ว!");
+      });
+    }
+
+    function simulateNewScan() {
+      const tbody = document.getElementById('scanner-audit-table-body');
+      const timeStr = new Date().toTimeString().split(' ')[0];
+      const randomTicket = 'TK-' + Math.floor(10000 + Math.random() * 90000) + '-01';
+      
+      const newRow = document.createElement('tr');
+      newRow.className = 'tx-row';
+      newRow.style.backgroundColor = '#f7fee7';
+      newRow.innerHTML = `
+        <td>
+          <span class="time-main">${timeStr}</span>
+          <span class="time-sub">เพิ่งสแกนสด</span>
+        </td>
+        <td>
+          <span class="badge badge-success" style="font-family: monospace;">CHECK_IN</span>
+        </td>
+        <td>
+          <div class="customer-info-cell">
+            <strong>ผู้เข้างานใหม่ (สแกนสด)</strong>
+            <span class="badge-tag-tier general" style="width: fit-content; margin-top: 2px;">General Admission</span>
+          </div>
+        </td>
+        <td>
+          <span style="font-family: monospace; font-weight: 700; color: #000000;">${randomTicket}</span>
+        </td>
+        <td>
+          <div>Gate 1 (Riverfront Main)</div>
+          <span class="cust-meta">Staff ID: #STF-01</span>
+        </td>
+        <td>
+          <span style="font-size: 12px; font-weight: 700; color: #059669;">ผ่าน (INSIDE)</span>
+        </td>
+      `;
+
+      tbody.insertBefore(newRow, tbody.firstChild);
+      showToast("สแกนบัตร " + randomTicket + " ผ่านเรียบร้อยแล้ว!");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('prototype-toast');
+      const text = document.getElementById('toast-message');
+      text.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

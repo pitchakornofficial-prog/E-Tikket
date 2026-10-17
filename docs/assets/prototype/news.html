@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข่าวสารและบทความดนตรี — E-TIKKET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="news" data-prototype-id="news-v1">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>9. News & Blog</strong></span>
+      <span>ID: <strong>news-v1</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" class="active" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
+      </a>
+      <nav class="nav-actions">
+        <a href="index.html" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          ย้อนกลับไปหน้าแรก
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="news-page-container">
+
+      <!-- Section Heading -->
+      <div class="news-header">
+        <span class="section-eyebrow">EDITORIAL & SCENE</span>
+        <h1 class="news-heading">ข่าวสาร & บทความดนตรี</h1>
+        <p class="news-sub">อัปเดตข่าวสารคอนเสิร์ต สัมภาษณ์ศิลปินอินดี้ และเรื่องราวดนตรีสดที่คุณไม่ควรพลาด</p>
+      </div>
+
+      <!-- Top: Featured Highlight Article (1 Large Banner) -->
+      <section class="featured-article-card">
+        <div class="featured-article-cover">
+          <img src="poster-summer.svg" alt="สัมภาษณ์ศิลปิน Indie Live Wave" class="featured-article-img">
+          <span class="badge badge-lime">FEATURED ARTICLE</span>
+        </div>
+        <div class="featured-article-content">
+          <div class="article-meta-row">
+            <span class="article-cat">สัมภาษณ์ศิลปิน</span>
+            <span>• 16 ต.ค. 2026</span>
+            <span>• อ่าน 3 นาที</span>
+          </div>
+          <h2 class="featured-article-title">
+            เจาะลึก 6 ศิลปินอินดี้หน้าใหม่ เตรียมระเบิดความมันส์ริมแม่น้ำใน Indie Live Wave 2026
+          </h2>
+          <p class="featured-article-excerpt">
+            เบื้องหลังการรวมตัวครั้งประวัติศาสตร์ของวงดนตรีรุ่นใหม่ที่เติบโตมาจากห้องซ้อมใต้ดิน สู่เวทีคอนเสิร์ตใหญ่ริมแม่น้ำ พร้อมความในใจและสิ่งที่คุณจะได้ยินในคืนวันเสาร์ที่ 24 ตุลาคมนี้
+          </p>
+
+          <!-- In-Article Related Event Card (Buy Ticket Direct Callout) -->
+          <div class="in-article-event-card">
+            <div class="in-event-info">
+              <span class="in-event-badge">งานคอนเสิร์ตที่เกี่ยวข้อง</span>
+              <h4>Indie Live Wave 2026</h4>
+              <p>📅 24 ต.ค. 2026 • The Riverfront Warehouse • ราคาเริ่มต้น ฿150 (นศ. ฿79)</p>
+            </div>
+            <a href="event-detail.html?event=summer" class="btn btn-lime btn-sm" data-prototype-target="event-v4">
+              <span>ซื้อบัตรงานนี้ →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom: 3-Column Articles Grid -->
+      <section class="articles-grid-section">
+        <div class="section-heading-bar">
+          <h2 class="section-title">บทความทั้งหมด</h2>
+          <span class="catalog-count-badge">3 บทความล่าสุด</span>
+        </div>
+
+        <div class="articles-grid">
+
+          <!-- Article 1 -->
+          <article class="article-card">
+            <div class="article-thumb-wrap">
+              <img src="poster-indie.svg" alt="UBU Music Club" class="article-thumb-img">
+              <span class="badge badge-ubu">CAMPUS LIFE</span>
+            </div>
+            <div class="article-body">
+              <div class="article-meta-row">
+                <span class="article-cat">แคมปัสอีเวนต์</span>
+                <span>• 12 ต.ค. 2026</span>
+              </div>
+              <h3 class="article-title">ชมรมดนตรี ม.อุบลฯ เตรียมจัด Acoustic Night Vol.3 คืนสู่เหย้าคนรักดนตรี</h3>
+              <p class="article-excerpt">เปิดพื้นที่ริมสระน้ำให้นักศึกษาและบุคคลทั่วไปได้มานั่งฟังดนตรีโฟล์กซองและอินดี้ป็อปในบรรยากาศลมหนาว</p>
+            </div>
+            <div class="article-footer">
+              <a href="event-detail.html?event=ubu" class="article-link" data-prototype-target="event-v4">ดูรายละเอียดงาน & ซื้อบัตร →</a>
+            </div>
+          </article>
+
+          <!-- Article 2 -->
+          <article class="article-card">
+            <div class="article-thumb-wrap">
+              <img src="poster-indie.svg" alt="Livehouse Guide" class="article-thumb-img">
+              <span class="badge badge-dark">GUIDE</span>
+            </div>
+            <div class="article-body">
+              <div class="article-meta-row">
+                <span class="article-cat">คู่มือคอนเสิร์ต</span>
+                <span>• 08 ต.ค. 2026</span>
+              </div>
+              <h3 class="article-title">5 คลับดนตรีสดใต้ดินในกรุงเทพฯ ที่คอเพลงอินดี้และอัลเทอร์เนทีฟต้องไปเยือน</h3>
+              <p class="article-excerpt">รวมพิกัดไลฟ์เฮาส์ไซส์มินิที่เสิร์ฟดนตรีสดคุณภาพคับแก้ว พร้อมระบบเครื่องเสียงแน่นและคอมมูนิตี้สุดอบอุ่น</p>
+            </div>
+            <div class="article-footer">
+              <a href="event-detail.html?event=midnight" class="article-link" data-prototype-target="event-v4">ดูงานที่จัดในคลับเหล่านี้ →</a>
+            </div>
+          </article>
+
+          <!-- Article 3 -->
+          <article class="article-card">
+            <div class="article-thumb-wrap">
+              <img src="poster-summer.svg" alt="Ticket Security Guide" class="article-thumb-img">
+              <span class="badge badge-dark">SECURITY</span>
+            </div>
+            <div class="article-body">
+              <div class="article-meta-row">
+                <span class="article-cat">ฟีเจอร์แพลตฟอร์ม</span>
+                <span>• 04 ต.ค. 2026</span>
+              </div>
+              <h3 class="article-title">หมดห่วงเรื่องตั๋วผี! ทำความเข้าใจระบบ QR Code แบบ CSPRNG และ Re-entry</h3>
+              <p class="article-excerpt">ระบบรักษาความปลอดภัยยุคใหม่ที่ทำให้คุณเข้างานได้อย่างสบายใจ สแกนผ่านฉลุย และเข้า-ออกงานได้แบบไม่ต้องกลัวตั๋วซ้ำ</p>
+            </div>
+            <div class="article-footer">
+              <a href="index.html" class="article-link" data-prototype-target="home-v4">สำรวจงานคอนเสิร์ตทั้งหมด →</a>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">E-TIKKET</span>
+        <p>แพลตฟอร์มระบบจำหน่ายบัตรคอนเสิร์ตและอีเวนต์ยุคใหม่ จองง่าย ปลอดภัย สแกนจ่ายด้วยพร้อมเพย์อัตโนมัติ</p>
+      </div>
+      <div class="footer-links">
+        <span>Guest Checkout • CSPRNG QR Ticket • Re-entry Audit</span>
+        <span class="copy">E-TIKKET Prototype &copy; 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+</body>
+</html>

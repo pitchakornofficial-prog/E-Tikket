@@ -3,110 +3,355 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TICKETBOX — คอนเสิร์ตและอีเวนต์ดนตรี</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <title>E-TIKKET — คอนเสิร์ตและอีเวนต์ดนตรีสด</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
-<body data-prototype-page="home" data-prototype-id="home-v2">
+<body data-prototype-page="home" data-prototype-id="home-v6">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
-      <span>Page: <strong>Home (Event Catalog)</strong></span>
-      <span>ID: <strong>home-v2</strong></span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>1. Home (Catalog)</strong></span>
+      <span>ID: <strong>home-v6</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" class="active" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
-      <a href="event-detail.html" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
-      <a href="checkout.html" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
-      <a href="tickets.html" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
-      <a href="admin-verifications.html" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
-      <a href="organizer-checkin.html" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
+      <a href="index.html" class="active" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
     </nav>
   </div>
 
-  <!-- Site Header -->
+  <!-- Site Navigation Header -->
   <header class="site-header">
     <div class="header-container">
+      <!-- Left: Logo -->
       <a href="index.html" class="brand">
-        <span>TICKETBOX</span>
-        <span class="brand-badge">MVP</span>
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
       </a>
-      <nav class="nav-links">
-        <a href="index.html" style="color:#ffffff;">สำรวจงานแสดง</a>
-        <a href="tickets.html">บัตรจากลิงก์อีเมล (ตัวอย่าง)</a>
-        <a href="organizer-checkin.html">ผู้จัดงาน (จำลอง)</a>
-        <a href="admin-verifications.html">แอดมิน (จำลอง)</a>
+
+      <!-- Center: Instant Search Bar -->
+      <div class="search-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="live-search-input" placeholder="ค้นหาชื่องาน, ศิลปิน, สถานที่..." class="search-input">
+      </div>
+
+      <!-- Right: Navigation Links -->
+      <nav class="nav-actions">
+        <a href="my-tickets.html" class="nav-link" data-prototype-target="lookup-v1">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          ค้นหาบัตร
+        </a>
+        <a href="news.html" class="nav-link" data-prototype-target="news-v1">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+            <path d="M18 14h-8"></path>
+            <path d="M15 18h-5"></path>
+            <path d="M10 6h8v4h-8V6Z"></path>
+          </svg>
+          ข่าวสาร
+        </a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="main-content">
-    <section class="catalog-intro"><p class="eyebrow">LOCAL CONCERTS / BANGKOK</p><h1>ค่ำคืนถัดไป<br>เริ่มที่นี่</h1><p class="lead">ค้นพบดนตรีสดใกล้คุณ เลือกงาน ซื้อบัตร และรับ QR ทางอีเมล โดยไม่ต้องสมัครสมาชิก</p></section>
 
-    <section>
-      <div class="catalog-heading" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
-        <h2>คอนเสิร์ตและอีเวนต์ที่เปิดจำหน่าย</h2>
-        <span class="badge badge-outline">2 งานเปิดขาย</span>
+    <!-- Top Zone: 16:9 Landscape Poster for Top Featured Event (Strictly No Text Overlay) -->
+    <section class="featured-landscape-section">
+      <div class="section-tag-row">
+        <span class="badge badge-lime">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          HIGHLIGHT OF THE WEEK
+        </span>
+        <span class="badge badge-dark">เปิดจำหน่ายบัตรออนไลน์</span>
       </div>
 
-      <div class="grid-cards">
-        <!-- Event 1 (Active) -->
-        <article class="card featured-event">
-          <div class="card-image-wrap">
-            <img src="poster-summer.svg" alt="ภาพโปสเตอร์ตัวอย่าง Summer Live Concert" class="event-art">
-            <span class="badge badge-success" style="position:absolute; top:12px; right:12px;">✓ เปิดขายบัตร</span>
-          </div>
-          <div class="card-content">
-            <h3>Summer Live Concert</h3>
-            <p>งานแสดงดนตรีสดอะคูสติกริมแม่น้ำ บรรยากาศสุดชิลล์ รวมศิลปินอินดี้ท้องถิ่น</p>
-            <div class="card-meta">
-              <span>📅 วันเสาร์ที่ 24 ตุลาคม 2026</span>
-              <span>⏰ ประตูเปิด 18:00 น.</span>
-              <span>📍 The Riverfront Warehouse, กรุงเทพฯ</span>
-              <span>🎟️ เหลือบัตร 173 / 500 ใบ</span>
-            </div>
-            <div class="card-footer">
-              <div class="price-tag">
-                399 <small>THB / ใบ</small>
-              </div>
-              <a href="event-detail.html?event=summer" class="btn btn-primary" data-prototype-target="event-v2">ซื้อบัตร</a>
-            </div>
-          </div>
-        </article>
+      <div class="landscape-poster-card">
+        <!-- 16:9 Landscape Poster Image (Clean, No Overlay Text) -->
+        <div class="landscape-poster-wrap">
+          <img src="poster-summer.svg" alt="Indie Live Wave 2026 Poster" class="landscape-img">
+        </div>
 
-        <!-- Event 2 -->
-        <article class="card">
-          <div class="card-image-wrap">
-            <img src="poster-indie.svg" alt="ภาพโปสเตอร์ตัวอย่าง Indie Night Underground" class="event-art">
-            <span class="badge badge-success" style="position:absolute; top:12px; right:12px;">✓ เปิดขายบัตร</span>
+        <!-- Details Strictly Below the Poster Image -->
+        <div class="landscape-details-box">
+          <div class="landscape-info">
+            <span class="event-cat-tag">LIVE CONCERT • INDIE FESTIVAL</span>
+            <h1 class="landscape-title">Indie Live Wave 2026</h1>
+            <p class="landscape-meta">
+              <span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                เสาร์ที่ 24 ตุลาคม 2026 • 18:00 น.
+              </span>
+              <span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ
+              </span>
+            </p>
           </div>
-          <div class="card-content">
-            <h3>Indie Night Underground</h3>
-            <p>รวมวงดนตรีร็อกและอินดี้หน้าใหม่ 5 วง ในคลับใต้ดินใจกลางทองหล่อ</p>
-            <div class="card-meta">
-              <span>📅 วันศุกร์ที่ 6 พฤศจิกายน 2026</span>
-              <span>⏰ ประตูเปิด 19:30 น.</span>
-              <span>📍 The Basement Club, ทองหล่อ</span>
-              <span>🎟️ เหลือบัตร 42 / 200 ใบ</span>
-            </div>
-            <div class="card-footer">
-              <div class="price-tag">
-                250 <small>THB / ใบ</small>
+
+          <div class="landscape-action-row">
+            <div class="price-display">
+              <span class="price-lbl">ราคาบัตร</span>
+              <div class="price-val-row">
+                <strong class="main-price">฿150</strong>
               </div>
-              <a href="event-detail.html?event=indie" class="btn btn-primary" data-prototype-target="event-v2">ซื้อบัตร</a>
             </div>
+            <a href="event-detail.html?event=summer" class="btn btn-lime btn-lg" data-prototype-target="event-v6">
+              <span>ซื้อบัตร / ดูรายละเอียด</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
           </div>
-        </article>
+        </div>
       </div>
     </section>
-  <p class="art-note">โปสเตอร์และข้อมูลในหน้านี้เป็นภาพประกอบตัวอย่างสำหรับตรวจทาน UI</p></main>
 
-  <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-    TICKETBOX Prototype MVP &copy; 2026 &bull; High-Contrast Monochromatic UI
+    <!-- Bottom Zone: 3:4 / 4:5 Vertical Posters Grid (Strictly No Text Overlay) -->
+    <section class="catalog-grid-section">
+      <div class="section-heading-bar">
+        <div>
+          <span class="section-eyebrow">ALL CONCERTS & EVENTS</span>
+          <h2 class="section-title">คอนเสิร์ตและงานแสดงทั้งหมด</h2>
+        </div>
+        <span class="catalog-count-badge">แสดง 4 รายการ</span>
+      </div>
+
+      <div class="vertical-posters-grid" id="events-grid">
+
+        <!-- Card 1: Indie Live Wave -->
+        <article class="vertical-event-card">
+          <div class="vertical-poster-wrap">
+            <img src="poster-summer.svg" alt="Indie Live Wave 2026" class="vertical-img">
+          </div>
+          <div class="vertical-card-body">
+            <span class="event-cat-tag">LIVE CONCERT • INDIE</span>
+            <h3 class="vertical-card-title">Indie Live Wave 2026</h3>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              เสาร์ 24 ต.ค. 2026 • 18:00 น.
+            </p>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              The Riverfront Warehouse, กรุงเทพฯ
+            </p>
+            <div class="vertical-price-box">
+              <div class="price-val-row">
+                <strong>฿150</strong>
+              </div>
+            </div>
+            <a href="event-detail.html?event=summer" class="btn btn-dark full-width" data-prototype-target="event-v6">ซื้อบัตร →</a>
+          </div>
+        </article>
+
+        <!-- Card 2: UBU Acoustic Night -->
+        <article class="vertical-event-card">
+          <div class="vertical-poster-wrap">
+            <img src="poster-indie.svg" alt="UBU Acoustic Night" class="vertical-img">
+          </div>
+          <div class="vertical-card-body">
+            <span class="event-cat-tag">CAMPUS & MUSIC • UBON</span>
+            <h3 class="vertical-card-title">UBU Acoustic Night Vol.3</h3>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              ศุกร์ 31 ต.ค. 2026 • 17:30 น.
+            </p>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              ลานกิจกรรมริมสระ ม.อุบลราชธานี
+            </p>
+            <div class="vertical-price-box">
+              <div class="price-val-row">
+                <strong>฿150</strong>
+              </div>
+            </div>
+            <a href="event-detail.html?event=ubu" class="btn btn-dark full-width" data-prototype-target="event-v6">ซื้อบัตร →</a>
+          </div>
+        </article>
+
+        <!-- Card 3: Midnight Underground -->
+        <article class="vertical-event-card">
+          <div class="vertical-poster-wrap">
+            <img src="poster-indie.svg" alt="Midnight Underground" class="vertical-img">
+          </div>
+          <div class="vertical-card-body">
+            <span class="event-cat-tag">NIGHTLIFE • ROCK / INDIE</span>
+            <h3 class="vertical-card-title">Midnight Underground Club</h3>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              ศุกร์ 06 พ.ย. 2026 • 20:00 น.
+            </p>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              The Basement Club, ทองหล่อ
+            </p>
+            <div class="vertical-price-box">
+              <div class="price-val-row">
+                <strong>฿250</strong>
+              </div>
+            </div>
+            <a href="event-detail.html?event=midnight" class="btn btn-dark full-width" data-prototype-target="event-v4">ซื้อบัตร →</a>
+          </div>
+        </article>
+
+        <!-- Card 4: Sunset Vibes -->
+        <article class="vertical-event-card">
+          <div class="vertical-poster-wrap">
+            <img src="poster-summer.svg" alt="Sunset Vibes Sessions" class="vertical-img">
+          </div>
+          <div class="vertical-card-body">
+            <span class="event-cat-tag">CHILL & DJ • ROOFTOP</span>
+            <h3 class="vertical-card-title">Sunset Vibes Sessions</h3>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              เสาร์ 14 พ.ย. 2026 • 17:00 น.
+            </p>
+            <p class="vertical-card-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              Horizon Bar Rooftop, สุขุมวิท
+            </p>
+            <div class="vertical-price-box">
+              <div class="price-val-row">
+                <strong>฿450</strong>
+              </div>
+            </div>
+            <a href="event-detail.html?event=sunset" class="btn btn-dark full-width" data-prototype-target="event-v4">ซื้อบัตร →</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Bottom FAQ & Contact Zone -->
+    <section class="home-bottom-section">
+      <div class="bottom-grid">
+        <!-- FAQ Accordion -->
+        <div class="faq-container">
+          <span class="section-eyebrow">HELP & SUPPORT</span>
+          <h2 class="faq-title">คำถามที่พบบ่อย (FAQ)</h2>
+          
+          <div class="faq-accordion">
+            <details class="faq-item" open>
+              <summary class="faq-question">
+                <span>ซื้อบัตรแล้วจะได้รับตั๋วอย่างไร?</span>
+                <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="faq-answer">
+                เมื่อชำระเงินผ่าน PromptPay QR เรียบร้อย ระบบจะออกตั๋วพร้อม QR Code บนหน้าจอทันที และส่งลิงก์เปิดตั๋วเข้าอีเมลของคุณโดยอัตโนมัติ โดยไม่ต้องสมัครสมาชิกหรือจำรหัสผ่าน
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-question">
+                <span>สิทธิพิเศษนักศึกษา (@ubu.ac.th) ใช้งานอย่างไร?</span>
+                <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="faq-answer">
+                ในขั้นตอนกรอกข้อมูล เพียงระบุอีเมลสถาบันที่ลงท้ายด้วย @ubu.ac.th ระบบจะตรวจจับและปรับราคาบัตรเป็นราคานักศึกษาคงที่ (เช่น ฿150 เหลือ ฿79) ให้อัตโนมัติทันที
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-question">
+                <span>บัตรคอนเสิร์ตรองรับการเข้า-ออกงาน (Re-entry) หรือไม่?</span>
+                <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </summary>
+              <div class="faq-answer">
+                รองรับครับ บัตรทุกใบมีระบบบันทึกสถานะ เมื่อต้องการออกจากงานชั่วคราว ให้แจ้งสต๊าฟสแกนออก (Check-out) และเมื่อกลับเข้ามาให้สแกนเข้าใหม่ (Check-in) ได้อย่างปลอดภัย
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Contact Support Card -->
+        <div class="contact-card">
+          <span class="section-eyebrow">CONTACT US</span>
+          <h3 class="contact-title">ติดต่อสอบถาม & แจ้งปัญหา</h3>
+          <p class="contact-desc">หากพบปัญหาในการสั่งซื้อ ชำระเงิน หรือต้องการนำงานของคุณมาเปิดขายบัตรบนแพลตฟอร์ม</p>
+          
+          <div class="contact-links-list">
+            <div class="contact-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>support@e-tikket.com</span>
+            </div>
+            <div class="contact-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span>LINE Official: @e-tikket</span>
+            </div>
+            <div class="contact-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>เวลาทำการทีมซัพพอร์ต: ทุกวัน 09:00 - 22:00 น.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">E-TIKKET</span>
+        <p>แพลตฟอร์มระบบจำหน่ายบัตรคอนเสิร์ตและอีเวนต์ยุคใหม่ จองง่าย ปลอดภัย สแกนจ่ายด้วยพร้อมเพย์อัตโนมัติ</p>
+      </div>
+      <div class="footer-links">
+        <span>Guest Checkout • CSPRNG QR Ticket • Re-entry Audit</span>
+        <span class="copy">E-TIKKET Prototype &copy; 2026</span>
+      </div>
+    </div>
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

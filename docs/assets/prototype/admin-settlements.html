@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตัดจ่ายเงินผู้จัดงาน (Payout & Settlement) — E-TIKKET Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="admin-settlements" data-prototype-id="admin-settle-v3">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Admin & Platform Architecture</span>
+      <span>Page: <strong>A3. Organizer Payouts & Settlement</strong></span>
+      <span>ID: <strong>admin-settle-v3</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" class="active" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Admin Site Header (Customer-style aesthetic + Scrollable Subnav) -->
+  <header class="admin-site-header">
+    <!-- Top Row: Brand & Admin User Profile -->
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="admin-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">PLATFORM ADMIN</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">AD</div>
+          <span class="admin-name">Super Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subnav Row: Moved down with horizontal scroll capability -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="admin-dashboard.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="admin-transactions.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>ธุรกรรมเกตเวย์</span>
+          </a>
+          <a href="admin-settlements.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>ตัดจ่ายผู้จัดงาน</span>
+          </a>
+          <a href="admin-events.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>อนุมัติคอนเสิร์ต</span>
+            <span class="tab-pill-badge">3</span>
+          </a>
+          <a href="admin-orders.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>จัดการคำสั่งซื้อ</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Header & Explanatory sub -->
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">ระบบตัดจ่ายเงินให้ผู้จัดงาน (Payout & Settlement)</h1>
+          <p class="admin-page-sub">สรุปยอดขายหักค่าธรรมเนียมแพลตฟอร์ม 5% และบันทึกหลักฐานการโอนเงินส่วนแบ่งเข้าบัญชีผู้จัด</p>
+        </div>
+      </div>
+
+      <!-- Financial Metric Highlights for Settlement -->
+      <div class="stats-cards-grid">
+        <div class="stat-card highlight">
+          <div class="stat-card-header">
+            <span class="stat-lbl">ยอดเงินที่ถึงรอบต้องตัดจ่าย (Pending Payouts)</span>
+            <div class="stat-icon-badge lime">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            </div>
+          </div>
+          <div class="stat-card-value text-lime-dark">฿284,500.00</div>
+          <div class="stat-card-trend">
+            <span class="badge badge-warning">4 งานจบแล้ว รอดำเนินการโอน</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">ค่าธรรมเนียมแพลตฟอร์มที่หักไว้ (Fee Retained 5%)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-card-value">฿14,973.00</div>
+          <div class="stat-card-trend">
+            <span class="trend-sub">รายได้สุทธิของแพลตฟอร์มในรอบนี้</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">ยอดที่โอนเคลียร์เสร็จสิ้นแล้ว (Settled)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-card-value">฿1,140,500.00</div>
+          <div class="stat-card-trend">
+            <span class="trend-sub">รวม 18 คอนเสิร์ตในรอบที่ผ่านมา</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settlement Queue Table Card with Status Tabs -->
+      <div class="admin-card table-card" style="margin-top: 28px;">
+        <div class="card-head-row" style="align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <h2 class="card-title-main">รายการรอบตัดจ่ายเงินผู้จัดงาน</h2>
+            <span class="card-title-sub">คำนวณหัก 5% อัตโนมัติ ตรวจสอบยอดและบันทึกสลิปการโอน</span>
+          </div>
+
+          <!-- Status Tabs (แยกตามสถานะ) -->
+          <div class="filter-pills-group" id="settlement-status-tabs">
+            <button type="button" class="status-tab-btn active" data-settle-tab="ALL" onclick="filterSettlementTab('ALL', this)">
+              <span>ทั้งหมด</span>
+              <span class="tab-badge-pill">4</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-settle-tab="PENDING" onclick="filterSettlementTab('PENDING', this)">
+              <span>รอดำเนินการโอน</span>
+              <span class="tab-badge-pill" style="background-color: #fef3c7; color: #b45309;">2</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-settle-tab="SETTLED" onclick="filterSettlementTab('SETTLED', this)">
+              <span>โอนเงินเรียบร้อยแล้ว</span>
+              <span class="tab-badge-pill" style="background-color: #dcfce7; color: #15803d;">2</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>งานคอนเสิร์ต / ผู้จัด</th>
+                <th>ข้อมูลบัญชีธนาคารผู้รับ</th>
+                <th>ยอดขายรวม</th>
+                <th>หักค่าธรรมเนียม 5%</th>
+                <th>ยอดสุทธิที่ต้องโอน</th>
+                <th>สถานะ</th>
+                <th style="text-align: right;">การดำเนินการ</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Row 1: Ready to Payout (Indie Live Wave) -->
+              <tr class="tx-row warning-row" id="settle-row-1" data-settle-status="PENDING">
+                <td>
+                  <div class="event-cell-mini">
+                    <img src="poster-summer.svg" alt="Indie Live Wave" class="mini-thumb">
+                    <div>
+                      <strong>Indie Live Wave 2026</strong>
+                      <span class="org-name-text">Soundbox Live Studio ✓</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="bank-details-cell">
+                    <strong class="bank-name">ธนาคารกสิกรไทย (KBANK)</strong>
+                    <span class="acc-num">045-8-12345-6</span>
+                    <span class="acc-holder">บจก. ซาวด์บ็อกซ์ ไลฟ์ สตูดิโอ</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">฿68,700.00</span>
+                </td>
+                <td>
+                  <span class="fee-deduct">-฿3,435.00</span>
+                </td>
+                <td>
+                  <strong class="net-payout">฿65,265.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-warning" id="settle-badge-1">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    รอโอนเงิน (PENDING)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-outline btn-xs" onclick="openConcertAnalyticsModal('indie-live-wave')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                      <span>แดชบอร์ดงานนี้</span>
+                    </button>
+                    <button type="button" id="settle-btn-1" class="btn btn-lime btn-xs" onclick="openSettlementModal('Indie Live Wave 2026', 'บจก. ซาวด์บ็อกซ์ ไลฟ์ สตูดิโอ', 'ธนาคารกสิกรไทย 045-8-12345-6', '฿65,265.00')">
+                      โอนเงิน & แนบสลิป
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 2: Sunset Acoustic -->
+              <tr class="tx-row warning-row" id="settle-row-2" data-settle-status="PENDING">
+                <td>
+                  <div class="event-cell-mini">
+                    <img src="poster-jazz.svg" alt="Sunset Acoustic" class="mini-thumb">
+                    <div>
+                      <strong>Sunset Acoustic Rooftop</strong>
+                      <span class="org-name-text">The Sky Bar & Lounge ✓</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="bank-details-cell">
+                    <strong class="bank-name">ธนาคารไทยพาณิชย์ (SCB)</strong>
+                    <span class="acc-num">112-9-87654-3</span>
+                    <span class="acc-holder">นายภาคิน วงศ์สุวรรณ</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">฿50,750.00</span>
+                </td>
+                <td>
+                  <span class="fee-deduct">-฿2,537.50</span>
+                </td>
+                <td>
+                  <strong class="net-payout">฿48,212.50</strong>
+                </td>
+                <td>
+                  <span class="badge badge-warning">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    รอโอนเงิน (PENDING)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-outline btn-xs" onclick="openConcertAnalyticsModal('sunset-acoustic')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                      <span>แดชบอร์ดงานนี้</span>
+                    </button>
+                    <button type="button" class="btn btn-lime btn-xs" onclick="openSettlementModal('Sunset Acoustic Rooftop', 'นายภาคิน วงศ์สุวรรณ', 'ธนาคารไทยพาณิชย์ 112-9-87654-3', '฿48,212.50')">
+                      โอนเงิน & แนบสลิป
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 3: Settled Event -->
+              <tr class="tx-row" id="settle-row-3" data-settle-status="SETTLED">
+                <td>
+                  <div class="event-cell-mini">
+                    <img src="poster-neon.svg" alt="Retro Synthwave Night" class="mini-thumb">
+                    <div>
+                      <strong>Retro Synthwave Night Vol. 1</strong>
+                      <span class="org-name-text">ElectroWave Group ✓</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="bank-details-cell">
+                    <strong class="bank-name">ธนาคารกรุงเทพ (BBL)</strong>
+                    <span class="acc-num">201-4-55443-1</span>
+                    <span class="acc-holder">บจก. อิเล็กโทรเวฟ เอ็นเตอร์เทนเมนท์</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">฿180,000.00</span>
+                </td>
+                <td>
+                  <span class="fee-deduct">-฿9,000.00</span>
+                </td>
+                <td>
+                  <strong class="net-payout">฿171,000.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-lime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    โอนเรียบร้อย (SETTLED)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-outline btn-xs" onclick="openConcertAnalyticsModal('retro-synthwave')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                      <span>แดชบอร์ดงานนี้</span>
+                    </button>
+                    <button type="button" class="btn btn-outline btn-xs" onclick="alert('หลักฐานการโอนเงิน:\nโอนเมื่อ: 10 ต.ค. 2026\nเลขอ้างอิง: TRF-KBANK-99124\nยอดเงิน: ฿171,000.00\nสถานะ: ปิดยอดเรียบร้อย')">
+                      ดูหลักฐานการโอน
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Row 4: Settled Event (Neon Midnight Club) -->
+              <tr class="tx-row" id="settle-row-4" data-settle-status="SETTLED">
+                <td>
+                  <div class="event-cell-mini">
+                    <img src="poster-summer.svg" alt="Neon Midnight Club" class="mini-thumb">
+                    <div>
+                      <strong>Neon Midnight Club</strong>
+                      <span class="org-name-text">Midnight Sound & Light ✓</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="bank-details-cell">
+                    <strong class="bank-name">ธนาคารกสิกรไทย (KBANK)</strong>
+                    <span class="acc-num">021-3-44556-7</span>
+                    <span class="acc-holder">นายธนกฤต วิเศษศิลป์</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">฿210,000.00</span>
+                </td>
+                <td>
+                  <span class="fee-deduct">-฿10,500.00</span>
+                </td>
+                <td>
+                  <strong class="net-payout">฿199,500.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-lime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    โอนเรียบร้อย (SETTLED)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-outline btn-xs" onclick="openConcertAnalyticsModal('neon-midnight')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                      <span>แดชบอร์ดงานนี้</span>
+                    </button>
+                    <button type="button" class="btn btn-outline btn-xs" onclick="alert('หลักฐานการโอนเงิน:\nโอนเมื่อ: 5 ต.ค. 2026\nเลขอ้างอิง: TRF-SCB-88321\nยอดเงิน: ฿199,500.00\nสถานะ: ปิดยอดเรียบร้อย')">
+                      ดูหลักฐานการโอน
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Concert Specific Analytics & Breakdown Modal -->
+  <div id="concert-analytics-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog concert-modal-dialog">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>แดชบอร์ดและสถิติยอดขายเฉพาะคอนเสิร์ต</span>
+        </h3>
+        <button type="button" class="modal-close-btn" onclick="closeConcertAnalyticsModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <!-- Event Header Info -->
+        <div class="concert-analytics-header">
+          <img id="ca-event-poster" src="poster-summer.svg" alt="Poster" class="concert-analytics-thumb">
+          <div style="flex: 1;">
+            <h4 id="ca-event-name" class="concert-analytics-title">Indie Live Wave 2026</h4>
+            <div id="ca-event-meta" class="concert-analytics-meta">
+              ผู้จัด: <strong>Soundbox Live Studio ✓</strong> • สถานที่: The Riverfront Warehouse • จัดแสดง: 24 ต.ค. 2026
+            </div>
+            <div id="ca-settle-status-tag" style="margin-top: 6px;">
+              <span class="badge badge-warning">รอการตัดจ่ายเงิน (PENDING PAYOUT)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 KPI Cards -->
+        <div class="concert-kpi-grid">
+          <div class="concert-kpi-card">
+            <span class="kpi-lbl">บัตรที่ขายได้ / โควตา</span>
+            <div class="kpi-val" id="ca-kpi-tickets">687 / 1,000 ใบ</div>
+            <span style="font-size: 10px; color: #15803d; font-weight: 600;" id="ca-kpi-pct">(68.7% ของความจุ)</span>
+          </div>
+
+          <div class="concert-kpi-card">
+            <span class="kpi-lbl">ยอดขายตั๋วรวม (Gross GMV)</span>
+            <div class="kpi-val" id="ca-kpi-gross">฿68,700.00</div>
+            <span style="font-size: 10px; color: var(--text-subtle);">จาก PromptPay Gateway</span>
+          </div>
+
+          <div class="concert-kpi-card">
+            <span class="kpi-lbl">ค่าธรรมเนียมระบบ 5%</span>
+            <div class="kpi-val" style="color: #e11d48;" id="ca-kpi-fee">-฿3,435.00</div>
+            <span style="font-size: 10px; color: var(--text-subtle);">หักเข้าแพลตฟอร์ม</span>
+          </div>
+
+          <div class="concert-kpi-card highlight">
+            <span class="kpi-lbl">ยอดสุทธิที่ต้องโอนผู้จัด</span>
+            <div class="kpi-val lime-text" id="ca-kpi-net">฿65,265.00</div>
+            <span style="font-size: 10px; color: #15803d; font-weight: 700;">Net Organizer Payout</span>
+          </div>
+        </div>
+
+        <!-- Breakdown by Ticket Tier -->
+        <h5 class="analytics-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          แจกแจงรายได้ตามประเภทบัตร (Tier Revenue Breakdown)
+        </h5>
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th>ประเภทบัตร</th>
+              <th>ราคาต่อใบ</th>
+              <th>จำนวนที่ขาย</th>
+              <th>ยอดเงินรวม</th>
+              <th>สัดส่วน</th>
+            </tr>
+          </thead>
+          <tbody id="ca-tiers-tbody">
+            <!-- Dynamic rows inserted by JS -->
+          </tbody>
+        </table>
+
+        <!-- Gate Check-in Stats -->
+        <h5 class="analytics-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          สถิติการสแกนบัตรหน้างาน (Gate Check-in Analytics)
+        </h5>
+        <div style="background-color: var(--bg-surface); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 16px; border: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+            <span>อัตราผู้เข้าชมเข้างาน (Attendance Rate): <strong id="ca-checkin-rate">93.1%</strong></span>
+            <span id="ca-checkin-count">640 / 687 คน</span>
+          </div>
+          <div class="card-quota-bar" style="height: 8px;">
+            <div id="ca-checkin-bar" class="quota-progress" style="width: 93.1%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            <span>สถิติ Re-entry (เข้า-ออกชั่วคราว): <strong id="ca-reentry-count" style="color: var(--text-main);">82 ครั้ง</strong></span>
+            <span>ยังไม่เข้างาน: <strong id="ca-absent-count" style="color: var(--text-main);">47 คน</strong></span>
+          </div>
+        </div>
+
+        <!-- Bank & Transfer Audit -->
+        <h5 class="analytics-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+          บัญชีธนาคารผู้รับโอนและสถานะรอบจ่าย
+        </h5>
+        <div class="settlement-audit-box">
+          <div class="modal-row">
+            <span class="m-lbl">ธนาคาร & เลขที่บัญชี:</span>
+            <strong id="ca-bank-info" style="font-family: monospace;">ธนาคารกสิกรไทย (KBANK) • 045-8-12345-6</strong>
+          </div>
+          <div class="modal-row" style="margin-top: 4px;">
+            <span class="m-lbl">ชื่อบัญชีผู้จัดงาน:</span>
+            <span id="ca-bank-holder">บจก. ซาวด์บ็อกซ์ ไลฟ์ สตูดิโอ</span>
+          </div>
+          <div class="modal-row" style="margin-top: 4px;">
+            <span class="m-lbl">สถานะโอนเงิน:</span>
+            <span id="ca-payout-status-text">รอโอนเงิน (กำหนดโอนรอบวันศุกร์นี้)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-outline btn-sm" onclick="printSettlementStatement()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          <span>พิมพ์ใบสรุปยอด (Print)</span>
+        </button>
+        <button type="button" class="btn btn-lime btn-sm" id="ca-action-btn" onclick="handleConcertModalAction()">
+          <span>ดำเนินการโอนเงิน</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settlement Confirmation Modal -->
+  <div id="settlement-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title">บันทึกการโอนเงินให้ผู้จัดงาน (Mark as Settled)</h3>
+        <button type="button" class="modal-close-btn" onclick="closeSettlementModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <div class="modal-info-box">
+          <div class="modal-row">
+            <span class="m-lbl">งานคอนเสิร์ต:</span>
+            <strong id="modal-event-name">Indie Live Wave 2026</strong>
+          </div>
+          <div class="modal-row">
+            <span class="m-lbl">ชื่อบัญชีผู้รับ:</span>
+            <span id="modal-org-holder">บจก. ซาวด์บ็อกซ์ ไลฟ์ สตูดิโอ</span>
+          </div>
+          <div class="modal-row">
+            <span class="m-lbl">เลขที่บัญชี:</span>
+            <strong id="modal-bank-acc" style="font-family: monospace;">ธนาคารกสิกรไทย 045-8-12345-6</strong>
+          </div>
+          <div class="modal-row total">
+            <span class="m-lbl">ยอดสุทธิที่ต้องโอน (บาท):</span>
+            <strong class="m-val-total" id="modal-payout-amt">฿65,265.00</strong>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label class="form-label">เลขอ้างอิงการโอนเงิน / Transaction Ref *</label>
+          <input type="text" id="payout-ref-input" class="form-control" value="TRF-202610-88391" placeholder="เช่น TRF-202610-12345">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">แนบภาพสลิปการโอนเงินของแอดมิน (จำลอง)</label>
+          <div class="file-upload-mock-zone">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>ไฟล์ตัวอย่าง: slip-transfer-soundbox.png (แนบแล้ว)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeSettlementModal()">ยกเลิก</button>
+        <button type="button" class="btn btn-lime btn-sm" onclick="confirmSettlementSubmission()">
+          <span>ยืนยันการโอนเงิน (Mark as Settled)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="admin-site-footer">
+    <div class="admin-footer-container">
+      <span>E-TIKKET Admin Portal &copy; 2026 • ระบบจัดการธุรกรรมและคอนเสิร์ต</span>
+      <span>Platform Commission Model: 5% Automated Deduction</span>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+  <script>
+    // 1. Separate by Status Tabs (แยกตามสถานะ)
+    function filterSettlementTab(tab, btn) {
+      document.querySelectorAll('#settlement-status-tabs .status-tab-btn').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+
+      const rows = document.querySelectorAll('.admin-data-table tbody tr.tx-row');
+      rows.forEach(row => {
+        const rowStatus = row.dataset.settleStatus;
+        if (tab === 'ALL' || rowStatus === tab) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // 2. Concert Analytics Data Dictionary
+    const CONCERT_DATA = {
+      'indie-live-wave': {
+        name: 'Indie Live Wave 2026',
+        poster: 'poster-summer.svg',
+        org: 'Soundbox Live Studio ✓',
+        venue: 'The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ',
+        date: '24 ต.ค. 2026 • 18:00 น.',
+        status: 'PENDING',
+        statusText: 'รอการตัดจ่ายเงิน (PENDING PAYOUT)',
+        badgeClass: 'badge-warning',
+        tickets: '687 / 1,000 ใบ',
+        pct: '(68.7% ของความจุ)',
+        gross: '฿68,700.00',
+        fee: '-฿3,435.00',
+        net: '฿65,265.00',
+        tiers: [
+          { name: 'สิทธิ์นักศึกษา @ubu.ac.th', price: '฿79.00', qty: '420 ใบ', total: '฿33,180.00', share: '48.3%' },
+          { name: 'บัตรทั่วไป Early Bird', price: '฿150.00', qty: '237 ใบ', total: '฿35,550.00', share: '51.7%' }
+        ],
+        checkinRate: '93.1%',
+        checkinCount: '640 / 687 คน',
+        reentry: '82 ครั้ง',
+        absent: '47 คน',
+        bank: 'ธนาคารกสิกรไทย (KBANK) • 045-8-12345-6',
+        holder: 'บจก. ซาวด์บ็อกซ์ ไลฟ์ สตูดิโอ',
+        payoutStatus: 'รอโอนเงิน (กำหนดโอนรอบวันศุกร์นี้)'
+      },
+      'sunset-acoustic': {
+        name: 'Sunset Acoustic Rooftop',
+        poster: 'poster-jazz.svg',
+        org: 'The Sky Bar & Lounge ✓',
+        venue: '360 Sky Rooftop Bar, สุขุมวิท กรุงเทพฯ',
+        date: '31 ต.ค. 2026 • 17:30 น.',
+        status: 'PENDING',
+        statusText: 'รอการตัดจ่ายเงิน (PENDING PAYOUT)',
+        badgeClass: 'badge-warning',
+        tickets: '145 / 200 ใบ',
+        pct: '(72.5% ของความจุ)',
+        gross: '฿50,750.00',
+        fee: '-฿2,537.50',
+        net: '฿48,212.50',
+        tiers: [
+          { name: 'บัตรทั่วไป (General Admission)', price: '฿350.00', qty: '145 ใบ', total: '฿50,750.00', share: '100.0%' }
+        ],
+        checkinRate: '89.6%',
+        checkinCount: '130 / 145 คน',
+        reentry: '24 ครั้ง',
+        absent: '15 คน',
+        bank: 'ธนาคารไทยพาณิชย์ (SCB) • 112-9-87654-3',
+        holder: 'นายภาคิน วงศ์สุวรรณ',
+        payoutStatus: 'รอโอนเงิน (กำหนดโอนรอบวันศุกร์นี้)'
+      },
+      'retro-synthwave': {
+        name: 'Retro Synthwave Night Vol. 1',
+        poster: 'poster-neon.svg',
+        org: 'ElectroWave Group ✓',
+        venue: 'The Underground Club, ทองหล่อ',
+        date: '10 ต.ค. 2026 • 21:00 น.',
+        status: 'SETTLED',
+        statusText: 'โอนเงินเรียบร้อยแล้ว (SETTLED)',
+        badgeClass: 'badge-lime',
+        tickets: '400 / 400 ใบ',
+        pct: '(100% Sold Out เต็มความจุ)',
+        gross: '฿180,000.00',
+        fee: '-฿9,000.00',
+        net: '฿171,000.00',
+        tiers: [
+          { name: 'Early Bird Pass', price: '฿450.00', qty: '400 ใบ', total: '฿180,000.00', share: '100.0%' }
+        ],
+        checkinRate: '97.5%',
+        checkinCount: '390 / 400 คน',
+        reentry: '115 ครั้ง',
+        absent: '10 คน',
+        bank: 'ธนาคารกรุงเทพ (BBL) • 201-4-55443-1',
+        holder: 'บจก. อิเล็กโทรเวฟ เอ็นเตอร์เทนเมนท์',
+        payoutStatus: 'โอนเรียบร้อยแล้วเมื่อ 10 ต.ค. 2026 (Ref: TRF-KBANK-99124)'
+      },
+      'neon-midnight': {
+        name: 'Neon Midnight Club',
+        poster: 'poster-summer.svg',
+        org: 'Midnight Sound & Light ✓',
+        venue: 'Neon Arena Ratchada, กรุงเทพฯ',
+        date: '5 ต.ค. 2026 • 22:00 น.',
+        status: 'SETTLED',
+        statusText: 'โอนเงินเรียบร้อยแล้ว (SETTLED)',
+        badgeClass: 'badge-lime',
+        tickets: '702 / 800 ใบ',
+        pct: '(87.7% ของความจุ)',
+        gross: '฿210,000.00',
+        fee: '-฿10,500.00',
+        net: '฿199,500.00',
+        tiers: [
+          { name: 'Regular Entry Pass', price: '฿299.00', qty: '702 ใบ', total: '฿210,000.00', share: '100.0%' }
+        ],
+        checkinRate: '95.0%',
+        checkinCount: '667 / 702 คน',
+        reentry: '98 ครั้ง',
+        absent: '35 คน',
+        bank: 'ธนาคารกสิกรไทย (KBANK) • 021-3-44556-7',
+        holder: 'นายธนกฤต วิเศษศิลป์',
+        payoutStatus: 'โอนเรียบร้อยแล้วเมื่อ 5 ต.ค. 2026 (Ref: TRF-SCB-88321)'
+      }
+    };
+
+    let activeEventKey = null;
+
+    // 3. Open Concert Analytics Modal
+    function openConcertAnalyticsModal(eventKey) {
+      const data = CONCERT_DATA[eventKey];
+      if (!data) return;
+      activeEventKey = eventKey;
+
+      document.getElementById('ca-event-poster').src = data.poster;
+      document.getElementById('ca-event-name').textContent = data.name;
+      document.getElementById('ca-event-meta').innerHTML = `ผู้จัด: <strong>${data.org}</strong> • สถานที่: ${data.venue} • จัดแสดง: ${data.date}`;
+      
+      const tagBox = document.getElementById('ca-settle-status-tag');
+      tagBox.innerHTML = `<span class="badge ${data.badgeClass}">${data.statusText}</span>`;
+
+      document.getElementById('ca-kpi-tickets').textContent = data.tickets;
+      document.getElementById('ca-kpi-pct').textContent = data.pct;
+      document.getElementById('ca-kpi-gross').textContent = data.gross;
+      document.getElementById('ca-kpi-fee').textContent = data.fee;
+      document.getElementById('ca-kpi-net').textContent = data.net;
+
+      // Render Tiers Table
+      const tbody = document.getElementById('ca-tiers-tbody');
+      tbody.innerHTML = '';
+      data.tiers.forEach(tier => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${tier.name}</strong></td>
+          <td>${tier.price}</td>
+          <td>${tier.qty}</td>
+          <td><strong>${tier.total}</strong></td>
+          <td><span class="badge badge-dark" style="font-size:10px;">${tier.share}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Render Checkin Stats
+      document.getElementById('ca-checkin-rate').textContent = data.checkinRate;
+      document.getElementById('ca-checkin-count').textContent = data.checkinCount;
+      document.getElementById('ca-checkin-bar').style.width = data.checkinRate;
+      document.getElementById('ca-reentry-count').textContent = data.reentry;
+      document.getElementById('ca-absent-count').textContent = data.absent;
+
+      // Bank & Audit
+      document.getElementById('ca-bank-info').textContent = data.bank;
+      document.getElementById('ca-bank-holder').textContent = data.holder;
+      document.getElementById('ca-payout-status-text').textContent = data.payoutStatus;
+
+      // Action Button in Modal
+      const actionBtn = document.getElementById('ca-action-btn');
+      if (data.status === 'PENDING') {
+        actionBtn.style.display = '';
+        actionBtn.innerHTML = '<span>ดำเนินการโอนเงินให้ผู้จัดงาน</span>';
+      } else {
+        actionBtn.style.display = 'none';
+      }
+
+      document.getElementById('concert-analytics-modal').style.display = 'flex';
+    }
+
+    function closeConcertAnalyticsModal() {
+      document.getElementById('concert-analytics-modal').style.display = 'none';
+    }
+
+    function handleConcertModalAction() {
+      if (!activeEventKey) return;
+      const data = CONCERT_DATA[activeEventKey];
+      closeConcertAnalyticsModal();
+      openSettlementModal(data.name, data.holder, data.bank, data.net);
+    }
+
+    function printSettlementStatement() {
+      alert('✓ พิมพ์ใบสรุปยอดการจัดงาน (Settlement Statement)\nกำลังเตรียมข้อมูลพิมพ์สำหรับ ' + (activeEventKey ? CONCERT_DATA[activeEventKey].name : 'คอนเสิร์ต'));
+    }
+
+    // 4. Standard Mark as Settled Modal
+    function openSettlementModal(event, holder, bank, amount) {
+      document.getElementById('modal-event-name').textContent = event;
+      document.getElementById('modal-org-holder').textContent = holder;
+      document.getElementById('modal-bank-acc').textContent = bank;
+      document.getElementById('modal-payout-amt').textContent = amount;
+      document.getElementById('settlement-modal').style.display = 'flex';
+    }
+
+    function closeSettlementModal() {
+      document.getElementById('settlement-modal').style.display = 'none';
+    }
+
+    function confirmSettlementSubmission() {
+      closeSettlementModal();
+      const badge = document.getElementById('settle-badge-1');
+      const row = document.getElementById('settle-row-1');
+      const btn = document.getElementById('settle-btn-1');
+
+      if (badge) {
+        badge.className = 'badge badge-lime';
+        badge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> โอนเรียบร้อย (SETTLED)';
+      }
+      if (row) {
+        row.classList.remove('warning-row');
+        row.dataset.settleStatus = 'SETTLED';
+      }
+      if (btn) {
+        btn.className = 'btn btn-outline btn-xs';
+        btn.textContent = 'ดูหลักฐานการโอน';
+        btn.onclick = () => alert('บันทึกการโอนเงินเรียบร้อยเมื่อสักครู่!');
+      }
+
+      alert('✓ บันทึกการตัดจ่ายเงินเรียบร้อยแล้ว!\nระบบได้ส่งอีเมลแจ้งผู้จัดงาน พร้อมแนบใบสรุปยอดเงินและหลักฐานการโอนเงินเรียบร้อยแล้ว');
+    }
+  </script>
+</body>
+</html>

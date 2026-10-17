@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>อนุมัติและจัดการคอนเสิร์ต — E-TIKKET Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="admin-events" data-prototype-id="admin-events-v4">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Admin & Platform Architecture</span>
+      <span>Page: <strong>A4. Event Approval & Moderation</strong></span>
+      <span>ID: <strong>admin-events-v4</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" class="active" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Admin Site Header (Customer-style aesthetic + Scrollable Subnav) -->
+  <header class="admin-site-header">
+    <!-- Top Row: Brand & Admin User Profile -->
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="admin-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">PLATFORM ADMIN</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">AD</div>
+          <span class="admin-name">Super Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subnav Row: Moved down with horizontal scroll capability -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="admin-dashboard.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="admin-transactions.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>ธุรกรรมเกตเวย์</span>
+          </a>
+          <a href="admin-settlements.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>ตัดจ่ายผู้จัดงาน</span>
+          </a>
+          <a href="admin-events.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>อนุมัติคอนเสิร์ต</span>
+            <span class="tab-pill-badge">3</span>
+          </a>
+          <a href="admin-orders.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>จัดการคำสั่งซื้อ</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">ตรวจสอบและอนุมัติคอนเสิร์ต (Event Approval & Moderation)</h1>
+          <p class="admin-page-sub">แอดมินสามารถค้นหา กรองสถานะ และแก้ไขข้อมูลคอนเสิร์ตได้ทุกส่วน เพื่อความถูกต้องของแพลตฟอร์ม</p>
+        </div>
+        <div class="header-action-group">
+          <button type="button" class="btn btn-lime btn-sm" onclick="openAdminCreateModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>สร้างคอนเสิร์ตใหม่</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Expanded Search and Filters Bar (admin-events-v2) -->
+      <div class="admin-filter-container">
+        <!-- Row 1: Search & Status Pills -->
+        <div class="filter-row-primary">
+          <div class="search-input-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="event-search-input" placeholder="ค้นหาด้วยชื่องาน, ศิลปิน, ผู้จัดงาน, หรือสถานที่..." class="admin-search-field" oninput="applyEventFilters()">
+          </div>
+          <div class="filter-pills-group" id="event-status-pills">
+            <button type="button" class="status-tab-btn active" data-status="ALL" onclick="setEventStatusTab('ALL', this)">
+              <span>ทั้งหมด</span>
+              <span class="tab-badge-pill">4</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="PENDING_APPROVAL" onclick="setEventStatusTab('PENDING_APPROVAL', this)">
+              <span>รอตรวจสอบ</span>
+              <span class="tab-badge-pill" style="background-color: #fef3c7; color: #b45309;">1</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="PUBLISHED" onclick="setEventStatusTab('PUBLISHED', this)">
+              <span>กำลังเปิดขาย</span>
+              <span class="tab-badge-pill" style="background-color: #dcfce7; color: #15803d;">2</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="SUSPENDED" onclick="setEventStatusTab('SUSPENDED', this)">
+              <span>ระงับการขาย</span>
+              <span class="tab-badge-pill" style="background-color: #fee2e2; color: #b91c1c;">1</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 2: Secondary Dropdowns and Reset -->
+        <div class="filter-row-secondary">
+          <div class="filter-controls-inline">
+            <span class="filter-label-inline">แนวเพลง:</span>
+            <select id="event-genre-filter" class="admin-select-input" onchange="applyEventFilters()">
+              <option value="ALL">ทุกแนวเพลง</option>
+              <option value="Folk / Acoustic">Folk / Acoustic</option>
+              <option value="Indie / Rock">Indie / Rock</option>
+              <option value="EDM / Club">EDM / Club</option>
+              <option value="Jazz / Soul">Jazz / Soul</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 8px;">ผู้จัดงาน:</span>
+            <select id="event-org-filter" class="admin-select-input" onchange="applyEventFilters()">
+              <option value="ALL">ทุกผู้จัดงาน</option>
+              <option value="Indie Melody Production">Indie Melody Production</option>
+              <option value="Soundbox Live Studio">Soundbox Live Studio</option>
+              <option value="ElectroWave Group">ElectroWave Group</option>
+              <option value="The Sky Bar & Lounge">The Sky Bar & Lounge</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 8px;">สถานะโควตา:</span>
+            <select id="event-quota-filter" class="admin-select-input" onchange="applyEventFilters()">
+              <option value="ALL">ทุกสถานะโควตา</option>
+              <option value="AVAILABLE">บัตรเหลือ (>20%)</option>
+              <option value="NEAR_SOLD_OUT">ใกล้หมด (<20%)</option>
+              <option value="SOLD_OUT">ขายหมดแล้ว (Sold Out)</option>
+            </select>
+
+            <button type="button" class="btn btn-outline btn-xs" style="margin-left: 6px;" onclick="resetEventFilters()">
+              ล้างตัวกรอง
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Redesigned Events Review Cards List (admin-events-v2) -->
+      <div class="approval-cards-list" id="events-card-container">
+
+        <!-- Card 1: Pending Approval (Acoustic in the Park 2026) -->
+        <div class="event-approval-card pending-card" id="card-acoustic-park" 
+             data-event-key="acoustic-park" 
+             data-status="PENDING_APPROVAL" 
+             data-genre="Folk / Acoustic" 
+             data-org="Indie Melody Production" 
+             data-quota-status="AVAILABLE">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap">
+              <img src="poster-indie.svg" alt="Acoustic Park Fest" class="approval-poster-img" id="poster-img-acoustic-park">
+              <span class="badge badge-warning poster-status-badge" id="badge-acoustic-park">PENDING REVIEW (รออนุมัติ)</span>
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; gap: 4px; justify-content: center;">
+                <span style="background: rgba(0,0,0,0.85); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">🖼️ แนวตั้ง 4:5</span>
+                <span style="background: rgba(0,0,0,0.85); color: var(--lime-accent); font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">แบนเนอร์ 16:9</span>
+              </div>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <span class="event-cat-tag" id="genre-tag-acoustic-park">LIVE CONCERT • FOLK / ACOUSTIC</span>
+                    <span class="badge badge-dark" id="student-badge-acoustic-park" style="font-size: 10px; background: #0f172a; color: #4ade80; border: 1px solid #22c55e;">🛡️ สิทธิ์ นศ.: แอดมินเปิดแล้ว (@ubu)</span>
+                  </div>
+                  <h2 class="approval-event-name" id="title-acoustic-park">Acoustic in the Park 2026</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    ศิลปิน: <strong id="artists-acoustic-park" style="color: var(--text-main);">Anatomy Rabbit, Moving and Cut, Safeplanet</strong>
+                  </div>
+                  <p class="approval-org-row">
+                    <span>ผู้จัดงาน: <strong id="org-acoustic-park">Indie Melody Production</strong></span>
+                    <span class="badge badge-lime" id="org-badge-acoustic-park" style="font-size: 11px;">✓ ผ่านการยืนยันตัวตนแล้ว</span>
+                  </p>
+                </div>
+
+                <!-- Pricing Badges -->
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">บัตรทั่วไป</span>
+                    <strong class="p-val" id="price-regular-acoustic-park">฿250</strong>
+                  </div>
+                  <div class="pricing-pill student" id="pill-student-acoustic-park">
+                    <span class="p-lbl">นศ. @ubu.ac.th</span>
+                    <strong class="p-val" id="price-student-acoustic-park">฿179</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Details Grid -->
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 วันจัดแสดง & เวลา</span>
+                  <span class="m-val" id="datetime-acoustic-park">เสาร์ที่ 14 พ.ย. 2026</span>
+                  <span id="timing-acoustic-park" style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">🚪 ประตูเปิด 15:00 น. • 🎸 แสดง 16:00 - 22:00 น.</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่ & แผนที่</span>
+                  <span class="m-val" id="venue-acoustic-park">สวนสันติภาพ (อนุสาวรีย์ชัยฯ), กรุงเทพฯ</span>
+                  <a href="https://maps.google.com/?q=สวนสันติภาพ+กรุงเทพ" id="map-link-acoustic-park" target="_blank" style="color: #000; text-decoration: underline; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                    <span>เปิด Google Maps ↗</span>
+                  </a>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🛒 จำหน่ายบัตร & โควตา</span>
+                  <span class="m-val" id="quota-acoustic-park"><strong>0 / 300 ใบ (รอเปิดขาย)</strong></span>
+                  <span id="sale-window-acoustic-park" style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">เปิดขาย: 1 ต.ค. (10:00) — 14 พ.ย. (15:00)</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">💼 ส่วนแบ่งค่าธรรมเนียม</span>
+                  <span class="m-val" id="fee-acoustic-park">Platform Fee 5% (฿12.50 / ใบ)</span>
+                </div>
+              </div>
+
+              <div class="approval-desc-box">
+                <p><strong>รายละเอียดงาน:</strong> <span id="desc-acoustic-park">คอนเสิร์ตรวมศิลปินอะคูสติกโฟล์คซองในสวน บรรยากาศอบอุ่น มีการตรวจกระเป๋าก่อนเข้างาน</span></p>
+                <p style="margin-top: 4px; font-size: 11px; color: #64748b;"><strong>เงื่อนไข & กฎ (Rules):</strong> <span id="rules-acoustic-park">ผู้เข้างานต้องมีอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริง ห้ามนำเครื่องดื่มแอลกอฮอล์ภายนอกเข้างาน และรองรับระบบ Re-entry</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-approval-actions">
+            <a href="event-detail.html" target="_blank" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>พรีวิวหน้าเว็บ (Preview)</span>
+            </a>
+            <div class="action-buttons-right">
+              <!-- Admin Edit Button -->
+              <button type="button" class="btn btn-outline btn-sm" onclick="openAdminEditModal('acoustic-park')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <span>แก้ไขข้อมูลงาน (Edit)</span>
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openRequestChangesModal('Acoustic in the Park 2026')">
+                <span>แจ้งขอให้ผู้จัดแก้ไข</span>
+              </button>
+              <button type="button" id="approve-btn-acoustic-park" class="btn btn-lime btn-sm" onclick="simulateEventApproval('card-acoustic-park', 'Acoustic in the Park 2026')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>อนุมัติ & เปิดขายบัตร (Approve & Publish)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Published Event (Indie Live Wave 2026) -->
+        <div class="event-approval-card published-card" id="card-indie-wave" 
+             data-event-key="indie-wave" 
+             data-status="PUBLISHED" 
+             data-genre="Indie / Rock" 
+             data-org="Soundbox Live Studio" 
+             data-quota-status="AVAILABLE">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap">
+              <img src="poster-summer.svg" alt="Indie Live Wave" class="approval-poster-img" id="poster-img-indie-wave">
+              <span class="badge badge-lime poster-status-badge" id="badge-indie-wave">PUBLISHED (กำลังขาย)</span>
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; gap: 4px; justify-content: center;">
+                <span style="background: rgba(0,0,0,0.85); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">🖼️ แนวตั้ง 4:5</span>
+                <span style="background: rgba(0,0,0,0.85); color: var(--lime-accent); font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">แบนเนอร์ 16:9</span>
+              </div>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <span class="event-cat-tag" id="genre-tag-indie-wave">LIVE CONCERT • INDIE / ROCK</span>
+                    <span class="badge badge-dark" id="student-badge-indie-wave" style="font-size: 10px; background: #0f172a; color: #4ade80; border: 1px solid #22c55e;">🛡️ สิทธิ์ นศ.: แอดมินเปิดแล้ว (@ubu)</span>
+                  </div>
+                  <h2 class="approval-event-name" id="title-indie-wave">Indie Live Wave 2026</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    ศิลปิน: <strong id="artists-indie-wave" style="color: var(--text-main);">The Yers, Tilly Birds, Dept, Television off</strong>
+                  </div>
+                  <p class="approval-org-row">
+                    <span>ผู้จัดงาน: <strong id="org-indie-wave">Soundbox Live Studio</strong></span>
+                    <span class="badge badge-lime" id="org-badge-indie-wave" style="font-size: 11px;">✓ ผ่านการยืนยันตัวตนแล้ว</span>
+                  </p>
+                </div>
+
+                <!-- Pricing Badges -->
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">บัตรทั่วไป</span>
+                    <strong class="p-val" id="price-regular-indie-wave">฿150</strong>
+                  </div>
+                  <div class="pricing-pill student" id="pill-student-indie-wave">
+                    <span class="p-lbl">นศ. @ubu.ac.th</span>
+                    <strong class="p-val" id="price-student-indie-wave">฿79</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 วันจัดแสดง & เวลา</span>
+                  <span class="m-val" id="datetime-indie-wave">เสาร์ที่ 24 ต.ค. 2026</span>
+                  <span id="timing-indie-wave" style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">🚪 ประตูเปิด 17:00 น. • 🎸 แสดง 18:00 - 23:30 น.</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่ & แผนที่</span>
+                  <span class="m-val" id="venue-indie-wave">The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ</span>
+                  <a href="https://maps.google.com/?q=The+Riverfront+Warehouse+Bangkok" id="map-link-indie-wave" target="_blank" style="color: #000; text-decoration: underline; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                    <span>เปิด Google Maps ↗</span>
+                  </a>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 ยอดจำหน่ายปัจจุบัน</span>
+                  <span class="m-val" id="quota-indie-wave"><strong>687 / 1,000 ใบ (68.7% Sold)</strong></span>
+                  <div class="card-quota-bar" style="height: 5px; margin-top: 4px;">
+                    <div class="quota-progress" style="width: 68.7%;"></div>
+                  </div>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">💼 ยอดขายรวม & Fee</span>
+                  <span class="m-val" id="fee-indie-wave">฿68,700.00 (Fee 5% ฿3,435)</span>
+                </div>
+              </div>
+
+              <div class="approval-desc-box">
+                <p><strong>รายละเอียดงาน:</strong> <span id="desc-indie-wave">เทศกาลดนตรีอินดี้สดริมแม่น้ำเจ้าพระยา รวมคลื่นลูกใหม่แห่งวงการอินดี้ไทย ประตูเปิด 17:00 น.</span></p>
+                <p style="margin-top: 4px; font-size: 11px; color: #64748b;"><strong>เงื่อนไข & กฎ (Rules):</strong> <span id="rules-indie-wave">อายุ 20+ ตรวจบัตรประชาชนตัวจริง ห้ามนำเครื่องดื่มภายนอกเข้างาน รองรับ Re-entry</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-approval-actions">
+            <a href="event-detail.html" target="_blank" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>เปิดดูหน้าซื้อบัตรบนเว็บ</span>
+            </a>
+            <div class="action-buttons-right">
+              <!-- Admin Edit Button -->
+              <button type="button" class="btn btn-outline btn-sm" onclick="openAdminEditModal('indie-wave')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <span>แก้ไขข้อมูลงาน (Edit)</span>
+              </button>
+              <button type="button" id="pause-btn-indie-wave" class="btn btn-outline btn-sm danger-text" onclick="simulateEmergencyPause('card-indie-wave', 'Indie Live Wave 2026')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="10" y1="15" x2="10" y2="9"></line><line x1="14" y1="15" x2="14" y2="9"></line></svg>
+                <span>สั่งพักการขายฉุกเฉิน (Emergency Pause)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Published & Sold Out (Retro Synthwave Night) -->
+        <div class="event-approval-card published-card" id="card-retro-synth" 
+             data-event-key="retro-synth" 
+             data-status="PUBLISHED" 
+             data-genre="EDM / Club" 
+             data-org="ElectroWave Group" 
+             data-quota-status="SOLD_OUT">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap">
+              <img src="poster-neon.svg" alt="Retro Synthwave Night" class="approval-poster-img" id="poster-img-retro-synth">
+              <span class="badge badge-lime poster-status-badge" id="badge-retro-synth">PUBLISHED (SOLD OUT)</span>
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; gap: 4px; justify-content: center;">
+                <span style="background: rgba(0,0,0,0.85); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">🖼️ แนวตั้ง 4:5</span>
+                <span style="background: rgba(0,0,0,0.85); color: var(--lime-accent); font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">แบนเนอร์ 16:9</span>
+              </div>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <span class="event-cat-tag" id="genre-tag-retro-synth">LIVE CONCERT • EDM / CLUB</span>
+                    <span class="badge badge-dark" id="student-badge-retro-synth" style="font-size: 10px; color: #94a3b8; border: 1px solid #475569;">🔒 สิทธิ์ นศ.: ปิดใช้งาน</span>
+                  </div>
+                  <h2 class="approval-event-name" id="title-retro-synth">Retro Synthwave Night Vol. 1</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    ศิลปิน: <strong id="artists-retro-synth" style="color: var(--text-main);">DJ LaserWave, Midnight Runner</strong>
+                  </div>
+                  <p class="approval-org-row">
+                    <span>ผู้จัดงาน: <strong id="org-retro-synth">ElectroWave Group</strong></span>
+                    <span class="badge badge-lime" id="org-badge-retro-synth" style="font-size: 11px;">✓ ผ่านการยืนยันตัวตนแล้ว</span>
+                  </p>
+                </div>
+
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">บัตรทั่วไป</span>
+                    <strong class="p-val" id="price-regular-retro-synth">฿450</strong>
+                  </div>
+                  <div class="pricing-pill student" id="pill-student-retro-synth" style="display: none;">
+                    <span class="p-lbl">นศ. @ubu.ac.th</span>
+                    <strong class="p-val" id="price-student-retro-synth">-</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 วันจัดแสดง & เวลา</span>
+                  <span class="m-val" id="datetime-retro-synth">เสาร์ที่ 31 ต.ค. 2026</span>
+                  <span id="timing-retro-synth" style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">🚪 ประตูเปิด 20:00 น. • 🎸 แสดง 21:00 - 02:00 น.</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่ & แผนที่</span>
+                  <span class="m-val" id="venue-retro-synth">The Underground Club, ทองหล่อ กรุงเทพฯ</span>
+                  <a href="https://maps.google.com/?q=Thonglor+Bangkok" id="map-link-retro-synth" target="_blank" style="color: #000; text-decoration: underline; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                    <span>เปิด Google Maps ↗</span>
+                  </a>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 ยอดจำหน่ายปัจจุบัน</span>
+                  <span class="m-val" id="quota-retro-synth"><strong style="color: #15803d;">400 / 400 ใบ (100% เต็มความจุ)</strong></span>
+                  <div class="card-quota-bar" style="height: 5px; margin-top: 4px;">
+                    <div class="quota-progress" style="width: 100%;"></div>
+                  </div>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">💼 ยอดขายรวม & Fee</span>
+                  <span class="m-val" id="fee-retro-synth">฿180,000.00 (Fee 5% ฿9,000)</span>
+                </div>
+              </div>
+
+              <div class="approval-desc-box">
+                <p><strong>รายละเอียดงาน:</strong> <span id="desc-retro-synth">ค่ำคืนแห่งเสียงดนตรีเรโทร ซินธ์เวฟ แสงไฟนีออนยุค 80s</span></p>
+                <p style="margin-top: 4px; font-size: 11px; color: #64748b;"><strong>เงื่อนไข & กฎ (Rules):</strong> <span id="rules-retro-synth">จำกัดอายุ 20 ปีบริบูรณ์เท่านั้น ตรวจบัตรประชาชนเคร่งครัด</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-approval-actions">
+            <a href="event-detail.html" target="_blank" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>เปิดดูหน้าซื้อบัตรบนเว็บ</span>
+            </a>
+            <div class="action-buttons-right">
+              <!-- Admin Edit Button -->
+              <button type="button" class="btn btn-outline btn-sm" onclick="openAdminEditModal('retro-synth')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <span>แก้ไขข้อมูลงาน (Edit)</span>
+              </button>
+              <button type="button" class="btn btn-outline btn-sm danger-text" onclick="simulateEmergencyPause('card-retro-synth', 'Retro Synthwave Night Vol. 1')">
+                <span>สั่งพักการขายฉุกเฉิน</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Suspended Event (Midnight Bass Express) -->
+        <div class="event-approval-card suspended-card" id="card-midnight-bass" 
+             data-event-key="midnight-bass" 
+             data-status="SUSPENDED" 
+             data-genre="EDM / Club" 
+             data-org="The Sky Bar & Lounge" 
+             data-quota-status="AVAILABLE">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap">
+              <img src="poster-jazz.svg" alt="Midnight Bass Express" class="approval-poster-img" id="poster-img-midnight-bass">
+              <span class="badge badge-dark poster-status-badge" id="badge-midnight-bass" style="color: #ef4444; border: 1px solid #ef4444;">SUSPENDED (พักการขาย)</span>
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; gap: 4px; justify-content: center;">
+                <span style="background: rgba(0,0,0,0.85); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">🖼️ แนวตั้ง 4:5</span>
+                <span style="background: rgba(0,0,0,0.85); color: var(--lime-accent); font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">แบนเนอร์ 16:9</span>
+              </div>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <span class="event-cat-tag" id="genre-tag-midnight-bass">LIVE CONCERT • CLUB / BASS</span>
+                    <span class="badge badge-dark" id="student-badge-midnight-bass" style="font-size: 10px; color: #94a3b8; border: 1px solid #475569;">🔒 สิทธิ์ นศ.: ปิดใช้งาน</span>
+                  </div>
+                  <h2 class="approval-event-name" id="title-midnight-bass">Midnight Bass Express</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    ศิลปิน: <strong id="artists-midnight-bass" style="color: var(--text-main);">SubZero DJ Crew</strong>
+                  </div>
+                  <p class="approval-org-row">
+                    <span>ผู้จัดงาน: <strong id="org-midnight-bass">The Sky Bar & Lounge</strong></span>
+                    <span class="badge badge-lime" id="org-badge-midnight-bass" style="font-size: 11px;">✓ ผ่านการยืนยันตัวตนแล้ว</span>
+                  </p>
+                </div>
+
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">บัตรทั่วไป</span>
+                    <strong class="p-val" id="price-regular-midnight-bass">฿350</strong>
+                  </div>
+                  <div class="pricing-pill student" id="pill-student-midnight-bass" style="display: none;">
+                    <span class="p-lbl">นศ. @ubu.ac.th</span>
+                    <strong class="p-val" id="price-student-midnight-bass">-</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 วันจัดแสดง & เวลา</span>
+                  <span class="m-val" id="datetime-midnight-bass">ศุกร์ที่ 20 พ.ย. 2026</span>
+                  <span id="timing-midnight-bass" style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">🚪 ประตูเปิด 21:00 น. • 🎸 แสดง 22:00 - 03:00 น.</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่ & แผนที่</span>
+                  <span class="m-val" id="venue-midnight-bass">Club 99, เอกมัย กรุงเทพฯ</span>
+                  <a href="https://maps.google.com/?q=Ekkamai+Bangkok" id="map-link-midnight-bass" target="_blank" style="color: #000; text-decoration: underline; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                    <span>เปิด Google Maps ↗</span>
+                  </a>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 ยอดจำหน่ายปัจจุบัน</span>
+                  <span class="m-val" id="quota-midnight-bass">120 / 500 ใบ (พักการขายชั่วคราว)</span>
+                  <div class="card-quota-bar" style="height: 5px; margin-top: 4px;">
+                    <div class="quota-progress" style="width: 24%;"></div>
+                  </div>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">💼 สถานะระงับ</span>
+                  <span class="m-val" style="color: #ef4444;">ผู้จัดขอเปลี่ยนสถานที่จัดงาน</span>
+                </div>
+              </div>
+
+              <div class="approval-desc-box">
+                <p><strong>รายละเอียดงาน:</strong> <span id="desc-midnight-bass">ปาร์ตี้ดนตรีเบสและอิเล็กทรอนิกส์ข้ามคืน (ระงับชั่วคราวระหว่างรอตรวจสอบใบอนุญาตสถานที่ใหม่)</span></p>
+                <p style="margin-top: 4px; font-size: 11px; color: #64748b;"><strong>เงื่อนไข & กฎ (Rules):</strong> <span id="rules-midnight-bass">จำกัดอายุ 20 ปีขึ้นไป</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-approval-actions">
+            <a href="event-detail.html" target="_blank" class="btn btn-outline btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>พรีวิวหน้าเว็บ</span>
+            </a>
+            <div class="action-buttons-right">
+              <!-- Admin Edit Button -->
+              <button type="button" class="btn btn-outline btn-sm" onclick="openAdminEditModal('midnight-bass')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <span>แก้ไขข้อมูลงาน (Edit)</span>
+              </button>
+              <button type="button" class="btn btn-lime btn-sm" onclick="simulateResumeSales('card-midnight-bass', 'Midnight Bass Express')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>เปิดขายต่อทันที (Resume Sales)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Admin Full Edit Event Modal (แอดมินแก้ไขได้ทุกอย่าง) -->
+  <div id="admin-edit-event-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog edit-event-modal-dialog">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          <span>แก้ไขข้อมูลคอนเสิร์ตโดยผู้ดูแลระบบ (Admin Edit Event)</span>
+        </h3>
+        <button type="button" class="modal-close-btn" onclick="closeAdminEditModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+          แอดมินมีสิทธิ์แก้ไขข้อมูลคอนเสิร์ตทุกส่วน ทั้งชื่อ ศิลปิน วันเวลา สถานที่ ราคา และโควตา เพื่อความถูกต้องสมบูรณ์
+        </p>
+
+        <form id="admin-edit-event-form" onsubmit="event.preventDefault(); saveAdminEditEvent();">
+          <input type="hidden" id="edit-event-key" value="">
+
+          <!-- Row 1: Name & Artists -->
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label">ชื่องานคอนเสิร์ต *</label>
+              <input type="text" id="modal-edit-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">รายชื่อศิลปิน / Lineup *</label>
+              <input type="text" id="modal-edit-artists" class="form-control" placeholder="เช่น Anatomy Rabbit, Safeplanet" required>
+            </div>
+          </div>
+
+          <!-- Row 2: Genre & Organizer -->
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label">แนวเพลง / หมวดหมู่งาน *</label>
+              <select id="modal-edit-genre" class="form-control">
+                <option value="Folk / Acoustic">Folk / Acoustic</option>
+                <option value="Indie / Rock">Indie / Rock</option>
+                <option value="EDM / Club">EDM / Club</option>
+                <option value="Jazz / Soul">Jazz / Soul</option>
+                <option value="Pop / Mainstream">Pop / Mainstream</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">ผู้จัดงาน (Organizer Name) *</label>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="modal-edit-org" class="form-control" required style="flex: 1;">
+                <label style="font-size: 11px; display: flex; align-items: center; gap: 4px; white-space: nowrap; cursor: pointer;">
+                  <input type="checkbox" id="modal-edit-verified" checked>
+                  <span>ยืนยันแล้ว ✓</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Venue & Google Maps Link -->
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label">สถานที่จัดแสดง (Venue & Location) *</label>
+              <input type="text" id="modal-edit-venue" class="form-control" placeholder="เช่น สวนสันติภาพ (อนุสาวรีย์ชัยฯ), กรุงเทพฯ" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">ลิงก์ Google Maps *</label>
+              <div style="display: flex; gap: 6px;">
+                <input type="url" id="modal-edit-map" class="form-control" style="flex: 1;" placeholder="https://maps.google.com/..." required>
+                <button type="button" class="btn btn-outline btn-sm" onclick="testAdminMapsLink()" style="white-space: nowrap; padding: 0 10px;">
+                  <span>📍 Map ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 4: Timings (Show & Doors) -->
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">วันจัดแสดง (Date) *</label>
+              <input type="date" id="modal-edit-date" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">เวลาเปิดประตู (Doors) *</label>
+              <input type="text" id="modal-edit-doors" class="form-control" placeholder="เช่น 15:00 น." required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">เวลาเริ่มแสดง-จบ *</label>
+              <input type="text" id="modal-edit-showtime" class="form-control" placeholder="เช่น 16:00 - 22:00 น." required>
+            </div>
+          </div>
+
+          <!-- Row 5: Sale Window -->
+          <div class="form-grid-2col" style="background: #fafbfc; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" style="font-size: 12px;">⏰ วัน-เวลาเริ่มเปิดขายบัตร *</label>
+              <input type="datetime-local" id="modal-edit-sale-start" class="form-control" style="font-size: 12px;" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" style="font-size: 12px;">⏰ วัน-เวลาปิดการจำหน่ายบัตร *</label>
+              <input type="datetime-local" id="modal-edit-sale-end" class="form-control" style="font-size: 12px;" required>
+            </div>
+          </div>
+
+          <!-- Row 6: Pricing & Quota -->
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label">ราคาบัตรทั่วไป (บาท) *</label>
+              <input type="number" id="modal-edit-price" class="form-control" min="0" step="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">โควตาบัตรจำหน่ายทั้งหมด (ใบ) *</label>
+              <input type="number" id="modal-edit-quota" class="form-control" min="1" required>
+            </div>
+          </div>
+
+          <!-- Row 7: Student Privilege Control Box (ADMIN EXCLUSIVE) -->
+          <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #166534; cursor: pointer;">
+                <input type="checkbox" id="modal-edit-student-active" style="width: 17px; height: 17px; accent-color: #16a34a;" onchange="handleStudentActiveChange()">
+                <span>เปิดให้สิทธิ์ส่วนลดพิเศษสำหรับนักศึกษา (Student Privilege) สอดคล้องหน้า Checkout OTP</span>
+              </label>
+              <span class="badge badge-success" style="font-size: 10px; padding: 2px 8px; background: #16a34a; color: #fff;">
+                🛡️ แอดมินเป็นผู้ควบคุมสิทธิ์ (Admin Controlled)
+              </span>
+            </div>
+            <p style="font-size: 11px; color: #166534; margin: 0 0 10px 0;">
+              * สิทธิ์นี้แอดมินเป็นผู้เปิด/ปิดแต่เพียงผู้เดียว เมื่อเปิดใช้งาน ผู้ซื้อที่ใช้อีเมลสถาบัน (@ubu.ac.th) จะต้องยืนยัน OTP ก่อนได้รับสิทธิ์ราคาพิเศษ
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 12px; font-weight: 700; color: #166534; margin-bottom: 4px;">ราคานักศึกษา (บาท)</label>
+                <input type="number" id="modal-edit-student-price" class="form-control" min="0" step="1" placeholder="เช่น 179">
+              </div>
+              <div>
+                <label style="display: block; font-size: 12px; font-weight: 700; color: #166534; margin-bottom: 4px;">โดเมนอีเมลสถาบันที่ตรวจสอบ OTP</label>
+                <input type="text" value="@ubu.ac.th" readonly class="form-control" style="background: #f1f5f9; color: #64748b; font-family: monospace;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 8: Dual Posters -->
+          <div class="form-grid-2col">
+            <div class="form-group">
+              <label class="form-label">1. โปสเตอร์แนวตั้ง (Portrait 4:5)</label>
+              <select id="modal-edit-poster-vert" class="form-control">
+                <option value="poster-indie.svg">โปสเตอร์ 1: Indie Acoustic (poster-indie.svg)</option>
+                <option value="poster-neon.svg">โปสเตอร์ 3: Retro Synthwave (poster-neon.svg)</option>
+                <option value="poster-jazz.svg">โปสเตอร์ 4: Rooftop Club (poster-jazz.svg)</option>
+                <option value="poster-summer.svg">โปสเตอร์ 2: Indie Live Wave (poster-summer.svg)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">2. แบนเนอร์แนวนอน (Landscape 16:9)</label>
+              <select id="modal-edit-poster-horiz" class="form-control">
+                <option value="poster-summer.svg">แบนเนอร์ 1: Indie Live Wave 16:9 (poster-summer.svg)</option>
+                <option value="poster-indie.svg">แบนเนอร์ 2: Acoustic Park 16:9 (poster-indie.svg)</option>
+                <option value="poster-neon.svg">แบนเนอร์ 3: Retro Synth 16:9 (poster-neon.svg)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 9: Details & Rules -->
+          <div class="form-group">
+            <label class="form-label">รายละเอียดไฮไลท์คอนเสิร์ต *</label>
+            <textarea id="modal-edit-desc" class="form-control" rows="2" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">เงื่อนไขและกฎการเข้างาน (Entry Rules) *</label>
+            <textarea id="modal-edit-rules" class="form-control" rows="2" required></textarea>
+          </div>
+
+          <!-- Row 10: Status -->
+          <div class="form-group">
+            <label class="form-label">สถานะคอนเสิร์ต (Status) *</label>
+            <select id="modal-edit-status" class="form-control" style="font-weight: 700;">
+              <option value="PENDING_APPROVAL">รอตรวจสอบ (PENDING REVIEW)</option>
+              <option value="PUBLISHED">กำลังเปิดขาย (PUBLISHED)</option>
+              <option value="SUSPENDED">ระงับการขายชั่วคราว (SUSPENDED)</option>
+              <option value="DRAFT">แบบร่าง (DRAFT)</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeAdminEditModal()">ยกเลิก</button>
+        <button type="button" class="btn btn-lime btn-sm" onclick="saveAdminEditEvent()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>บันทึกการแก้ไขข้อมูล (Save Changes)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Request Changes Modal -->
+  <div id="request-changes-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title">แจ้งขอให้ผู้จัดงานแก้ไขข้อมูล</h3>
+        <button type="button" class="modal-close-btn" onclick="closeRequestChangesModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+          ข้อความนี้จะถูกส่งทางอีเมลไปยังผู้จัดงาน <strong id="req-modal-event-title">Acoustic in the Park</strong> เพื่อให้ผู้จัดแก้ไขและส่งกลับมาตรวจสอบใหม่
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">ระบุรายละเอียดที่ต้องปรับแก้ *</label>
+          <textarea id="req-changes-text" class="form-control" rows="4" placeholder="เช่น รูปภาพโปสเตอร์มีความละเอียดต่ำเกินไป, กรุณาเพิ่มรายละเอียดกฎการนำเครื่องดื่มเข้างาน..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeRequestChangesModal()">ยกเลิก</button>
+        <button type="button" class="btn btn-dark btn-sm" onclick="sendChangesRequest()">
+          <span>ส่งคำขอแก้ไข</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="admin-site-footer">
+    <div class="admin-footer-container">
+      <span>E-TIKKET Admin Portal &copy; 2026 • ระบบจัดการธุรกรรมและคอนเสิร์ต</span>
+      <span>Event Moderation Workflow: Draft &rarr; Pending Approval &rarr; Published</span>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+  <script>
+    // 1. In-memory Mock Data for Events (แอดมินแก้ไขได้ทุกอย่าง)
+    const EVENTS_STORE = {
+      'acoustic-park': {
+        key: 'acoustic-park',
+        name: 'Acoustic in the Park 2026',
+        artists: 'Anatomy Rabbit, Moving and Cut, Safeplanet',
+        genre: 'Folk / Acoustic',
+        org: 'Indie Melody Production',
+        verified: true,
+        date: '2026-11-14',
+        datetime: 'เสาร์ที่ 14 พ.ย. 2026',
+        doorsOpen: '15:00 น.',
+        showTime: '16:00 - 22:00 น.',
+        saleStart: '2026-10-01T10:00',
+        saleEnd: '2026-11-14T15:00',
+        venue: 'สวนสันติภาพ (อนุสาวรีย์ชัยฯ), กรุงเทพฯ',
+        mapUrl: 'https://maps.google.com/?q=Santiphap+Park+Bangkok',
+        priceRegular: 250,
+        studentDiscountActive: true,
+        priceStudent: 179,
+        quota: 300,
+        soldCount: 0,
+        status: 'PENDING_APPROVAL',
+        posterVert: 'poster-indie.svg',
+        posterHoriz: 'poster-summer.svg',
+        desc: 'คอนเสิร์ตรวมศิลปินอะคูสติกโฟล์คซองในสวน บรรยากาศอบอุ่น รองรับ Re-entry เข้าออกงานได้ตลอดเวลา มีการตรวจกระเป๋าก่อนเข้างาน',
+        rules: 'อายุ 18+ มีการตรวจค้นกระเป๋าก่อนเข้างาน ห้ามนำอาวุธและขวดแก้วทุกชนิด เข้า-ออกงานได้ด้วยระบบ Re-entry'
+      },
+      'indie-wave': {
+        key: 'indie-wave',
+        name: 'Indie Live Wave 2026',
+        artists: 'The Yers, Tilly Birds, Dept, Television off',
+        genre: 'Indie / Rock',
+        org: 'Soundbox Live Studio',
+        verified: true,
+        date: '2026-10-24',
+        datetime: 'เสาร์ที่ 24 ต.ค. 2026',
+        doorsOpen: '17:00 น.',
+        showTime: '18:00 - 23:30 น.',
+        saleStart: '2026-10-01T12:00',
+        saleEnd: '2026-10-24T18:00',
+        venue: 'The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ',
+        mapUrl: 'https://maps.google.com/?q=The+Riverfront+Warehouse+Bangkok',
+        priceRegular: 150,
+        studentDiscountActive: true,
+        priceStudent: 79,
+        quota: 1000,
+        soldCount: 687,
+        status: 'PUBLISHED',
+        posterVert: 'poster-summer.svg',
+        posterHoriz: 'poster-summer.svg',
+        desc: 'เทศกาลดนตรีอินดี้สดริมแม่น้ำเจ้าพระยา รวมคลื่นลูกใหม่แห่งวงการอินดี้ไทย ประตูเปิด 17:00 น. รองรับระบบ Re-entry',
+        rules: 'อายุ 20+ ตรวจบัตรประชาชนตัวจริง ห้ามนำเครื่องดื่มภายนอกเข้างาน รองรับ Re-entry'
+      },
+      'retro-synth': {
+        key: 'retro-synth',
+        name: 'Retro Synthwave Night Vol. 1',
+        artists: 'DJ LaserWave, Midnight Runner',
+        genre: 'EDM / Club',
+        org: 'ElectroWave Group',
+        verified: true,
+        date: '2026-10-31',
+        datetime: 'เสาร์ที่ 31 ต.ค. 2026',
+        doorsOpen: '20:00 น.',
+        showTime: '21:00 - 02:00 น.',
+        saleStart: '2026-10-10T09:00',
+        saleEnd: '2026-10-31T20:00',
+        venue: 'The Underground Club, ทองหล่อ กรุงเทพฯ',
+        mapUrl: 'https://maps.google.com/?q=Thonglor+Bangkok',
+        priceRegular: 450,
+        studentDiscountActive: false,
+        priceStudent: null,
+        quota: 400,
+        soldCount: 400,
+        status: 'PUBLISHED',
+        posterVert: 'poster-neon.svg',
+        posterHoriz: 'poster-neon.svg',
+        desc: 'ค่ำคืนแห่งเสียงดนตรีเรโทร ซินธ์เวฟ แสงไฟนีออนยุค 80s จำกัดอายุ 20 ปีขึ้นไป',
+        rules: 'อายุ 20+ เท่านั้น ตรวจบัตรประชาชน/พาสปอร์ตตัวจริง ห้ามนำยาเสพติดและอาวุธเข้าพื้นที่'
+      },
+      'midnight-bass': {
+        key: 'midnight-bass',
+        name: 'Midnight Bass Express',
+        artists: 'SubZero DJ Crew',
+        genre: 'EDM / Club',
+        org: 'The Sky Bar & Lounge',
+        verified: true,
+        date: '2026-11-20',
+        datetime: 'ศุกร์ที่ 20 พ.ย. 2026',
+        doorsOpen: '21:30 น.',
+        showTime: '22:00 - 03:00 น.',
+        saleStart: '2026-10-15T10:00',
+        saleEnd: '2026-11-20T21:00',
+        venue: 'Club 99, เอกมัย กรุงเทพฯ',
+        mapUrl: 'https://maps.google.com/?q=Ekkamai+Bangkok',
+        priceRegular: 350,
+        studentDiscountActive: false,
+        priceStudent: null,
+        quota: 500,
+        soldCount: 120,
+        status: 'SUSPENDED',
+        posterVert: 'poster-jazz.svg',
+        posterHoriz: 'poster-jazz.svg',
+        desc: 'ปาร์ตี้ดนตรีเบสและอิเล็กทรอนิกส์ข้ามคืน (ระงับชั่วคราวระหว่างรอตรวจสอบใบอนุญาตสถานที่ใหม่)',
+        rules: 'จำกัดอายุ 20+ ตรวจบัตรประชาชนก่อนเข้างาน'
+      }
+    };
+
+    let currentEventStatusTab = 'ALL';
+
+    function handleStudentActiveChange() {
+      const active = document.getElementById('modal-edit-student-active').checked;
+      const priceInput = document.getElementById('modal-edit-student-price');
+      if (priceInput) {
+        priceInput.disabled = !active;
+        priceInput.style.opacity = active ? '1' : '0.5';
+      }
+    }
+
+    function testAdminMapsLink() {
+      const url = document.getElementById('modal-edit-map').value.trim();
+      if (!url) {
+        alert('กรุณากรอกลิงก์ Google Maps ก่อนทดสอบ');
+        return;
+      }
+      window.open(url, '_blank');
+    }
+
+    // 2. Open Admin Edit Modal
+    function openAdminEditModal(eventKey) {
+      const ev = EVENTS_STORE[eventKey];
+      if (!ev) return;
+
+      document.getElementById('edit-event-key').value = ev.key;
+      document.getElementById('modal-edit-name').value = ev.name;
+      document.getElementById('modal-edit-artists').value = ev.artists;
+      document.getElementById('modal-edit-genre').value = ev.genre;
+      document.getElementById('modal-edit-org').value = ev.org;
+      document.getElementById('modal-edit-verified').checked = ev.verified;
+      document.getElementById('modal-edit-venue').value = ev.venue;
+      document.getElementById('modal-edit-map').value = ev.mapUrl || '';
+      document.getElementById('modal-edit-date').value = ev.date || '';
+      document.getElementById('modal-edit-doors').value = ev.doorsOpen || '';
+      document.getElementById('modal-edit-showtime').value = ev.showTime || '';
+      document.getElementById('modal-edit-sale-start').value = ev.saleStart || '';
+      document.getElementById('modal-edit-sale-end').value = ev.saleEnd || '';
+      document.getElementById('modal-edit-price').value = ev.priceRegular;
+      document.getElementById('modal-edit-student-active').checked = !!ev.studentDiscountActive;
+      document.getElementById('modal-edit-student-price').value = ev.priceStudent || '';
+      document.getElementById('modal-edit-quota').value = ev.quota;
+      document.getElementById('modal-edit-status').value = ev.status;
+      document.getElementById('modal-edit-poster-vert').value = ev.posterVert || 'poster-indie.svg';
+      document.getElementById('modal-edit-poster-horiz').value = ev.posterHoriz || 'poster-summer.svg';
+      document.getElementById('modal-edit-desc').value = ev.desc;
+      document.getElementById('modal-edit-rules').value = ev.rules || '';
+
+      handleStudentActiveChange();
+      document.getElementById('admin-edit-event-modal').style.display = 'flex';
+    }
+
+    function closeAdminEditModal() {
+      document.getElementById('admin-edit-event-modal').style.display = 'none';
+    }
+
+    function openAdminCreateModal() {
+      alert('เปิดฟอร์มสร้างคอนเสิร์ตใหม่โดยผู้ดูแลระบบ (Admin Direct Create)');
+    }
+
+    // 3. Save Admin Edit Event
+    function saveAdminEditEvent() {
+      const key = document.getElementById('edit-event-key').value;
+      const ev = EVENTS_STORE[key];
+      if (!ev) return;
+
+      // Update in-memory data
+      ev.name = document.getElementById('modal-edit-name').value.trim();
+      ev.artists = document.getElementById('modal-edit-artists').value.trim();
+      ev.genre = document.getElementById('modal-edit-genre').value;
+      ev.org = document.getElementById('modal-edit-org').value.trim();
+      ev.verified = document.getElementById('modal-edit-verified').checked;
+      ev.venue = document.getElementById('modal-edit-venue').value.trim();
+      ev.mapUrl = document.getElementById('modal-edit-map').value.trim();
+      ev.date = document.getElementById('modal-edit-date').value;
+      ev.doorsOpen = document.getElementById('modal-edit-doors').value.trim();
+      ev.showTime = document.getElementById('modal-edit-showtime').value.trim();
+      ev.saleStart = document.getElementById('modal-edit-sale-start').value;
+      ev.saleEnd = document.getElementById('modal-edit-sale-end').value;
+      ev.priceRegular = parseFloat(document.getElementById('modal-edit-price').value) || 0;
+      
+      ev.studentDiscountActive = document.getElementById('modal-edit-student-active').checked;
+      const stdVal = document.getElementById('modal-edit-student-price').value.trim();
+      ev.priceStudent = (ev.studentDiscountActive && stdVal) ? parseFloat(stdVal) : null;
+
+      ev.quota = parseInt(document.getElementById('modal-edit-quota').value) || ev.quota;
+      ev.status = document.getElementById('modal-edit-status').value;
+      ev.posterVert = document.getElementById('modal-edit-poster-vert').value;
+      ev.posterHoriz = document.getElementById('modal-edit-poster-horiz').value;
+      ev.desc = document.getElementById('modal-edit-desc').value.trim();
+      ev.rules = document.getElementById('modal-edit-rules').value.trim();
+
+      // Update Card in DOM
+      const card = document.getElementById(`card-${key}`);
+      if (card) {
+        // Update texts
+        const titleEl = document.getElementById(`title-${key}`);
+        if (titleEl) titleEl.textContent = ev.name;
+
+        const artistsEl = document.getElementById(`artists-${key}`);
+        if (artistsEl) artistsEl.textContent = ev.artists;
+
+        const genreTag = document.getElementById(`genre-tag-${key}`);
+        if (genreTag) genreTag.textContent = `LIVE CONCERT • ${ev.genre.toUpperCase()}`;
+
+        const studentBadge = document.getElementById(`student-badge-${key}`);
+        if (studentBadge) {
+          if (ev.studentDiscountActive) {
+            studentBadge.style.display = 'inline-flex';
+            studentBadge.textContent = '🛡️ สิทธิ์ นศ.: แอดมินเปิดแล้ว (@ubu)';
+          } else {
+            studentBadge.style.display = 'none';
+          }
+        }
+
+        const orgEl = document.getElementById(`org-${key}`);
+        if (orgEl) orgEl.textContent = ev.org;
+
+        const orgBadge = document.getElementById(`org-badge-${key}`);
+        if (orgBadge) orgBadge.style.display = ev.verified ? '' : 'none';
+
+        const datetimeEl = document.getElementById(`datetime-${key}`);
+        if (datetimeEl) datetimeEl.textContent = ev.date;
+
+        const timingEl = document.getElementById(`timing-${key}`);
+        if (timingEl) timingEl.textContent = `🚪 ประตูเปิด ${ev.doorsOpen} • 🎸 แสดง ${ev.showTime}`;
+
+        const venueEl = document.getElementById(`venue-${key}`);
+        if (venueEl) venueEl.textContent = ev.venue;
+
+        const mapLinkEl = document.getElementById(`map-link-${key}`);
+        if (mapLinkEl) {
+          mapLinkEl.href = ev.mapUrl || '#';
+          mapLinkEl.style.display = ev.mapUrl ? 'inline-flex' : 'none';
+        }
+
+        const regularPriceEl = document.getElementById(`price-regular-${key}`);
+        if (regularPriceEl) regularPriceEl.textContent = `฿${ev.priceRegular}`;
+
+        const studentPricePill = document.getElementById(`pill-student-${key}`);
+        const studentPriceEl = document.getElementById(`price-student-${key}`);
+        if (studentPricePill) {
+          if (ev.studentDiscountActive && ev.priceStudent) {
+            studentPricePill.style.display = 'flex';
+            if (studentPriceEl) studentPriceEl.textContent = `฿${ev.priceStudent}`;
+          } else {
+            studentPricePill.style.display = 'none';
+          }
+        }
+
+        const descEl = document.getElementById(`desc-${key}`);
+        if (descEl) descEl.textContent = ev.desc;
+
+        const rulesEl = document.getElementById(`rules-${key}`);
+        if (rulesEl) rulesEl.textContent = ev.rules;
+
+        const posterImg = document.getElementById(`poster-img-${key}`);
+        if (posterImg) posterImg.src = ev.posterVert;
+
+        // Update Status & Card Border
+        card.classList.remove('pending-card', 'published-card', 'suspended-card', 'draft-card');
+        card.dataset.status = ev.status;
+        card.dataset.genre = ev.genre;
+        card.dataset.org = ev.org;
+
+        const badge = document.getElementById(`badge-${key}`);
+        if (badge) {
+          if (ev.status === 'PUBLISHED') {
+            card.classList.add('published-card');
+            badge.className = 'badge badge-lime poster-status-badge';
+            badge.textContent = 'PUBLISHED (กำลังขาย)';
+          } else if (ev.status === 'PENDING_APPROVAL') {
+            card.classList.add('pending-card');
+            badge.className = 'badge badge-warning poster-status-badge';
+            badge.textContent = 'PENDING REVIEW (รออนุมัติ)';
+          } else if (ev.status === 'SUSPENDED') {
+            card.classList.add('suspended-card');
+            badge.className = 'badge badge-dark poster-status-badge';
+            badge.style.color = '#ef4444';
+            badge.style.border = '1px solid #ef4444';
+            badge.textContent = 'SUSPENDED (พักการขาย)';
+          } else {
+            card.classList.add('draft-card');
+            badge.className = 'badge badge-dark poster-status-badge';
+            badge.textContent = 'DRAFT (แบบร่าง)';
+          }
+        }
+      }
+
+      closeAdminEditModal();
+      applyEventFilters();
+      alert(`✓ บันทึกการแก้ไขคอนเสิร์ต "${ev.name}" เรียบร้อยแล้ว!\nข้อมูลทั้งหมด (สถานที่, แผนที่, เวลา, โปสเตอร์แนวตั้ง/แนวนอน, สิทธิ์นักศึกษา) ได้รับการอัปเดตแบบ Realtime ในระบบ`);
+    }
+
+    // 4. Search and Multi-Filter Logic
+    function setEventStatusTab(tab, btn) {
+      currentEventStatusTab = tab;
+      document.querySelectorAll('#event-status-pills .status-tab-btn').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      applyEventFilters();
+    }
+
+    function applyEventFilters() {
+      const query = (document.getElementById('event-search-input')?.value || '').toLowerCase().trim();
+      const genreVal = document.getElementById('event-genre-filter')?.value || 'ALL';
+      const orgVal = document.getElementById('event-org-filter')?.value || 'ALL';
+      const quotaVal = document.getElementById('event-quota-filter')?.value || 'ALL';
+
+      const cards = document.querySelectorAll('#events-card-container .event-approval-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const status = card.dataset.status;
+        const genre = card.dataset.genre;
+        const org = card.dataset.org;
+        const quotaStatus = card.dataset.quotaStatus;
+
+        // Match Query
+        const matchQuery = !query || text.includes(query);
+
+        // Match Status Tab
+        const matchStatus = (currentEventStatusTab === 'ALL') || (status === currentEventStatusTab);
+
+        // Match Genre
+        const matchGenre = (genreVal === 'ALL') || (genre === genreVal);
+
+        // Match Org
+        const matchOrg = (orgVal === 'ALL') || (org === orgVal);
+
+        // Match Quota
+        const matchQuota = (quotaVal === 'ALL') || (quotaStatus === quotaVal);
+
+        const isVisible = matchQuery && matchStatus && matchGenre && matchOrg && matchQuota;
+        card.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) visibleCount++;
+      });
+    }
+
+    function resetEventFilters() {
+      document.getElementById('event-search-input').value = '';
+      document.getElementById('event-genre-filter').value = 'ALL';
+      document.getElementById('event-org-filter').value = 'ALL';
+      document.getElementById('event-quota-filter').value = 'ALL';
+
+      const allBtn = document.querySelector('#event-status-pills .status-tab-btn[data-status="ALL"]');
+      if (allBtn) setEventStatusTab('ALL', allBtn);
+      else applyEventFilters();
+    }
+
+    // 5. Actions: Approve, Pause, Resume
+    function simulateEventApproval(cardId, eventName) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      const btn = card.querySelector('.btn-lime');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>กำลังเปิดระบบจำหน่ายบัตร...</span>';
+      }
+
+      setTimeout(() => {
+        card.classList.remove('pending-card');
+        card.classList.add('published-card');
+        card.dataset.status = 'PUBLISHED';
+
+        const badge = card.querySelector('.poster-status-badge');
+        if (badge) {
+          badge.className = 'badge badge-lime poster-status-badge';
+          badge.textContent = 'PUBLISHED (กำลังขาย)';
+        }
+
+        if (btn) {
+          btn.className = 'btn btn-outline btn-sm';
+          btn.innerHTML = '✓ อนุมัติเปิดขายแล้ว';
+          btn.disabled = false;
+        }
+
+        alert(`✓ อนุมัติคอนเสิร์ต "${eventName}" เรียบร้อยแล้ว!\nงานนี้เปิดขายบัตรบนหน้าเว็บทันที และแสดงในรายการคอนเสิร์ตแนะนำ`);
+      }, 700);
+    }
+
+    function simulateEmergencyPause(cardId, eventName) {
+      if (!confirm(`คำเตือน: คุณแน่ใจหรือไม่ว่าต้องการสั่งพักการขายบัตรงาน "${eventName}" ชั่วคราว?\nผู้ซื้อจะไม่สามารถกดซื้อบัตรได้จนกว่าจะเปิดขายต่อ`)) return;
+
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      card.classList.remove('published-card');
+      card.classList.add('suspended-card');
+      card.dataset.status = 'SUSPENDED';
+
+      const badge = card.querySelector('.poster-status-badge');
+      if (badge) {
+        badge.className = 'badge badge-dark poster-status-badge';
+        badge.style.color = '#ef4444';
+        badge.style.border = '1px solid #ef4444';
+        badge.textContent = 'SUSPENDED (พักการขาย)';
+      }
+
+      alert(`สั่งพักการขายคอนเสิร์ต "${eventName}" ชั่วคราวเรียบร้อยแล้ว! (สถานะเปลี่ยนเป็น SUSPENDED)`);
+    }
+
+    function simulateResumeSales(cardId, eventName) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      card.classList.remove('suspended-card');
+      card.classList.add('published-card');
+      card.dataset.status = 'PUBLISHED';
+
+      const badge = card.querySelector('.poster-status-badge');
+      if (badge) {
+        badge.className = 'badge badge-lime poster-status-badge';
+        badge.style.color = '';
+        badge.style.border = '';
+        badge.textContent = 'PUBLISHED (กำลังขาย)';
+      }
+
+      alert(`✓ เปิดขายบัตรคอนเสิร์ต "${eventName}" ต่อเรียบร้อยแล้ว! ลูกค้าสามารถซื้อบัตรได้ตามปกติ`);
+    }
+
+    // 6. Request Changes Modal
+    function openRequestChangesModal(event) {
+      document.getElementById('req-modal-event-title').textContent = event;
+      document.getElementById('request-changes-modal').style.display = 'flex';
+    }
+
+    function closeRequestChangesModal() {
+      document.getElementById('request-changes-modal').style.display = 'none';
+    }
+
+    function sendChangesRequest() {
+      const txt = document.getElementById('req-changes-text').value.trim();
+      if (!txt) {
+        alert('กรุณากรอกข้อความที่ต้องการให้ผู้จัดแก้ไข');
+        return;
+      }
+      closeRequestChangesModal();
+      alert('✓ ส่งคำขอให้ผู้จัดงานแก้ไขเรียบร้อยแล้ว!\nระบบได้ส่งการแจ้งเตือนพร้อมข้อความไปยังอีเมลของผู้จัดงาน');
+    }
+  </script>
+</body>
+</html>

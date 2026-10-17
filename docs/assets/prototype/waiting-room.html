@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องรอคิวจำหน่ายบัตร — E-TIKKET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="waiting-room" data-prototype-id="waiting-v2">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>3. Virtual Waiting Room</strong></span>
+      <span>ID: <strong>waiting-v2</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" class="active" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
+      </a>
+      <div class="header-status">
+        <span class="status-live-dot"></span>
+        <span>ระบบจัดการคิวจำหน่ายบัตรแบบเรียลไทม์</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content flex-center">
+    <div class="queue-card">
+      <div class="queue-icon-wrap">
+        <svg class="pulse-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+
+      <span class="badge badge-lime">VIRTUAL WAITING ROOM</span>
+      <h1 class="queue-title">คุณกำลังอยู่ในลำดับคิวซื้อบัตร</h1>
+      <p class="queue-sub">เนื่องจากขณะนี้มีผู้เข้าใช้งานพร้อมกันจำนวนมาก ระบบกำลังจัดสรรคิวอย่างเป็นธรรม เพื่อให้การทำรายการปลอดภัยและเสถียรที่สุด</p>
+
+      <div class="queue-stats-box">
+        <div class="queue-number-box">
+          <span class="queue-label">ลำดับคิวของคุณ</span>
+          <div class="queue-num" id="queue-position">42</div>
+          <span class="queue-total">จากผู้รอทั้งหมด 380 คน</span>
+        </div>
+        <div class="queue-time-box">
+          <span class="queue-label">เวลาที่คาดว่าจะได้เข้าทำรายการ</span>
+          <div class="queue-time" id="queue-eta">อีกประมาณ 01:30 นาที</div>
+          <span class="queue-total">ปล่อยคิวอัตโนมัติ</span>
+        </div>
+      </div>
+
+      <!-- Animated Progress Bar -->
+      <div class="queue-progress-wrapper">
+        <div class="queue-bar-outer">
+          <div class="queue-bar-inner" id="queue-progress-bar" style="width: 35%;"></div>
+        </div>
+        <div class="queue-progress-labels">
+          <span>ความคืบหน้า</span>
+          <span id="queue-percent">35%</span>
+        </div>
+      </div>
+
+      <div class="queue-notice-card">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p><strong>คำแนะนำสำคัญ:</strong> กรุณาอย่าปิดหรือรีเฟรชหน้าจอนี้ ระบบจะนำท่านเข้าสู่หน้าซื้อบัตรทันทีเมื่อถึงคิวของท่าน พร้อมสิทธิ์ล็อกบัตร 10 นาที</p>
+      </div>
+
+      <!-- Simulation Controller for Prototype Testing -->
+      <div class="prototype-test-box">
+        <span class="test-label">ปุ่มสำหรับทดสอบในต้นแบบ:</span>
+        <button id="skip-queue-btn" class="btn btn-lime btn-sm">
+          <span>ข้ามไปถึงคิวทันที (Skip to Front)</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="13 17 18 12 13 7"></polyline>
+            <polyline points="6 17 11 12 6 7"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="script.js?v=8"></script>
+</body>
+</html>

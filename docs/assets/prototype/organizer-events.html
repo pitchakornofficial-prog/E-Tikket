@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คอนเสิร์ตของฉัน — E-TIKKET ผู้จัดงาน</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=11">
+</head>
+<body data-prototype-page="organizer-events" data-prototype-id="org-events-v5">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Organizer Portal Architecture</span>
+      <span>Page: <strong>O2. My Events & Creation Wizard</strong></span>
+      <span>ID: <strong>org-events-v5</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <!-- Public Journey Links -->
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="mytickets-v3">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <!-- Admin Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" class="active" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Header Matching Exact Admin Style -->
+  <header class="admin-site-header">
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="organizer-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">ORGANIZER PORTAL</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">RP</div>
+          <span class="admin-name">The Rock Pub (Bangkok)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrollable Subnav Bar -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="organizer-dashboard.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="organizer-events.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>คอนเสิร์ตของฉัน</span>
+            <span class="tab-pill-badge">1</span>
+          </a>
+          <a href="organizer-orders.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>รายชื่อผู้ซื้อบัตร</span>
+          </a>
+          <a href="organizer-scanner.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9V5a2 2 0 0 1 2-2h4"></path><path d="M16 3h4a2 2 0 0 1 2 2v4"></path><path d="M22 15v4a2 2 0 0 1-2 2h-4"></path><path d="M8 21H4a2 2 0 0 1-2-2v-4"></path><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+            <span>ลิงก์สแกนเนอร์หน้างาน</span>
+          </a>
+          <a href="organizer-payouts.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>การเงิน & เงินโอน</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">คอนเสิร์ตของฉัน (My Events & Gated Management)</h1>
+          <p class="admin-page-sub">สร้างคอนเสิร์ต, กำหนดราคาบัตรปกติ (General Admission) & โควตา, ส่งอนุมัติ และจัดการข้อมูลตามนโยบาย Rule ORG-03</p>
+        </div>
+        <div class="header-action-group">
+          <button type="button" class="btn btn-lime btn-sm" onclick="openCreateEventModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ สร้างคอนเสิร์ตใหม่</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Advanced Filter and Search Container (Matching Exact Admin Filter Bar) -->
+      <div class="admin-filter-container">
+        <!-- Row 1: Search & Status Pills -->
+        <div class="filter-row-primary">
+          <div class="search-input-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="event-search-input" placeholder="ค้นหาด้วยชื่องาน, ศิลปิน หรือสถานที่จัดงาน..." class="admin-search-field" oninput="applyEventFilters()">
+          </div>
+          <div class="filter-pills-group" id="event-status-pills">
+            <button type="button" class="status-tab-btn active" data-status="ALL" onclick="setEventStatusTab('ALL', this)">
+              <span>ทั้งหมด</span>
+              <span class="tab-badge-pill">4</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="PUBLISHED" onclick="setEventStatusTab('PUBLISHED', this)">
+              <span>เปิดขายอยู่</span>
+              <span class="tab-badge-pill" style="background-color: #dcfce7; color: #15803d;">1</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="PENDING_APPROVAL" onclick="setEventStatusTab('PENDING_APPROVAL', this)">
+              <span>รอแอดมินอนุมัติ</span>
+              <span class="tab-badge-pill" style="background-color: #fef3c7; color: #b45309;">1</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="DRAFT" onclick="setEventStatusTab('DRAFT', this)">
+              <span>แบบร่าง</span>
+              <span class="tab-badge-pill" style="background-color: #f1f5f9; color: #475569;">1</span>
+            </button>
+            <button type="button" class="status-tab-btn" data-status="ENDED" onclick="setEventStatusTab('ENDED', this)">
+              <span>จัดจบแล้ว</span>
+              <span class="tab-badge-pill" style="background-color: #e2e8f0; color: #64748b;">1</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Row 2: Secondary Dropdowns and Reset -->
+        <div class="filter-row-secondary">
+          <div class="filter-controls-inline">
+            <span class="filter-label-inline">แนวเพลง:</span>
+            <select id="event-genre-filter" class="admin-select-input" onchange="applyEventFilters()">
+              <option value="ALL">ทุกแนวเพลง</option>
+              <option value="Indie / Rock">Indie / Rock</option>
+              <option value="Folk / Acoustic">Folk / Acoustic</option>
+              <option value="EDM / Beats">EDM / Beats</option>
+              <option value="Retro 90s">Retro 90s</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 8px;">สถานะโควตา:</span>
+            <select id="event-quota-filter" class="admin-select-input" onchange="applyEventFilters()">
+              <option value="ALL">ทุกสถานะโควตา</option>
+              <option value="AVAILABLE">บัตรเหลือ (>20%)</option>
+              <option value="NEAR_SOLD_OUT">ใกล้หมด (<20%)</option>
+              <option value="SOLD_OUT">ขายหมดแล้ว (Sold Out)</option>
+            </select>
+
+            <button type="button" class="btn btn-outline btn-xs" style="margin-left: 8px;" onclick="resetEventFilters()">
+              ล้างตัวกรอง
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Review Cards List (Matching Admin Cards Architecture) -->
+      <div class="approval-cards-list" id="events-card-container">
+
+        <!-- Card 1: Published / On Sale (Indie Rock Revival 2026) -->
+        <div class="event-approval-card published-card" 
+             data-status="PUBLISHED" 
+             data-genre="Indie / Rock" 
+             data-quota-status="NEAR_SOLD_OUT">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap">
+              <img src="poster-indie.svg" alt="Indie Rock Revival" class="approval-poster-img">
+              <span class="badge badge-success poster-status-badge">ON SALE / PUBLISHED</span>
+              <div style="position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; gap: 4px; justify-content: center;">
+                <span style="background: rgba(0,0,0,0.8); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">🖼️ แนวตั้ง 4:5</span>
+                <span style="background: rgba(0,0,0,0.8); color: var(--lime-accent); font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">แบนเนอร์ 16:9</span>
+              </div>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <span class="event-cat-tag">LIVE CONCERT • INDIE / ROCK</span>
+                    <span class="badge badge-dark" style="font-size: 10px; background: #0f172a; color: #4ade80; border: 1px solid #22c55e;">🛡️ สิทธิ์นักศึกษา: แอดมินเปิดสิทธิ์แล้ว (@ubu)</span>
+                  </div>
+                  <h2 class="approval-event-name">Indie Rock Revival 2026</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    ศิลปิน: <strong style="color: var(--text-main);">The Dark Knight Band, Neon Horizon, Starlight Echoes</strong>
+                  </div>
+                  <p class="approval-org-row">
+                    <span>ผู้จัดงาน: <strong>The Rock Pub (Bangkok)</strong></span>
+                    <span class="badge badge-lime" style="font-size: 11px;">✓ ประตูเปิด 18:00 น. วันนี้</span>
+                  </p>
+                </div>
+
+                <!-- Pricing Badges (Matching Customer General Admission + Student Discount) -->
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">บัตรทั่วไป (General)</span>
+                    <strong class="p-val">฿350</strong>
+                  </div>
+                  <div class="pricing-pill student">
+                    <span class="p-lbl">ส่วนลดนักศึกษา (@ubu)</span>
+                    <strong class="p-val">฿250</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Details Grid -->
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 กำหนดการแสดง</span>
+                  <span class="m-val">เสาร์ 25 ต.ค. 2026</span>
+                  <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">🚪 ประตูเปิด 18:00 น. • 🎸 แสดง 19:00 - 23:30 น.</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่ & แผนที่</span>
+                  <span class="m-val">The Rock Pub, พญาไท, กทม.</span>
+                  <a href="https://maps.google.com/?q=The+Rock+Pub+Bangkok" target="_blank" style="color: #000; text-decoration: underline; font-weight: 700; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; margin-top: 3px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                    <span>เปิด Google Maps ↗</span>
+                  </a>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🛒 ช่วงเวลาจำหน่ายบัตร</span>
+                  <span class="m-val" style="font-size: 12px;">1 ต.ค. (10:00) — 25 ต.ค. (17:00)</span>
+                  <span class="badge badge-success" style="font-size: 10px; margin-top: 3px; display: inline-block;">● กำลังเปิดจำหน่าย (On Sale)</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 ยอดขาย / โควตารวม</span>
+                  <span class="m-val"><strong>649 / 800 ใบ (81.1%)</strong></span>
+                  <div class="card-quota-bar" style="height: 5px; margin-top: 4px;">
+                    <div class="quota-progress" style="width: 81.1%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-desc-box">
+                <div style="margin-bottom: 6px;"><strong>ไฮไลท์การแสดง:</strong> คอนเสิร์ตรวมศิลปินอินดี้ร็อคแถวหน้าของเมืองไทย ประตูเปิด 18:00 น. เริ่มแสดง 19:00 น. ระบบตรวจสแกนบัตรผ่านมือถือหน้างาน 2 ประตู</div>
+                <div style="font-size: 12px; color: #475569;"><strong>กฎการเข้างาน (Entry Rules):</strong> ผู้เข้างานต้องมีอายุ 20 ปีขึ้นไป (แสดงบัตรประชาชนตัวจริง) ห้ามนำเครื่องดื่มแอลกอฮอล์ภายนอกเข้างาน และรองรับระบบ Re-entry สแกนออกชั่วคราว</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Row -->
+          <div class="event-approval-actions">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge badge-success">✓ เช็คอินอยู่ในงาน: 412 คน (INSIDE)</span>
+              <span style="font-size: 11px; color: var(--text-muted);">OUTSIDE: 237 คน</span>
+            </div>
+            <div class="action-buttons-right">
+              <a href="organizer-orders.html" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                <span>รายชื่อผู้ซื้อบัตร</span>
+              </a>
+              <a href="organizer-scanner.html" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9V5a2 2 0 0 1 2-2h4"></path><path d="M16 3h4a2 2 0 0 1 2 2v4"></path></svg>
+                <span>สแกนเนอร์หน้างาน</span>
+              </a>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openEditEventModal('Indie Rock Revival 2026', true)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <span>แก้ไขข้อมูล (Gated)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Pending Approval (Acoustic Sunset Unplugged) -->
+        <div class="event-approval-card pending-card" 
+             data-status="PENDING_APPROVAL" 
+             data-genre="Folk / Acoustic" 
+             data-quota-status="AVAILABLE">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap">
+              <div style="width: 100%; height: 100%; background: #0f172a; display: flex; align-items: center; justify-content: center; color: var(--lime-accent); font-weight: 800; font-size: 24px;">
+                AS
+              </div>
+              <span class="badge badge-warning poster-status-badge">PENDING APPROVAL (รออนุมัติ)</span>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <span class="event-cat-tag">LIVE CONCERT • FOLK / ACOUSTIC</span>
+                  <h2 class="approval-event-name">Acoustic Sunset Unplugged</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    ศิลปิน: <strong style="color: var(--text-main);">Whispering Woods, Earth & Rain</strong>
+                  </div>
+                  <p class="approval-org-row">
+                    <span>ส่งคำขอเมื่อ: <strong>17 ต.ค. 2026</strong></span>
+                    <span class="badge badge-amber" style="font-size: 11px;">รอ Admin ตรวจสอบ</span>
+                  </p>
+                </div>
+
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">Regular Pass</span>
+                    <strong class="p-val">฿290</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 วันจัดแสดง & เวลา</span>
+                  <span class="m-val">ศุกร์ที่ 14 พ.ย. 2026 • 19:30 - 22:30 น.</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่จัดงาน</span>
+                  <span class="m-val">Rooftop Garden Bar, กรุงเทพฯ</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 โควตาจำหน่ายที่ขอเปิด</span>
+                  <span class="m-val"><strong>150 ใบ (รอเปิดขาย)</strong></span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">💼 รายรับประมาณการ</span>
+                  <span class="m-val">฿43,500 (สุทธิ ฿41,325)</span>
+                </div>
+              </div>
+
+              <div class="approval-desc-box" style="background-color: #fffbeb; border: 1px solid #fde68a; color: #92400e;">
+                ℹ️ ข้อมูลคอนเสิร์ตและโปสเตอร์อยู่ระหว่างการตรวจสอบโดยทีมงาน Admin ตามนโยบายคุ้มครองผู้ซื้อ จะแจ้งผลอนุมัติภายใน 24 ชม.
+              </div>
+            </div>
+          </div>
+
+          <div class="event-approval-actions">
+            <span style="font-size: 12px; color: var(--text-muted);">สถานะ: ตรวจสอบความถูกต้องของวันเวลาและราคาตั๋ว</span>
+            <div class="action-buttons-right">
+              <button type="button" class="btn btn-outline btn-sm" onclick="openEditEventModal('Acoustic Sunset Unplugged', false)">
+                <span>ดูรายละเอียด / แก้ไข</span>
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" style="color: #dc2626; border-color: #fecaca;" onclick="showToast('ยกเลิกคำขอส่งตรวจแล้ว คอนเสิร์ตกลับเป็นแบบร่าง')">
+                <span>ยกเลิกคำขอ</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Draft (Neon Midnight Beats 2026) -->
+        <div class="event-approval-card" 
+             data-status="DRAFT" 
+             data-genre="EDM / Beats" 
+             data-quota-status="AVAILABLE">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap" style="background: #f8fafc; border: 1.5px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: 800;">
+              DRAFT
+              <span class="badge badge-dark poster-status-badge">DRAFT (แบบร่าง)</span>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <span class="event-cat-tag">CLUB EVENT • EDM / BEATS</span>
+                  <h2 class="approval-event-name">Neon Midnight Beats 2026</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    แก้ไขล่าสุด: <strong>15 ต.ค. 2026</strong>
+                  </div>
+                </div>
+
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">บัตรทั่วไป (General)</span>
+                    <strong class="p-val">฿450</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">📅 กำหนดการเบื้องต้น</span>
+                  <span class="m-val">เสาร์ที่ 12 ธ.ค. 2026</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📍 สถานที่</span>
+                  <span class="m-val">Club Warehouse Ratchada</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 โควตาเตรียมเปิดขาย</span>
+                  <span class="m-val">300 ใบ (General Admission)</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">💼 มูลค่าประมาณการ</span>
+                  <span class="m-val">฿135,000</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-approval-actions">
+            <span style="font-size: 12px; color: var(--text-muted);">ยังไม่ได้ส่งคำขออนุมัติเปิดขาย สามารถปรับแต่งข้อมูลได้อิสระ</span>
+            <div class="action-buttons-right">
+              <button type="button" class="btn btn-outline btn-sm" onclick="openEditEventModal('Neon Midnight Beats 2026', false)">
+                <span>แก้ไขแบบร่าง</span>
+              </button>
+              <button type="button" class="btn btn-lime btn-sm" onclick="submitDraftForApproval()">
+                <span>ส่งให้แอดมินอนุมัติ</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Ended (Retro 90s Live Session) -->
+        <div class="event-approval-card" 
+             data-status="ENDED" 
+             data-genre="Retro 90s" 
+             data-quota-status="SOLD_OUT"
+             style="opacity: 0.92;">
+          <div class="event-approval-top">
+            <div class="approval-poster-wrap" style="background: #1e293b; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-weight: 700;">
+              COMPLETED
+              <span class="badge poster-status-badge" style="background-color: #f1f5f9; color: #475569;">ENDED (จัดจบแล้ว)</span>
+            </div>
+
+            <div class="approval-info-col">
+              <div class="approval-title-row">
+                <div>
+                  <span class="event-cat-tag">ARCHIVED • RETRO 90S</span>
+                  <h2 class="approval-event-name">Retro 90s Live Session</h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                    จัดเมื่อ: <strong>5 ต.ค. 2026</strong> • ผู้เข้างาน 393 / 400 คน (98.25% Check-in)
+                  </div>
+                </div>
+
+                <div class="approval-pricing-row">
+                  <div class="pricing-pill">
+                    <span class="p-lbl">รายรับสุทธิที่ได้รับ</span>
+                    <strong class="p-val" style="color: #059669;">฿142,500</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="approval-meta-grid">
+                <div class="meta-box">
+                  <span class="m-title">💼 ยอดขายรวม (Gross)</span>
+                  <span class="m-val">฿150,000 (หัก Fee 5%: ฿7,500)</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🏦 สถานะเงินโอน</span>
+                  <span class="m-val" style="color: #059669;">✓ โอนเข้าบัญชีเรียบร้อยแล้ว</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">🎫 บัตรจำหน่าย</span>
+                  <span class="m-val">400 / 400 ใบ (100% Sold Out)</span>
+                </div>
+                <div class="meta-box">
+                  <span class="m-title">📄 หลักฐานตัดจ่าย</span>
+                  <span class="m-val"><a href="organizer-payouts.html" style="color: #000; text-decoration: underline;">ดูสลิป Settlement &rarr;</a></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Create Event Wizard Modal -->
+  <div id="create-event-modal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; width: 100%; max-width: 720px; border-radius: var(--radius-card); border: 1px solid var(--border-subtle); max-height: 90vh; overflow-y: auto; padding: 32px; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 20px; font-weight: 800; margin: 0; text-transform: uppercase;">สร้างคอนเสิร์ตใหม่ (Create Event Wizard)</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 4px 0 0 0;">กรอกข้อมูล กำหนดประเภทตั๋ว (Multi-tier) และส่งให้แอดมินอนุมัติ</p>
+        </div>
+        <button type="button" onclick="closeCreateEventModal()" style="background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+
+      <form onsubmit="handleCreateEvent(event)">
+        <!-- Step 1: General Info & Artists Lineup -->
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #000000; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">1. ข้อมูลคอนเสิร์ตและศิลปิน (Event Info & Artists)</h3>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ชื่อคอนเสิร์ต / งานแสดง *</label>
+                <input type="text" id="create-event-name" required placeholder="เช่น Acoustic Night Under The Stars 2026" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">แนวเพลง / หมวดหมู่งาน *</label>
+                <select id="create-event-genre" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px; background: #fff;">
+                  <option value="Folk / Acoustic">Folk / Acoustic</option>
+                  <option value="Indie / Rock">Indie / Rock</option>
+                  <option value="EDM / Beats">EDM / Beats</option>
+                  <option value="Jazz / Soul">Jazz / Soul</option>
+                  <option value="Pop / Mainstream">Pop / Mainstream</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">รายชื่อศิลปิน / วงดนตรี (Artists Lineup) *</label>
+              <input type="text" id="create-event-artists" required placeholder="เช่น Anatomy Rabbit, Moving and Cut, Safeplanet" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">คำบรรยายและไฮไลท์การแสดง (Description & Highlights) *</label>
+              <textarea id="create-event-desc" rows="3" required placeholder="ระบุเรื่องราว ธีมงาน ไฮไลท์การแสดงพิเศษ..." style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;"></textarea>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">เงื่อนไขและกฎการเข้างาน (Entry Rules & Policy) *</label>
+              <textarea id="create-event-rules" rows="2" placeholder="เช่น จำกัดอายุ 20 ปีขึ้นไป (ตรวจบัตรประชาชนตัวจริง), ห้ามนำเครื่องดื่มภายนอกเข้างาน, รองรับระบบ Re-entry..." style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">จำกัดอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริงหน้างาน ห้ามนำเครื่องดื่มแอลกอฮอล์ภายนอกเข้างาน รองรับการสแกนออกชั่วคราว (Re-entry)</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Venue & Google Maps Link -->
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #000000; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">2. สถานที่จัดงานและลิงก์ Google Maps (Venue & Map)</h3>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ชื่อสถานที่จัดงาน (Venue Name) *</label>
+                <input type="text" id="create-event-venue" required placeholder="เช่น The Rock Pub (Bangkok)" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ที่อยู่สถานที่จัดงานโดยละเอียด *</label>
+                <input type="text" id="create-event-address" required placeholder="เช่น 93/26-28 ถนนพญาไท แขวงถนนเพชรบุรี เขตราชเทวี กรุงเทพฯ" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+              </div>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ลิงก์ Google Maps (สำหรับนำทางลูกค้า) *</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="url" id="create-event-map" required value="https://maps.app.goo.gl/TheRockPubBangkok" placeholder="https://maps.app.goo.gl/... หรือ https://goo.gl/maps/..." style="flex: 1; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="testGoogleMapsLink('create-event-map')" style="white-space: nowrap; padding: 0 16px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                  <span>📍 ทดสอบเปิด Google Maps ↗</span>
+                </button>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">ลิงก์นี้จะปรากฏเป็นปุ่มเปิดแผนที่นำทางบนหน้าเว็บสำหรับลูกค้าและในตั๋วอิเล็กทรอนิกส์</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Timings (Show & Sale Window) -->
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #000000; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">3. กำหนดการแสดงและช่วงเวลาเปิดขายบัตร (Timings & Sale Window)</h3>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Event Schedule -->
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 14px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">วันที่จัดแสดง (Event Date) *</label>
+                <input type="date" id="create-event-date" required value="2026-11-20" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">เวลาประตูเปิด (Doors Open) *</label>
+                <input type="time" id="create-event-doors" required value="17:00" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">เวลาคอนเริ่ม - จบ (Show Time) *</label>
+                <input type="text" id="create-event-showtime" required value="18:00 - 23:30 น." placeholder="เช่น 18:00 - 23:30 น." style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+              </div>
+            </div>
+
+            <!-- Ticket Sale Window -->
+            <div style="background: #fafbfc; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px 16px;">
+              <span style="display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; color: #000; margin-bottom: 10px;">⏰ ช่วงเวลาจำหน่ายบัตร (Ticket Sale Window)</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px;">วัน-เวลาเริ่มเปิดขายบัตร (Sale Starts) *</label>
+                  <input type="datetime-local" id="create-sale-start" required value="2026-10-20T10:00" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px;">วัน-เวลาปิดจำหน่ายบัตร (Sale Ends) *</label>
+                  <input type="datetime-local" id="create-sale-end" required value="2026-11-20T17:00" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+                </div>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px;">ก่อนถึงเวลาเปิดขาย ลูกค้าจะเห็นปุ่มนับถอยหลัง (Countdown) และระบบจะปิดรับคำสั่งซื้ออัตโนมัติเมื่อถึงเวลาปิดจำหน่าย</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Dual Posters (Vertical 4:5 & Horizontal 16:9) -->
+        <div style="margin-bottom: 24px;">
+          <h3 style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #000000; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">4. รูปภาพโปสเตอร์งาน 2 รูปแบบ (Dual Posters: Vertical & Horizontal)</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <!-- Vertical Poster Dropzone -->
+            <div style="border: 2px dashed #000000; border-radius: var(--radius-sm); padding: 18px; text-align: center; background-color: #fafbfc;">
+              <div style="display: inline-block; background: #000; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;">
+                🖼️ 1. โปสเตอร์แนวตั้ง (Portrait 4:5 หรือ 3:4) *
+              </div>
+              <div style="height: 100px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; border-radius: 4px; margin-bottom: 8px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><circle cx="12" cy="8" r="2"></circle><line x1="8" y1="16" x2="16" y2="16"></line></svg>
+              </div>
+              <div style="font-size: 12px; font-weight: 700;">โปสเตอร์หลักแนวตั้ง (Listing Card)</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">สำหรับแสดงบนการ์ดหน้าแรก, หน้าค้นหา และฟีดมือถือ</div>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-top: 8px; font-size: 11px;">เลือกไฟล์ JPG/PNG</button>
+            </div>
+
+            <!-- Horizontal Banner Dropzone -->
+            <div style="border: 2px dashed #000000; border-radius: var(--radius-sm); padding: 18px; text-align: center; background-color: #fafbfc;">
+              <div style="display: inline-block; background: var(--lime-accent); color: #000; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;">
+                📐 2. แบนเนอร์แนวนอน (Landscape 16:9) *
+              </div>
+              <div style="height: 100px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; border-radius: 4px; margin-bottom: 8px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><polyline points="21 15 16 10 5 21"></polyline></svg>
+              </div>
+              <div style="font-size: 12px; font-weight: 700;">แบนเนอร์แนวนอน (Hero Banner)</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">สำหรับภาพหัวเรื่องหน้ารายละเอียดและขั้นตอนชำระเงิน</div>
+              <button type="button" class="btn btn-outline btn-sm" style="margin-top: 8px; font-size: 11px;">เลือกไฟล์ JPG/PNG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Single-tier Ticket & Quota Setup + Admin-only Student Privilege -->
+        <div style="margin-bottom: 24px;">
+          <div style="margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">
+            <h3 style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #000000; margin: 0;">5. กำหนดราคาและโควตาบัตร & การควบคุมสิทธิ์นักศึกษา</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">กำหนดราคาบัตรเข้างานปกติและโควตาจำหน่าย ซึ่งจะแสดงบนหน้าเว็บลูกค้าและระบบชำระเงินโดยตรง</p>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Row: Ticket Name & Base Price -->
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ชื่อบัตรเข้างาน *</label>
+                <input type="text" id="ticket-title-input" value="บัตรเข้างานทั่วไป (General Admission)" readonly style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px; background-color: #f8fafc; color: #475569; font-weight: 600;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ราคาบัตรปกติ (บาท / ใบ) *</label>
+                <input type="number" id="base-ticket-price" value="350" min="0" required oninput="recalcRegularSummary()" style="width: 100%; padding: 11px 14px; border: 1.5px solid #000000; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700;">
+              </div>
+            </div>
+
+            <!-- Row: Quota & Max Per Order (Aligned with Customer Page Rule max 4) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">จำนวนโควตาบัตรทั้งหมด (ใบ) *</label>
+                <input type="number" id="base-ticket-quota" value="500" min="1" required oninput="recalcRegularSummary()" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 14px; font-weight: 700;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 3px;">ระบบจะปิดรับคำสั่งซื้ออัตโนมัติเมื่อโควตาครบ (Sold Out)</span>
+              </div>
+              <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">จำกัดการซื้อต่อออเดอร์ *</label>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <input type="number" value="4" readonly style="width: 80px; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; background-color: #f1f5f9; text-align: center;">
+                  <span style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">ใบ / 1 อีเมล (มาตรฐานหน้าเว็บเพื่อป้องกันการกักตุนตั๋ว)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Discount Privilege Box (Customer Alignment - Strictly Gated to Admin Only) -->
+            <div style="background-color: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: var(--radius-sm); padding: 14px 16px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; color: #64748b; cursor: not-allowed;">
+                  <input type="checkbox" id="student-discount-toggle" disabled style="width: 16px; height: 16px; opacity: 0.6; cursor: not-allowed;">
+                  <span>เปิดให้สิทธิ์ส่วนลดพิเศษสำหรับนักศึกษา (Student Privilege)</span>
+                </label>
+                <span class="badge badge-dark" style="font-size: 10px; padding: 3px 8px; background: #334155; color: #fff;">
+                  🔒 สิทธิ์เฉพาะแอดมิน (Admin Only) - ผู้จัดไม่สามารถเปิดเองได้
+                </span>
+              </div>
+
+              <p style="font-size: 11px; color: #64748b; margin: 0 0 10px 0; line-height: 1.4;">
+                * เพื่อความถูกต้องและปลอดภัยในการยืนยันตัวตนด้วย OTP ทางอีเมลสถาบัน (@ubu.ac.th) บนหน้า Checkout ผู้จัดงานไม่สามารถเปิดสิทธิ์นี้ได้เอง ผู้ดูแลระบบ (Admin) จะเป็นผู้พิจารณาตรวจสอบและเปิดใช้งานให้ในขั้นตอนอนุมัติคอนเสิร์ต
+              </p>
+
+              <div id="student-privilege-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; opacity: 0.75;">
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #475569;">ราคาบัตรนักศึกษาที่เสนอขอ (บาท / ใบ)</label>
+                  <input type="number" id="student-ticket-price" value="250" placeholder="ระบุราคาที่ต้องการเสนอให้ Admin พิจารณา" style="width: 100%; padding: 9px 12px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #475569;">โดเมนอีเมลสถาบันที่ระบบรองรับ (OTP Verification)</label>
+                  <input type="text" value="@ubu.ac.th (ยืนยัน OTP ตอนซื้อตั๋ว)" readonly style="width: 100%; padding: 9px 12px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px; background-color: #f1f5f9; color: #64748b; font-family: monospace;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Financial Estimation Box -->
+          <div style="background: #000000; color: #ffffff; padding: 16px 20px; border-radius: var(--radius-sm); margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; font-size: 13px; align-items: center;">
+            <div>
+              <span style="font-size: 11px; color: #94a3b8; display: block; text-transform: uppercase;">โควตารวมทั้งสิ้น</span>
+              <strong id="calc-total-tickets" style="color: var(--lime-accent); font-size: 16px;">500 ใบ</strong>
+            </div>
+            <div>
+              <span style="font-size: 11px; color: #94a3b8; display: block; text-transform: uppercase;">มูลค่าขายรวมประมาณการ</span>
+              <strong id="calc-total-revenue" style="color: #ffffff; font-size: 16px;">฿175,000</strong>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 11px; color: #94a3b8; display: block; text-transform: uppercase;">รายรับสุทธิผู้จัด (หัก 5%)</span>
+              <strong id="calc-net-revenue" style="color: var(--lime-accent); font-size: 18px;">฿166,250</strong>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--border-subtle); padding-top: 20px;">
+          <button type="button" class="btn btn-outline" onclick="closeCreateEventModal()">ยกเลิก</button>
+          <button type="button" class="btn btn-outline" onclick="saveAsDraft()">บันทึกแบบร่าง (Draft)</button>
+          <button type="submit" class="btn btn-lime">ส่งให้แอดมินอนุมัติ (Submit)</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Event Modal (Demonstrating Rule ORG-03 Gated Editing & Admin-Controlled Student Privilege) -->
+  <div id="edit-event-modal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; width: 100%; max-width: 760px; border-radius: var(--radius-card); border: 1px solid var(--border-subtle); max-height: 90vh; overflow-y: auto; padding: 32px; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 19px; font-weight: 800; margin: 0; text-transform: uppercase;" id="edit-modal-title">แก้ไขข้อมูลคอนเสิร์ต</h2>
+          <span class="badge badge-success" id="edit-modal-badge" style="margin-top: 4px;">PUBLISHED</span>
+        </div>
+        <button type="button" onclick="closeEditEventModal()" style="background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+
+      <div id="edit-gated-alert" style="background-color: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 12px; color: #92400e; line-height: 1.5;">
+        <strong>⚠️ นโยบายการแก้ไขคอนเสิร์ตที่เปิดขายแล้ว (Rule ORG-03):</strong><br>
+        คุณสามารถแก้ไขรายละเอียดคำบรรยายและรูปโปสเตอร์ได้ทันที แต่หากมีการเปลี่ยนแปลง <strong>วัน/เวลา, สถานที่จัดงาน หรือช่วงเวลาขายบัตร</strong> ข้อมูลจะต้องถูกส่งให้ Admin ตรวจสอบอนุมัติใหม่ เพื่อคุ้มครองลูกค้าที่ซื้อบัตรไปแล้ว
+      </div>
+
+      <form onsubmit="handleSaveEdit(event)">
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;">
+          <!-- Name & Genre -->
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ชื่องานคอนเสิร์ต</label>
+              <input type="text" id="edit-field-name" value="Indie Rock Revival 2026" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">หมวดหมู่งาน / Genre</label>
+              <input type="text" value="Indie / Rock" readonly style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px; background: #f8fafc;">
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">รายชื่อศิลปิน (Artists Lineup)</label>
+            <input type="text" value="The Dark Knight Band, Neon Horizon, Starlight Echoes" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+          </div>
+
+          <!-- Venue & Google Maps Link -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">สถานที่จัดงาน (Gated Field)</label>
+              <input type="text" value="The Rock Pub, พญาไท, กรุงเทพฯ" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">ลิงก์ Google Maps</label>
+              <div style="display: flex; gap: 6px;">
+                <input type="url" id="edit-event-map" value="https://maps.google.com/?q=The+Rock+Pub+Bangkok" style="flex: 1; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="testGoogleMapsLink('edit-event-map')" style="white-space: nowrap;">
+                  <span>📍 Map ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timings: Show & Sale Window -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">วันจัดงาน (Event Date)</label>
+              <input type="text" value="2026-10-25" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">เวลาเปิดประตู (Doors Open)</label>
+              <input type="text" value="18:00 น." style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">เวลาเริ่มแสดง (Show Time)</label>
+              <input type="text" value="19:00 - 23:30 น." style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">วัน-เวลาเริ่มเปิดขายบัตร</label>
+              <input type="text" value="2026-10-01 10:00" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">วัน-เวลาปิดจำหน่ายบัตร</label>
+              <input type="text" value="2026-10-25 17:00" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 13px;">
+            </div>
+          </div>
+
+          <!-- Dual Posters Status -->
+          <div style="background: #fafbfc; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 16px;">
+            <label style="display: block; font-size: 12px; font-weight: 800; margin-bottom: 8px;">🖼️ รูปภาพโปสเตอร์งาน (มีครบ 2 รูปแบบ)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fff; border: 1px solid var(--border-subtle); border-radius: 4px;">
+                <span>1. โปสเตอร์แนวตั้ง: <strong>poster-indie.svg</strong></span>
+                <span class="badge badge-success" style="font-size: 10px;">มีแล้ว ✓</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #fff; border: 1px solid var(--border-subtle); border-radius: 4px;">
+                <span>2. แบนเนอร์แนวนอน: <strong>poster-summer.svg</strong></span>
+                <span class="badge badge-success" style="font-size: 10px;">มีแล้ว ✓</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student Privilege Box (Admin Controlled) -->
+          <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-sm); padding: 12px 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 13px; font-weight: 700; color: #166534;">🛡️ สถานะส่วนลดนักศึกษา (Student Privilege)</span>
+              <span class="badge badge-success" style="font-size: 11px;">แอดมินเปิดสิทธิ์แล้ว ✓ (฿250 / @ubu.ac.th)</span>
+            </div>
+            <p style="font-size: 11px; color: #166534; margin: 4px 0 0 0;">
+              * การเปิด/ปิด หรือปรับราคานักศึกษาเป็นอำนาจของผู้ดูแลระบบ (Admin) เท่านั้น ผู้จัดงานไม่สามารถแก้ไขส่วนนี้เองได้
+            </p>
+          </div>
+
+          <!-- Description & Rules -->
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">คำบรรยาย (แก้ไขได้ทันที)</label>
+            <textarea rows="2" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm);">คอนเสิร์ตรวมศิลปินอินดี้ร็อคแถวหน้าของเมืองไทย ประตูเปิด 18:00 น. เริ่มแสดง 19:00 น.</textarea>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px;">เงื่อนไขและกฎการเข้างาน</label>
+            <textarea rows="2" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm);">ผู้เข้างานต้องมีอายุ 20 ปีขึ้นไป ตรวจบัตรประชาชนตัวจริง ห้ามนำเครื่องดื่มภายนอกเข้างาน และรองรับ Re-entry</textarea>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+          <button type="button" class="btn btn-outline" onclick="closeEditEventModal()">ยกเลิก</button>
+          <button type="submit" class="btn btn-lime">บันทึกการแก้ไข</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Prototype Toast Notification -->
+  <div id="prototype-toast" class="prototype-toast">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CCFF00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-message">ดำเนินการสำเร็จ!</span>
+  </div>
+
+  <script>
+    let activeStatus = 'ALL';
+
+    function setEventStatusTab(status, btn) {
+      activeStatus = status;
+      document.querySelectorAll('#event-status-pills .status-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyEventFilters();
+    }
+
+    function applyEventFilters() {
+      const q = document.getElementById('event-search-input').value.toLowerCase().trim();
+      const genre = document.getElementById('event-genre-filter').value;
+      const quota = document.getElementById('event-quota-filter').value;
+
+      const cards = document.querySelectorAll('.event-approval-card');
+
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        const status = card.dataset.status;
+        const cardGenre = card.dataset.genre;
+        const cardQuota = card.dataset.quotaStatus;
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesStatus = activeStatus === 'ALL' || status === activeStatus;
+        const matchesGenre = genre === 'ALL' || cardGenre === genre;
+        const matchesQuota = quota === 'ALL' || cardQuota === quota;
+
+        if (matchesQuery && matchesStatus && matchesGenre && matchesQuota) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function resetEventFilters() {
+      document.getElementById('event-search-input').value = '';
+      document.getElementById('event-genre-filter').value = 'ALL';
+      document.getElementById('event-quota-filter').value = 'ALL';
+      const allBtn = document.querySelector('#event-status-pills .status-tab-btn[data-status="ALL"]');
+      if (allBtn) setEventStatusTab('ALL', allBtn);
+      else applyEventFilters();
+    }
+
+    function openCreateEventModal() {
+      document.getElementById('create-event-modal').style.display = 'flex';
+    }
+
+    function closeCreateEventModal() {
+      document.getElementById('create-event-modal').style.display = 'none';
+    }
+
+    function openEditEventModal(title, isPublished) {
+      document.getElementById('edit-modal-title').innerText = 'แก้ไข: ' + title;
+      document.getElementById('edit-gated-alert').style.display = isPublished ? 'block' : 'none';
+      document.getElementById('edit-event-modal').style.display = 'flex';
+    }
+
+    function closeEditEventModal() {
+      document.getElementById('edit-event-modal').style.display = 'none';
+    }
+
+    function handleCreateEvent(e) {
+      e.preventDefault();
+      closeCreateEventModal();
+      showToast("ส่งคอนเสิร์ตให้ Admin ตรวจสอบอนุมัติเรียบร้อยแล้ว!");
+    }
+
+    function saveAsDraft() {
+      closeCreateEventModal();
+      showToast("บันทึกเป็นแบบร่าง (Draft) สำเร็จ!");
+    }
+
+    function submitDraftForApproval() {
+      showToast("ส่งคอนเสิร์ตให้ Admin ตรวจสอบอนุมัติเรียบร้อยแล้ว!");
+    }
+
+    function handleSaveEdit(e) {
+      e.preventDefault();
+      closeEditEventModal();
+      showToast("บันทึกข้อมูลคอนเสิร์ตสำเร็จ!");
+    }
+
+    function toggleStudentPrice() {
+      const toggle = document.getElementById('student-discount-toggle');
+      const row = document.getElementById('student-privilege-row');
+      if (toggle && row) {
+        row.style.display = toggle.checked ? 'grid' : 'none';
+      }
+      recalcRegularSummary();
+    }
+
+    function recalcRegularSummary() {
+      const priceInput = document.getElementById('base-ticket-price');
+      const quotaInput = document.getElementById('base-ticket-quota');
+      if (!priceInput || !quotaInput) return;
+
+      const price = parseFloat(priceInput.value) || 0;
+      const quota = parseInt(quotaInput.value) || 0;
+
+      const totalRevenue = price * quota;
+      const netRevenue = totalRevenue * 0.95; // Fee 5%
+
+      const ticketsEl = document.getElementById('calc-total-tickets');
+      const revenueEl = document.getElementById('calc-total-revenue');
+      const netEl = document.getElementById('calc-net-revenue');
+
+      if (ticketsEl) ticketsEl.innerText = quota.toLocaleString() + ' ใบ';
+      if (revenueEl) revenueEl.innerText = '฿' + totalRevenue.toLocaleString();
+      if (netEl) netEl.innerText = '฿' + Math.round(netRevenue).toLocaleString();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('prototype-toast');
+      const text = document.getElementById('toast-message');
+      text.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function testGoogleMapsLink(inputId) {
+      const input = document.getElementById(inputId);
+      if (!input || !input.value.trim()) {
+        alert("กรุณากรอกลิงก์ Google Maps ก่อนทดสอบเปิดแผนที่");
+        return;
+      }
+      let url = input.value.trim();
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      window.open(url, '_blank');
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'new') {
+      openCreateEventModal();
+    }
+  </script>
+</body>
+</html>

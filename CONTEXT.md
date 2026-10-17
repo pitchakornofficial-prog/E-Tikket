@@ -36,6 +36,9 @@ Durable domain understanding, vocabulary, business rules, and invariants for the
 14. **Article Approval Gate:** บทความของ Organizer ต้องผ่าน Admin approve ก่อนเผยแพร่ (DRAFT → PENDING_REVIEW → PUBLISHED) ส่วนบทความของ Admin เผยแพร่ได้ทันที (DRAFT → PUBLISHED)
 15. **Organizer Edit Reverts Review:** เมื่อ Organizer แก้ไขบทความที่ PUBLISHED แล้ว สถานะจะเปลี่ยนเป็น PENDING_REVIEW อัตโนมัติ Admin แก้ไขบทความใดก็ได้โดยคง PUBLISHED
 16. **Admin Article Superuser:** Admin จัดการบทความทั้งหมดได้ (แก้ไข, ลบ, unpublish) รวมถึงบทความของ Organizer
+17. **Organizer Event Modification Gate:** การแก้ไขคอนเสิร์ตที่เปิดขาย (Published) แล้วในส่วนข้อมูลสำคัญ (วัน/เวลา, สถานที่, ราคา, ลดโควตา) ต้องผ่านการอนุมัติใหม่จาก Admin ข้อมูลทั่วไป (รายละเอียด, โปสเตอร์) แก้ไขได้ทันที
+18. **Multi-tier Ticket Quota Isolation:** คอนเสิร์ตรองรับประเภทตั๋ว 1–4 ระดับ (Multi-tier) โดยแต่ละระดับมีราคาและโควตาแยกอิสระจากกัน
+19. **Scanner Token Delegation:** สตาฟประจำประตูสแกนบัตรผ่าน Scanner Token URL/PIN เฉพาะงานได้โดยตรงโดยไม่ต้องล็อกอินบัญชี Organizer ป้องกันการเข้าถึงข้อมูลทางการเงินหรือการตั้งค่าคอนเสิร์ต
 
 ## Verification Policy
 

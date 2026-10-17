@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตรวจสอบธุรกรรมเกตเวย์ — E-TIKKET Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="admin-transactions" data-prototype-id="admin-trans-v3">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Admin & Platform Architecture</span>
+      <span>Page: <strong>A2. Payment Transactions & Gateway Sync</strong></span>
+      <span>ID: <strong>admin-trans-v3</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" class="active" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Admin Site Header (Customer-style aesthetic + Scrollable Subnav) -->
+  <header class="admin-site-header">
+    <!-- Top Row: Brand & Admin User Profile -->
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="admin-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">PLATFORM ADMIN</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">AD</div>
+          <span class="admin-name">Super Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subnav Row: Moved down with horizontal scroll capability -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="admin-dashboard.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="admin-transactions.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>ธุรกรรมเกตเวย์</span>
+          </a>
+          <a href="admin-settlements.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>ตัดจ่ายผู้จัดงาน</span>
+          </a>
+          <a href="admin-events.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>อนุมัติคอนเสิร์ต</span>
+            <span class="tab-pill-badge">3</span>
+          </a>
+          <a href="admin-orders.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>จัดการคำสั่งซื้อ</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Header & Auto Sync Notice -->
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">ตรวจสอบธุรกรรมเกตเวย์ (Payment Transactions)</h1>
+          <p class="admin-page-sub">ระบบตรวจจับยอดเงินจาก PromptPay Gateway แบบอัตโนมัติ ลูกค้าไม่ต้องอัปโหลดสลิป</p>
+        </div>
+        <div class="header-action-group">
+          <button type="button" class="btn btn-outline btn-sm" onclick="alert('กำลังดึงข้อมูลธุรกรรมล่าสุดจาก Payment Gateway API... (สถานะปัจจุบันซิงก์ครบถ้วน)')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            <span>รีเฟรชข้อมูลเกตเวย์</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Expanded Filter and Search Container (admin-trans-v2) -->
+      <div class="admin-filter-container">
+        <!-- Row 1: Search & Quick Status Pills & Export -->
+        <div class="filter-row-primary">
+          <div class="search-input-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="tx-search-input" placeholder="ค้นหาด้วย Transaction ID, Order Ref, ชื่อลูกค้า, อีเมล..." class="admin-search-field">
+          </div>
+          <div class="filter-pills-group" id="status-filter-pills">
+            <button type="button" class="filter-pill active" data-status="ALL" onclick="setStatusFilter('ALL', this)">ทั้งหมด (1,420)</button>
+            <button type="button" class="filter-pill" data-status="PAID" onclick="setStatusFilter('PAID', this)">ชำระสำเร็จ (1,418)</button>
+            <button type="button" class="filter-pill warning" data-status="PENDING_SYNC" onclick="setStatusFilter('PENDING_SYNC', this)">รอซิงก์สถานะ (2)</button>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="exportTransactionsCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>นำออก CSV</span>
+          </button>
+        </div>
+
+        <!-- Row 2: Date & Time, Event Dropdown, Amount Range, Method, Reset -->
+        <div class="filter-row-secondary">
+          <div class="filter-controls-inline">
+            <span class="filter-label-inline">ช่วงวันเวลา:</span>
+            <div class="filter-pills-group" id="date-preset-pills" style="margin-right: 6px;">
+              <button type="button" class="filter-pill active" data-range="today" onclick="setDatePreset('today', this)">วันนี้</button>
+              <button type="button" class="filter-pill" data-range="7d" onclick="setDatePreset('7d', this)">7 วันล่าสุด</button>
+              <button type="button" class="filter-pill" data-range="30d" onclick="setDatePreset('30d', this)">30 วัน</button>
+              <button type="button" class="filter-pill" data-range="all" onclick="setDatePreset('all', this)">ทั้งหมด</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="date" id="tx-date-from" class="admin-date-input" value="2026-10-17" title="ตั้งแต่วันที่" onchange="applyAllFilters()">
+              <span style="font-size: 11px; color: var(--text-muted);">-</span>
+              <input type="date" id="tx-date-to" class="admin-date-input" value="2026-10-18" title="ถึงวันที่" onchange="applyAllFilters()">
+            </div>
+          </div>
+
+          <div class="filter-controls-inline">
+            <span class="filter-label-inline">คอนเสิร์ต:</span>
+            <select id="tx-event-filter" class="admin-select-input" onchange="applyAllFilters()">
+              <option value="ALL">ทุกคอนเสิร์ต (All Events)</option>
+              <option value="Indie Live Wave 2026">Indie Live Wave 2026</option>
+              <option value="Sunset Acoustic Rooftop">Sunset Acoustic Rooftop</option>
+              <option value="Neon Midnight Club">Neon Midnight Club</option>
+              <option value="Retro Synthwave Night">Retro Synthwave Night</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 6px;">ยอดเงิน:</span>
+            <select id="tx-amount-filter" class="admin-select-input" onchange="applyAllFilters()">
+              <option value="ALL">ทุกยอดเงิน</option>
+              <option value="UNDER_100">น้อยกว่า ฿100</option>
+              <option value="100_500">฿100 - ฿500</option>
+              <option value="OVER_500">มากกว่า ฿500</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 6px;">ช่องทาง:</span>
+            <select id="tx-method-filter" class="admin-select-input" onchange="applyAllFilters()">
+              <option value="ALL">ทุกช่องทาง</option>
+              <option value="PROMPTPAY">PromptPay QR</option>
+              <option value="CREDIT">บัตรเครดิต</option>
+            </select>
+
+            <button type="button" class="btn btn-outline btn-xs" style="margin-left: 6px;" onclick="resetTransactionFilters()">
+              ล้างตัวกรอง
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transactions Table Card -->
+      <div class="admin-card table-card">
+        <div class="table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Transaction ID / Ref</th>
+                <th>ข้อมูลผู้ซื้อ</th>
+                <th>ชื่องานคอนเสิร์ต</th>
+                <th>ยอดชำระ</th>
+                <th>เวลาชำระเงิน</th>
+                <th>สถานะเกตเวย์</th>
+                <th style="text-align: right;">การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Row 1: Recent Success -->
+              <tr class="tx-row" data-status="PAID" data-event="Indie Live Wave 2026" data-amount="79" data-date="2026-10-17" data-method="PROMPTPAY">
+                <td>
+                  <strong class="tx-id-text">TXN-PP-202610-8839</strong>
+                  <span class="tx-sub-ref">Order: ORD-202610-8839</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>วรพจน์ สิทธิชัย</strong>
+                    <span class="cust-meta">student@ubu.ac.th • 089-765-4321</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Indie Live Wave 2026</span>
+                  <span class="event-type-sub">1 ใบ • บัตร นศ. (฿79)</span>
+                </td>
+                <td>
+                  <strong class="price-highlight">฿79.00</strong>
+                </td>
+                <td>
+                  <span class="time-main">17 ต.ค. 2026, 23:38 น.</span>
+                  <span class="time-sub">เมื่อสักครู่</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระสำเร็จ (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="alert('รายละเอียดคำสั่งซื้อ ORD-202610-8839\nผู้ซื้อ: วรพจน์ สิทธิชัย\nอีเมล: student@ubu.ac.th\nบัตร: TKT-202610-8839-01\nสถานะเกตเวย์: Webhook 200 OK')">
+                    ดูคำสั่งซื้อ
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 2: Pending Sync Issue (Demonstration of Re-sync feature) -->
+              <tr class="tx-row warning-row" id="pending-tx-row-1" data-status="PENDING_SYNC" data-event="Sunset Acoustic Rooftop" data-amount="350" data-date="2026-10-17" data-method="PROMPTPAY">
+                <td>
+                  <strong class="tx-id-text">TXN-PP-202610-8836</strong>
+                  <span class="tx-sub-ref">Order: ORD-202610-8836</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>ธีรภัทร บุญญา</strong>
+                    <span class="cust-meta">teerapat@gmail.com • 081-234-5678</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Sunset Acoustic Rooftop</span>
+                  <span class="event-type-sub">1 ใบ • บัตรทั่วไป (฿350)</span>
+                </td>
+                <td>
+                  <strong class="price-highlight">฿350.00</strong>
+                </td>
+                <td>
+                  <span class="time-main">17 ต.ค. 2026, 23:25 น.</span>
+                  <span class="time-sub">14 นาทีที่แล้ว</span>
+                </td>
+                <td>
+                  <span class="badge badge-warning" id="pending-status-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    รอซิงก์ Webhook
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" id="resync-btn-1" class="btn btn-lime btn-xs" onclick="simulateAdminResync()">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    <span>Re-sync เกตเวย์</span>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 3: Standard Success -->
+              <tr class="tx-row" data-status="PAID" data-event="Neon Midnight Club" data-amount="598" data-date="2026-10-17" data-method="PROMPTPAY">
+                <td>
+                  <strong class="tx-id-text">TXN-PP-202610-8835</strong>
+                  <span class="tx-sub-ref">Order: ORD-202610-8835</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>ณัฐนันท์ ศิริกุล</strong>
+                    <span class="cust-meta">nattanan@hotmail.com • 086-987-6543</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Neon Midnight Club</span>
+                  <span class="event-type-sub">2 ใบ • บัตรทั่วไป (฿598)</span>
+                </td>
+                <td>
+                  <strong class="price-highlight">฿598.00</strong>
+                </td>
+                <td>
+                  <span class="time-main">17 ต.ค. 2026, 23:18 น.</span>
+                  <span class="time-sub">21 นาทีที่แล้ว</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระสำเร็จ (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="alert('รายละเอียดคำสั่งซื้อ ORD-202610-8835\nผู้ซื้อ: ณัฐนันท์ ศิริกุล\nยอด: ฿598.00\nสถานะ: ชำระสำเร็จแล้ว')">
+                    ดูคำสั่งซื้อ
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 4: Standard Success -->
+              <tr class="tx-row" data-status="PAID" data-event="Indie Live Wave 2026" data-amount="300" data-date="2026-10-17" data-method="PROMPTPAY">
+                <td>
+                  <strong class="tx-id-text">TXN-PP-202610-8834</strong>
+                  <span class="tx-sub-ref">Order: ORD-202610-8834</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>กมลชนก แสงดาว</strong>
+                    <span class="cust-meta">kamon@gmail.com • 084-555-1234</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Indie Live Wave 2026</span>
+                  <span class="event-type-sub">2 ใบ • บัตรทั่วไป (฿300)</span>
+                </td>
+                <td>
+                  <strong class="price-highlight">฿300.00</strong>
+                </td>
+                <td>
+                  <span class="time-main">17 ต.ค. 2026, 22:50 น.</span>
+                  <span class="time-sub">49 นาทีที่แล้ว</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระสำเร็จ (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="alert('รายละเอียดคำสั่งซื้อ ORD-202610-8834\nผู้ซื้อ: กมลชนก แสงดาว\nยอด: ฿300.00\nสถานะ: ชำระสำเร็จแล้ว')">
+                    ดูคำสั่งซื้อ
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 5: Historical transaction from 3 days ago -->
+              <tr class="tx-row" data-status="PAID" data-event="Retro Synthwave Night" data-amount="450" data-date="2026-10-14" data-method="PROMPTPAY">
+                <td>
+                  <strong class="tx-id-text">TXN-PP-202610-8702</strong>
+                  <span class="tx-sub-ref">Order: ORD-202610-8702</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong>อภิสิทธิ์ วรรณวิศาล</strong>
+                    <span class="cust-meta">apisit.w@yahoo.com • 082-111-9988</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Retro Synthwave Night</span>
+                  <span class="event-type-sub">1 ใบ • Early Bird (฿450)</span>
+                </td>
+                <td>
+                  <strong class="price-highlight">฿450.00</strong>
+                </td>
+                <td>
+                  <span class="time-main">14 ต.ค. 2026, 14:15 น.</span>
+                  <span class="time-sub">3 วันที่แล้ว</span>
+                </td>
+                <td>
+                  <span class="badge badge-lime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระสำเร็จ (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="alert('รายละเอียดคำสั่งซื้อ ORD-202610-8702\nผู้ซื้อ: อภิสิทธิ์ วรรณวิศาล\nยอด: ฿450.00\nสถานะ: ชำระสำเร็จแล้ว')">
+                    ดูคำสั่งซื้อ
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="admin-site-footer">
+    <div class="admin-footer-container">
+      <span>E-TIKKET Admin Portal &copy; 2026 • ระบบจัดการธุรกรรมและคอนเสิร์ต</span>
+      <span>Gateway Mode: Direct Webhook Listener • Auto Ticket Issuance Active</span>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+  <script>
+    // State management for filters
+    let currentStatusFilter = 'ALL';
+    let currentDatePreset = 'today';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('tx-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', applyAllFilters);
+      }
+    });
+
+    function setStatusFilter(status, btn) {
+      currentStatusFilter = status;
+      document.querySelectorAll('#status-filter-pills .filter-pill').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      applyAllFilters();
+    }
+
+    function setDatePreset(preset, btn) {
+      currentDatePreset = preset;
+      document.querySelectorAll('#date-preset-pills .filter-pill').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+
+      const dateFrom = document.getElementById('tx-date-from');
+      const dateTo = document.getElementById('tx-date-to');
+
+      if (preset === 'today') {
+        dateFrom.value = '2026-10-17';
+        dateTo.value = '2026-10-18';
+      } else if (preset === '7d') {
+        dateFrom.value = '2026-10-11';
+        dateTo.value = '2026-10-18';
+      } else if (preset === '30d') {
+        dateFrom.value = '2026-09-18';
+        dateTo.value = '2026-10-18';
+      } else if (preset === 'all') {
+        dateFrom.value = '';
+        dateTo.value = '';
+      }
+      applyAllFilters();
+    }
+
+    function applyAllFilters() {
+      const query = (document.getElementById('tx-search-input')?.value || '').toLowerCase().trim();
+      const eventVal = document.getElementById('tx-event-filter')?.value || 'ALL';
+      const amountVal = document.getElementById('tx-amount-filter')?.value || 'ALL';
+      const methodVal = document.getElementById('tx-method-filter')?.value || 'ALL';
+      const fromDate = document.getElementById('tx-date-from')?.value || '';
+      const toDate = document.getElementById('tx-date-to')?.value || '';
+
+      const rows = document.querySelectorAll('.admin-data-table tbody tr.tx-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const rowStatus = row.dataset.status || '';
+        const rowEvent = row.dataset.event || '';
+        const rowAmount = parseFloat(row.dataset.amount || '0');
+        const rowDate = row.dataset.date || '';
+        const rowMethod = row.dataset.method || '';
+
+        // Match Query
+        const matchQuery = !query || text.includes(query);
+
+        // Match Status
+        const matchStatus = (currentStatusFilter === 'ALL') || (rowStatus === currentStatusFilter);
+
+        // Match Event
+        const matchEvent = (eventVal === 'ALL') || (rowEvent === eventVal);
+
+        // Match Amount
+        let matchAmount = true;
+        if (amountVal === 'UNDER_100') matchAmount = rowAmount < 100;
+        else if (amountVal === '100_500') matchAmount = (rowAmount >= 100 && rowAmount <= 500);
+        else if (amountVal === 'OVER_500') matchAmount = rowAmount > 500;
+
+        // Match Method
+        const matchMethod = (methodVal === 'ALL') || (rowMethod === methodVal);
+
+        // Match Date
+        let matchDate = true;
+        if (fromDate && rowDate < fromDate) matchDate = false;
+        if (toDate && rowDate > toDate) matchDate = false;
+
+        const isVisible = matchQuery && matchStatus && matchEvent && matchAmount && matchMethod && matchDate;
+        row.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleCount++;
+      });
+    }
+
+    function resetTransactionFilters() {
+      document.getElementById('tx-search-input').value = '';
+      document.getElementById('tx-event-filter').value = 'ALL';
+      document.getElementById('tx-amount-filter').value = 'ALL';
+      document.getElementById('tx-method-filter').value = 'ALL';
+      
+      const allStatusBtn = document.querySelector('#status-filter-pills .filter-pill[data-status="ALL"]');
+      if (allStatusBtn) setStatusFilter('ALL', allStatusBtn);
+      
+      const allDateBtn = document.querySelector('#date-preset-pills .filter-pill[data-range="all"]');
+      if (allDateBtn) setDatePreset('all', allDateBtn);
+    }
+
+    function exportTransactionsCSV() {
+      alert('✓ ดาวน์โหลดรายงานธุรกรรม (CSV Export)\nระบบได้สร้างไฟล์ transactions-report-20261018.csv เรียบร้อยแล้ว');
+    }
+
+    // Live Demonstration of Re-sync
+    function simulateAdminResync() {
+      const btn = document.getElementById('resync-btn-1');
+      const badge = document.getElementById('pending-status-badge');
+      const row = document.getElementById('pending-tx-row-1');
+      if (!btn) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>กำลังเชื่อมต่อ API...</span>';
+
+      setTimeout(() => {
+        if (badge) {
+          badge.className = 'badge badge-lime';
+          badge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> ชำระสำเร็จ (PAID)';
+        }
+        if (row) {
+          row.classList.remove('warning-row');
+          row.dataset.status = 'PAID';
+        }
+        btn.className = 'btn btn-outline btn-xs';
+        btn.innerHTML = '✓ ซิงก์สำเร็จ';
+        alert('✓ ได้รับการยืนยันยอดเงินจากเกตเวย์เรียบร้อยแล้ว!\nระบบได้ทำการเปลี่ยนสถานะคำสั่งซื้อ ORD-202610-8836 เป็น PAID และออกตั๋ว QR ส่งเข้าอีเมลลูกค้า teerapat@gmail.com เรียบร้อยแล้ว');
+      }, 900);
+    }
+  </script>
+</body>
+</html>

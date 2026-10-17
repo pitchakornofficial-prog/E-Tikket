@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ค้นหาบัตรของฉัน — E-TIKKET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="lookup" data-prototype-id="lookup-v1">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>7. My Tickets Lookup</strong></span>
+      <span>ID: <strong>lookup-v1</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" class="active" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
+      </a>
+      <nav class="nav-actions">
+        <a href="index.html" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          ย้อนกลับไปหน้าแรก
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="lookup-container">
+
+      <div class="lookup-header-card">
+        <div class="lookup-icon-wrap">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <h1 class="lookup-title">ค้นหาบัตรคอนเสิร์ตของฉัน</h1>
+        <p class="lookup-sub">
+          กรอกอีเมลและเบอร์โทรศัพท์ที่ใช้ในการสั่งซื้อ เพื่อตรวจสอบสถานะคำสั่งซื้อและรับลิงก์เปิดบัตรเข้างาน
+        </p>
+
+        <!-- Search Form -->
+        <form id="lookup-form" class="lookup-form">
+          <div class="form-group">
+            <label class="form-label" for="lookup-email">อีเมลที่ใช้สั่งซื้อ *</label>
+            <input type="email" id="lookup-email" required placeholder="เช่น student@ubu.ac.th" class="form-control" value="student@ubu.ac.th">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lookup-phone">เบอร์โทรศัพท์ *</label>
+            <input type="tel" id="lookup-phone" required placeholder="เช่น 089-765-4321" class="form-control" value="089-765-4321">
+          </div>
+          <button type="submit" id="lookup-submit-btn" class="btn btn-lime btn-lg full-width">
+            <span>ค้นหาประวัติการจองบัตร</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Result Card (Strictly NO QR Code Displayed on Screen) -->
+      <div id="lookup-result-card" class="lookup-result-card" style="display:none;">
+        <div class="result-header">
+          <div>
+            <span class="badge badge-lime">พบคำสั่งซื้อ (PAID • ชำระเงินแล้ว)</span>
+            <h2 class="result-event-name">Indie Live Wave 2026</h2>
+            <p class="result-event-meta">📅 เสาร์ 24 ต.ค. 2026 • 18:00 น. • The Riverfront Warehouse</p>
+          </div>
+          <div class="result-order-ref">
+            <span class="ref-lbl">Order Ref</span>
+            <strong>#ORD-8839</strong>
+          </div>
+        </div>
+
+        <div class="result-details-grid">
+          <div class="detail-cell">
+            <span class="cell-lbl">ชื่อผู้รับบัตร</span>
+            <strong class="cell-val">วรพจน์ สิทธิชัย</strong>
+          </div>
+          <div class="detail-cell">
+            <span class="cell-lbl">จำนวนบัตร</span>
+            <strong class="cell-val">1 ใบ (สิทธิ์นักศึกษา @ubu.ac.th)</strong>
+          </div>
+          <div class="detail-cell">
+            <span class="cell-lbl">ยอดชำระสุทธิ</span>
+            <strong class="cell-val">฿79.00 (ชำระผ่าน PromptPay สำเร็จ)</strong>
+          </div>
+          <div class="detail-cell">
+            <span class="cell-lbl">สถานะบัตร</span>
+            <strong class="cell-val" style="color:#10b981;">✓ ออกบัตรเรียบร้อยแล้ว</strong>
+          </div>
+        </div>
+
+        <!-- Security Gate Notice: No QR Code Shown Directly -->
+        <div class="security-privacy-notice">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <div class="notice-txt">
+            <strong>มาตรการรักษาความปลอดภัยสูงสุด (Zero Leak Policy)</strong>
+            <p>เพื่อป้องกันบุคคลอื่นนำเบอร์โทรศัพท์มาแอบดู QR Code ระบบจะไม่แสดง QR Code บนหน้าจอนี้ กรุณากดปุ่มด้านล่างเพื่อรับ <strong>Magic Link</strong> สำหรับเปิดบัตรส่งตรงเข้าอีเมลของคุณ</p>
+          </div>
+        </div>
+
+        <!-- Magic Link Action Button -->
+        <button type="button" id="send-magic-link-btn" class="btn btn-dark btn-lg full-width">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <span>ส่งลิงก์เปิดบัตร (Magic Link) ไปยังอีเมล student@ubu.ac.th</span>
+        </button>
+
+        <div id="magic-link-sent-alert" class="magic-sent-box" style="display:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>ส่งลิงก์เปิดดูบัตรเรียบร้อยแล้ว! กรุณาเช็กกล่องข้อความหรืออีเมลขยะของคุณ</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">E-TIKKET</span>
+        <p>แพลตฟอร์มระบบจำหน่ายบัตรคอนเสิร์ตและอีเวนต์ยุคใหม่ จองง่าย ปลอดภัย สแกนจ่ายด้วยพร้อมเพย์อัตโนมัติ</p>
+      </div>
+      <div class="footer-links">
+        <span>Guest Checkout • CSPRNG QR Ticket • Re-entry Audit</span>
+        <span class="copy">E-TIKKET Prototype &copy; 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+</body>
+</html>

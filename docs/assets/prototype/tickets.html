@@ -3,197 +3,193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>View My Tickets - E-Ticket สำหรับเข้างาน</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <title>บัตรคอนเสิร์ตของฉัน — E-TIKKET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
-<body data-prototype-page="tickets" data-prototype-id="tickets-v2">
+<body data-prototype-page="tickets" data-prototype-id="tickets-v4">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
-      <span>Page: <strong>View My Tickets (Guest Token)</strong></span>
-      <span>ID: <strong>tickets-v2</strong></span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>6. Ticket Pass & QR</strong></span>
+      <span>ID: <strong>tickets-v4</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
-      <a href="event-detail.html" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
-      <a href="checkout.html" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
-      <a href="tickets.html" class="active" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
-      <a href="admin-verifications.html" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
-      <a href="organizer-checkin.html" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" class="active" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
     </nav>
   </div>
 
   <header class="site-header">
     <div class="header-container">
       <a href="index.html" class="brand">
-        <span>TICKETBOX</span>
-        <span class="brand-badge">MVP</span>
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
       </a>
-      <span style="font-size:12px; color:var(--text-muted);">ลิงก์บัตรจากอีเมล • ตัวอย่าง</span>
+      <nav class="nav-actions">
+        <a href="index.html" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          สำรวจงานอื่นเพิ่มเติม
+        </a>
+      </nav>
     </div>
   </header>
 
-  <main class="main-content"><p class="access-note">ตัวอย่างเมื่อเปิดลิงก์บัตรจากอีเมลที่มีสิทธิ์แล้ว • รูป QR เป็นภาพจำลองที่สแกนไม่ได้</p>
-    <div style="text-align: center; max-width: 650px; margin: 0 auto 32px;">
-      <span class="badge badge-success" style="margin-bottom: 8px;">✓ ชำระเงินสำเร็จ (PAID)</span>
-      <h1 style="font-size: 28px;">บัตรเข้างานคอนเสิร์ตของคุณ</h1>
-      <p style="font-size: 14px;">
-        คำสั่งซื้อ <strong>#ORD-00125</strong> &bull; ผู้ซื้อ: <strong>John Doe</strong> (john@example.com)<br>
-        กรุณาเปิดหน้านี้และแสดง QR Code ให้ Staff สแกนที่ประตูทางเข้างาน
-      </p>
-    </div>
+  <main class="main-content">
+    <div class="tickets-page-container">
 
-    <!-- Ticket Cards List (1 Order -> Multiple Tickets) -->
-    <div class="ticket-container">
-
-      <!-- Ticket 1 -->
-      <div class="ticket-item">
-        <div class="ticket-details">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span class="badge badge-outline">TICKET 1 OF 3</span>
-            <span class="badge badge-outline">↗ OUTSIDE • พร้อมเข้างาน</span>
-          </div>
-          <h2 style="font-size: 22px; margin-bottom: 4px;">Summer Live Concert</h2>
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">The Riverfront Warehouse (เจริญกรุง)</p>
-          <div style="font-size: 13px; display:flex; flex-direction:column; gap:4px;">
-            <span>📅 วันเสาร์ที่ 24 ตุลาคม 2026</span>
-            <span>⏰ เวลา 18:00 น.</span>
-            <span>🎟️ ประเภท: บัตรเข้างานทั่วไป (399 THB)</span>
-          </div>
-          <div style="margin-top: 16px; font-family: monospace; font-size: 14px; color: var(--accent-white); font-weight:700;">
-            เลขที่บัตร: TKT-00125-01
-          </div>
+      <!-- Success Notification Banner -->
+      <div class="success-banner">
+        <div class="success-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         </div>
-        <div class="ticket-qr">
-          <div class="qr-box">
-            <!-- Simulated QR SVG with high contrast -->
-            <svg viewBox="0 0 100 100" width="114" height="114">
-              <rect width="100" height="100" fill="#fff"/>
-              <rect x="5" y="5" width="28" height="28" fill="#000"/>
-              <rect x="9" y="9" width="20" height="20" fill="#fff"/>
-              <rect x="13" y="13" width="12" height="12" fill="#000"/>
-              <rect x="67" y="5" width="28" height="28" fill="#000"/>
-              <rect x="71" y="9" width="20" height="20" fill="#fff"/>
-              <rect x="75" y="13" width="12" height="12" fill="#000"/>
-              <rect x="5" y="67" width="28" height="28" fill="#000"/>
-              <rect x="9" y="71" width="20" height="20" fill="#fff"/>
-              <rect x="13" y="75" width="12" height="12" fill="#000"/>
-              <rect x="40" y="20" width="15" height="10" fill="#000"/>
-              <rect x="50" y="40" width="10" height="15" fill="#000"/>
-              <rect x="25" y="45" width="15" height="10" fill="#000"/>
-              <rect x="40" y="70" width="20" height="15" fill="#000"/>
-              <rect x="70" y="50" width="15" height="15" fill="#000"/>
-            </svg>
-          </div>
-          <small style="color:#888; font-size:10px; margin-top:6px; font-family:monospace;">QR ตัวอย่าง · ใบที่ 1</small>
+        <div class="success-text">
+          <h2>ออกบัตรเข้างานสำเร็จเรียบร้อย!</h2>
+          <p>ระบบได้ส่งลิงก์เปิดบัตรไปยังอีเมลของคุณเรียบร้อยแล้ว หรือท่านสามารถกดปุ่ม <strong>"บันทึกภาพตั๋วลงเครื่อง"</strong> ด้านล่างนี้เพื่อใช้สแกนเข้างานได้ทันที</p>
         </div>
       </div>
 
-      <!-- Ticket 2 -->
-      <div class="ticket-item">
-        <div class="ticket-details">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span class="badge badge-outline">TICKET 2 OF 3</span>
-            <span class="badge badge-outline">↗ OUTSIDE • พร้อมเข้างาน</span>
+      <!-- Multiple Tickets List Container -->
+      <div id="tickets-list-container">
+        
+        <!-- Ticket 1 -->
+        <div class="ticket-pass-card">
+          <div class="ticket-pass-main">
+            <div class="pass-tag-row">
+              <span class="badge badge-lime">VALID TICKET • ใบที่ 1 จาก 1 ใบ</span>
+              <span class="badge badge-dark">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                รองรับ Re-entry เข้า/ออกงาน
+              </span>
+            </div>
+
+            <h1 class="pass-event-title">Indie Live Wave 2026</h1>
+            <p class="pass-venue">The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ</p>
+
+            <div class="pass-info-grid">
+              <div class="pass-info-item">
+                <span class="pass-label">วันจัดแสดง</span>
+                <strong class="pass-val">เสาร์ที่ 24 ตุลาคม 2026</strong>
+              </div>
+              <div class="pass-info-item">
+                <span class="pass-label">เวลาเปิดประตู</span>
+                <strong class="pass-val">17:00 น. (เริ่ม 18:00 น.)</strong>
+              </div>
+              <div class="pass-info-item">
+                <span class="pass-label">ชื่อผู้ถือบัตร</span>
+                <strong class="pass-val ticket-holder-name">วรพจน์ สิทธิชัย</strong>
+              </div>
+              <div class="pass-info-item">
+                <span class="pass-label">ประเภทบัตร</span>
+                <strong class="pass-val" id="ticket-type-label">สิทธิ์นักศึกษา @ubu.ac.th (฿79)</strong>
+              </div>
+            </div>
+
+            <div class="pass-id-row">
+              <span>Ticket ID: <strong>TKT-202610-8839-01</strong></span>
+              <span>Order Ref: <strong>ORD-8839</strong></span>
+            </div>
           </div>
-          <h2 style="font-size: 22px; margin-bottom: 4px;">Summer Live Concert</h2>
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">The Riverfront Warehouse (เจริญกรุง)</p>
-          <div style="font-size: 13px; display:flex; flex-direction:column; gap:4px;">
-            <span>📅 วันเสาร์ที่ 24 ตุลาคม 2026</span>
-            <span>⏰ เวลา 18:00 น.</span>
-            <span>🎟️ ประเภท: บัตรเข้างานทั่วไป (399 THB)</span>
+
+          <!-- Perforated Divider -->
+          <div class="ticket-perforation">
+            <div class="perforation-notch top"></div>
+            <div class="perforation-line"></div>
+            <div class="perforation-notch bottom"></div>
           </div>
-          <div style="margin-top: 16px; font-family: monospace; font-size: 14px; color: var(--accent-white); font-weight:700;">
-            เลขที่บัตร: TKT-00125-02
+
+          <!-- Right Stub: QR Code for Gate Scanning -->
+          <div class="ticket-pass-stub">
+            <div class="stub-qr-wrapper">
+              <svg class="ticket-qr-svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+                <rect width="160" height="160" fill="white" rx="10"/>
+                <rect x="15" y="15" width="38" height="38" fill="black" rx="6"/>
+                <rect x="21" y="21" width="26" height="26" fill="white" rx="3"/>
+                <rect x="27" y="27" width="14" height="14" fill="black" rx="2"/>
+                <rect x="107" y="15" width="38" height="38" fill="black" rx="6"/>
+                <rect x="113" y="21" width="26" height="26" fill="white" rx="3"/>
+                <rect x="119" y="27" width="14" height="14" fill="black" rx="2"/>
+                <rect x="15" y="107" width="38" height="38" fill="black" rx="6"/>
+                <rect x="21" y="113" width="26" height="26" fill="white" rx="3"/>
+                <rect x="27" y="119" width="14" height="14" fill="black" rx="2"/>
+                <rect x="62" y="20" width="8" height="8" fill="black" rx="1"/>
+                <rect x="78" y="20" width="8" height="8" fill="black" rx="1"/>
+                <rect x="62" y="36" width="8" height="8" fill="black" rx="1"/>
+                <rect x="86" y="36" width="8" height="8" fill="black" rx="1"/>
+                <rect x="20" y="62" width="8" height="8" fill="black" rx="1"/>
+                <rect x="36" y="62" width="8" height="8" fill="black" rx="1"/>
+                <rect x="70" y="62" width="22" height="22" fill="#0f172a" rx="4"/>
+                <rect x="116" y="62" width="8" height="8" fill="black" rx="1"/>
+                <rect x="132" y="62" width="8" height="8" fill="black" rx="1"/>
+                <rect x="62" y="94" width="8" height="8" fill="black" rx="1"/>
+                <rect x="86" y="94" width="8" height="8" fill="black" rx="1"/>
+                <rect x="116" y="94" width="8" height="8" fill="black" rx="1"/>
+                <rect x="62" y="110" width="16" height="8" fill="black" rx="1"/>
+                <rect x="94" y="110" width="8" height="16" fill="black" rx="1"/>
+                <rect x="116" y="118" width="16" height="16" fill="black" rx="2"/>
+                <rect x="78" y="134" width="24" height="8" fill="black" rx="1"/>
+              </svg>
+            </div>
+            <span class="stub-qr-note">สแกน QR นี้ที่ประตูทางเข้า</span>
+            <span class="stub-security-tag">CSPRNG SHA-256 SECURED</span>
           </div>
         </div>
-        <div class="ticket-qr">
-          <div class="qr-box">
-            <!-- Simulated QR SVG with different pattern for token 2 -->
-            <svg viewBox="0 0 100 100" width="114" height="114">
-              <rect width="100" height="100" fill="#fff"/>
-              <rect x="5" y="5" width="28" height="28" fill="#000"/>
-              <rect x="9" y="9" width="20" height="20" fill="#fff"/>
-              <rect x="13" y="13" width="12" height="12" fill="#000"/>
-              <rect x="67" y="5" width="28" height="28" fill="#000"/>
-              <rect x="71" y="9" width="20" height="20" fill="#fff"/>
-              <rect x="75" y="13" width="12" height="12" fill="#000"/>
-              <rect x="5" y="67" width="28" height="28" fill="#000"/>
-              <rect x="9" y="71" width="20" height="20" fill="#fff"/>
-              <rect x="13" y="75" width="12" height="12" fill="#000"/>
-              <rect x="35" y="30" width="25" height="15" fill="#000"/>
-              <rect x="45" y="55" width="15" height="10" fill="#000"/>
-              <rect x="70" y="40" width="10" height="25" fill="#000"/>
-              <rect x="50" y="75" width="20" height="10" fill="#000"/>
-            </svg>
-          </div>
-          <small style="color:#888; font-size:10px; margin-top:6px; font-family:monospace;">QR ตัวอย่าง · ใบที่ 2</small>
-        </div>
+
       </div>
 
-      <!-- Ticket 3 -->
-      <div class="ticket-item">
-        <div class="ticket-details">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <span class="badge badge-outline">TICKET 3 OF 3</span>
-            <span class="badge badge-outline">↗ OUTSIDE • พร้อมเข้างาน</span>
-          </div>
-          <h2 style="font-size: 22px; margin-bottom: 4px;">Summer Live Concert</h2>
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">The Riverfront Warehouse (เจริญกรุง)</p>
-          <div style="font-size: 13px; display:flex; flex-direction:column; gap:4px;">
-            <span>📅 วันเสาร์ที่ 24 ตุลาคม 2026</span>
-            <span>⏰ เวลา 18:00 น.</span>
-            <span>🎟️ ประเภท: บัตรเข้างานทั่วไป (399 THB)</span>
-          </div>
-          <div style="margin-top: 16px; font-family: monospace; font-size: 14px; color: var(--accent-white); font-weight:700;">
-            เลขที่บัตร: TKT-00125-03
-          </div>
-        </div>
-        <div class="ticket-qr">
-          <div class="qr-box">
-            <!-- Simulated QR SVG with different pattern for token 3 -->
-            <svg viewBox="0 0 100 100" width="114" height="114">
-              <rect width="100" height="100" fill="#fff"/>
-              <rect x="5" y="5" width="28" height="28" fill="#000"/>
-              <rect x="9" y="9" width="20" height="20" fill="#fff"/>
-              <rect x="13" y="13" width="12" height="12" fill="#000"/>
-              <rect x="67" y="5" width="28" height="28" fill="#000"/>
-              <rect x="71" y="9" width="20" height="20" fill="#fff"/>
-              <rect x="75" y="13" width="12" height="12" fill="#000"/>
-              <rect x="5" y="67" width="28" height="28" fill="#000"/>
-              <rect x="9" y="71" width="20" height="20" fill="#fff"/>
-              <rect x="13" y="75" width="12" height="12" fill="#000"/>
-              <rect x="45" y="15" width="10" height="30" fill="#000"/>
-              <rect x="35" y="50" width="20" height="15" fill="#000"/>
-              <rect x="70" y="70" width="15" height="10" fill="#000"/>
-              <rect x="40" y="80" width="15" height="15" fill="#000"/>
-            </svg>
-          </div>
-          <small style="color:#888; font-size:10px; margin-top:6px; font-family:monospace;">QR ตัวอย่าง · ใบที่ 3</small>
-        </div>
+      <!-- Action Buttons -->
+      <div class="ticket-actions-bar">
+        <button type="button" class="btn btn-lime btn-lg" onclick="alert('บันทึกรูปภาพตั๋วคอนเสิร์ตลงโทรศัพท์มือถือเรียบร้อยแล้ว!')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>บันทึกภาพตั๋วลงเครื่อง (Save to Photos)</span>
+        </button>
+
+        <a href="index.html" class="btn btn-outline btn-lg">
+          <span>กลับหน้าแรก</span>
+        </a>
       </div>
 
     </div>
+  </main>
 
-    <!-- Re-entry & Next Action Callout -->
-    <div style="max-width:600px; margin:32px auto 0; text-align:center; background-color:var(--bg-card); border:1px solid var(--border-subtle); padding:20px; border-radius:var(--radius-lg);">
-      <h3 style="font-size:15px; margin-bottom:8px;">ทดสอบสแกนบัตรที่หน้างาน (Organizer Simulation)</h3>
-      <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
-        จำลองเป็น Staff หน้างานเพื่อทดสอบสแกน Check-in, Re-entry (Check-out) และการตรวจจับบัตรซ้ำ
-      </p>
-      <a href="organizer-checkin.html" class="btn btn-primary" data-prototype-target="scanner-v2">
-        เปิดหน้าสแกนบัตร (Mobile QR Scanner) &rarr;
-      </a>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">E-TIKKET</span>
+        <p>แพลตฟอร์มระบบจำหน่ายบัตรคอนเสิร์ตและอีเวนต์ยุคใหม่ จองง่าย ปลอดภัย สแกนจ่ายด้วยพร้อมเพย์อัตโนมัติ</p>
+      </div>
+      <div class="footer-links">
+        <span>Guest Checkout • CSPRNG QR Ticket • Re-entry Audit</span>
+        <span class="copy">E-TIKKET Prototype &copy; 2026</span>
+      </div>
     </div>
-
-  <p class="art-note">ในการใช้งานจริง ภาพ QR เดิมถูกส่งจาก private R2 หลังแอปตรวจสิทธิ์ลิงก์บัตร ไม่แสดง QR ผ่าน checkout link</p></main>
-
-  <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-    TICKETBOX Prototype MVP &copy; 2026
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

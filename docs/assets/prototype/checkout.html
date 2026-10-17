@@ -3,175 +3,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ชำระเงินและแจ้งโอนสลิป - Order #ORD-00125</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <title>สั่งซื้อบัตรและยืนยันตัวตน — E-TIKKET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
-<body data-prototype-page="checkout" data-prototype-id="checkout-v2">
+<body data-prototype-page="checkout" data-prototype-id="checkout-v5">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
-      <span>Page: <strong>Checkout & Slip Upload</strong></span>
-      <span>ID: <strong>checkout-v2</strong></span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>4. Checkout (Info & OTP)</strong></span>
+      <span>ID: <strong>checkout-v5</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
-      <a href="event-detail.html" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
-      <a href="checkout.html" class="active" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
-      <a href="tickets.html" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
-      <a href="admin-verifications.html" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
-      <a href="organizer-checkin.html" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" class="active" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
     </nav>
   </div>
 
   <header class="site-header">
     <div class="header-container">
       <a href="index.html" class="brand">
-        <span>TICKETBOX</span>
-        <span class="brand-badge">MVP</span>
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
       </a>
-      <span style="font-size:13px; color:var(--text-muted);">Guest Checkout</span>
+      <nav class="nav-actions">
+        <a href="event-detail.html" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          ย้อนกลับ
+        </a>
+      </nav>
     </div>
   </header>
 
-  <main class="main-content checkout-content">
-<p class="access-note">หน้าชำระเงินจาก checkout link • แยกจากลิงก์เปิดบัตรทางอีเมล (จำลอง)</p>
+  <main class="main-content">
+    <div class="checkout-single-col-container">
 
-    <!-- 15-Minute Reservation Timer Banner -->
-    <div class="timer-banner" id="timer-banner">
-      <div>
-        <strong style="color:#fbbf24; font-size:14px; display:block;">⏱️ เวลาในการล็อกบัตรและชำระเงิน</strong>
-        <span style="font-size:12px; color:var(--text-secondary);">กรุณาโอนเงินและแนบสลิปก่อนหมดเวลา เพื่อรักษาสิทธิ์บัตรของท่าน</span>
+      <!-- Step Indicator Bar -->
+      <div class="checkout-steps">
+        <div class="step-item active">
+          <div class="step-circle">1</div>
+          <span class="step-label">ข้อมูล & OTP</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-circle">2</div>
+          <span class="step-label">ชำระเงินพร้อมเพย์</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <div class="step-circle">3</div>
+          <span class="step-label">รับตั๋ว QR</span>
+        </div>
       </div>
-      <div id="reservation-timer" class="timer-digits">15:00</div>
+
+      <!-- Active Reservation Countdown Timer (Appears when OTP requested) -->
+      <div id="reservation-timer-banner" class="timer-banner" style="display:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>ระบบกำลังล็อกโควตาบัตรให้คุณ: กรุณาทำรายการภายใน <strong id="timer-display">10:00</strong> นาที</span>
+      </div>
+
+      <div class="checkout-single-card">
+        
+        <!-- ส่วนแรก: โปสเตอร์แนวนอนเด่นชัดเจน แล้วรายละเอียดอยู่ถัดไป -->
+        <div class="checkout-hero-section">
+          <div class="checkout-landscape-wrap">
+            <img src="poster-summer.svg" alt="Indie Live Wave 2026" class="checkout-landscape-img">
+          </div>
+          <div class="checkout-event-details">
+            <span class="event-cat-tag">LIVE CONCERT • โควตาบัตรออนไลน์</span>
+            <h1 class="checkout-event-title">Indie Live Wave 2026</h1>
+            <p class="checkout-event-meta">
+              <span>📅 วันเสาร์ที่ 24 ตุลาคม 2026 • 18:00 - 23:30 น.</span>
+              <span>📍 The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ</span>
+            </p>
+          </div>
+        </div>
+
+        <form id="checkout-form" class="form-vertical-flow">
+          
+          <!-- ลำดับที่ 1: ข้อมูลผู้รับบัตร -->
+          <div class="form-section-block">
+            <h3 class="form-section-heading">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              1. ข้อมูลผู้ซื้อ & รับตั๋ว
+            </h3>
+            
+            <div class="form-group">
+              <label class="form-label" for="cust-name">ชื่อ - นามสกุล ผู้รับบัตร *</label>
+              <input type="text" id="cust-name" required placeholder="เช่น นายวรพจน์ สิทธิชัย" class="form-control" value="วรพจน์ สิทธิชัย">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-phone">เบอร์โทรศัพท์ติดต่อ *</label>
+              <input type="tel" id="cust-phone" required placeholder="เช่น 089-765-4321" class="form-control" value="089-765-4321">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-email">อีเมลสำหรับรับตั๋ว QR Code *</label>
+              <input type="email" id="cust-email" required placeholder="เช่น yourname@domain.com" class="form-control" value="student@ubu.ac.th">
+            </div>
+          </div>
+
+          <!-- ลำดับที่ 2: เลือกจำนวนบัตร (ปุ่ม + / - สะอาดตา ไม่มีลูกศร) -->
+          <div class="form-section-block">
+            <h3 class="form-section-heading">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              2. เลือกจำนวนบัตร
+            </h3>
+            <div class="quantity-control-row">
+              <div>
+                <span class="qty-title">บัตรเข้างานทั่วไป (General Admission)</span>
+                <span class="qty-sub">ราคาปกติ ฿150 / ใบ • ซื้อได้สูงสุด 4 ใบ</span>
+              </div>
+              <div class="qty-stepper-clean">
+                <button type="button" id="qty-minus" class="stepper-btn" aria-label="ลดจำนวนบัตร">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <input type="number" id="ticket-qty" value="1" min="1" max="4" readonly class="qty-input clean-number">
+                <button type="button" id="qty-plus" class="stepper-btn" aria-label="เพิ่มจำนวนบัตร">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- โค้ดโปรโมชัน -->
+            <div class="form-group" style="margin-top: 14px;">
+              <label class="form-label" for="promo-code">โค้ดโปรโมชัน (ถ้ามี)</label>
+              <div class="promo-input-row">
+                <input type="text" id="promo-code" placeholder="เช่น INDIE2026" class="form-control" style="text-transform: uppercase;">
+                <button type="button" id="apply-promo-btn" class="btn btn-outline btn-sm">นำไปใช้</button>
+              </div>
+              <span id="promo-msg" class="promo-feedback-text"></span>
+            </div>
+          </div>
+
+          <!-- ลำดับที่ 3: ยืนยันอีเมลด้วยรหัส OTP (แสดงอีเมลที่จะส่งไป, 6 ช่องแยก, ยืนยันแล้วจึงให้ส่วนลด) -->
+          <div class="form-section-block">
+            <h3 class="form-section-heading">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              3. ยืนยันอีเมลด้วยรหัส OTP
+            </h3>
+            
+            <div class="otp-verification-box">
+              <div class="otp-header">
+                <div>
+                  <h4 class="otp-title">ยืนยันอีเมลเพื่อรับสิทธิ์และล็อกบัตร</h4>
+                  <p class="otp-email-notify">
+                    รหัส OTP 6 หลัก จะถูกส่งไปยัง: <strong id="otp-target-email-display">student@ubu.ac.th</strong>
+                  </p>
+                </div>
+                <button type="button" id="request-otp-btn" class="btn btn-dark btn-sm">
+                  <span>ขอรหัส OTP</span>
+                </button>
+              </div>
+
+              <!-- ช่องใส่ OTP 6 ช่องแยกกัน -->
+              <div id="otp-input-area" class="otp-boxes-wrapper" style="display:none;">
+                <span class="otp-instruction">กรุณากรอกรหัส 6 หลักที่ได้รับในอีเมล:</span>
+                <div class="otp-digits-group" id="otp-inputs-container">
+                  <input type="text" maxlength="1" class="otp-digit-box" data-index="1" inputmode="numeric" autocomplete="one-time-code">
+                  <input type="text" maxlength="1" class="otp-digit-box" data-index="2" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-digit-box" data-index="3" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-digit-box" data-index="4" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-digit-box" data-index="5" inputmode="numeric">
+                  <input type="text" maxlength="1" class="otp-digit-box" data-index="6" inputmode="numeric">
+                </div>
+                <span class="otp-demo-hint">ทดสอบในระบบจำลอง: กรอก <strong>1 2 3 4 5 6</strong></span>
+
+                <button type="button" id="verify-otp-btn" class="btn btn-lime btn-sm full-width" style="margin-top: 12px;">
+                  <span>ยืนยัน OTP</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </button>
+              </div>
+
+              <!-- กล่องแสดงส่วนลดที่ได้รับ (จะแสดงเฉพาะเมื่อยืนยัน OTP สำเร็จแล้วเท่านั้น) -->
+              <div id="otp-verified-discount-badge" class="domain-discount-badge" style="display:none; margin-top: 16px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <div>
+                  <strong>✓ ยืนยันอีเมลสำเร็จ! ได้รับสิทธิ์ราคาพิเศษนักศึกษา</strong>
+                  <p>ใช้อีเมลสถาบัน (@ubu.ac.th) ได้รับส่วนลดเหลือ <strong>฿79 / ใบ</strong> (ประหยัด ฿71 ต่อใบ)</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ลำดับที่ 4: สรุปยอดเงินคำสั่งซื้อ -->
+          <div class="checkout-bottom-summary">
+            <h3 class="summary-bottom-title">4. สรุปยอดเงินคำสั่งซื้อ</h3>
+            <div class="summary-pricing-breakdown">
+              <div class="price-row">
+                <span id="price-row-label">บัตรเข้างาน (1 ใบ × ฿150)</span>
+                <span id="subtotal-amount">฿150</span>
+              </div>
+              <div class="price-row discount-row" id="discount-row" style="display:none;">
+                <span id="discount-row-label">ส่วนลดนักศึกษา (@ubu.ac.th)</span>
+                <span id="discount-amount">-฿71</span>
+              </div>
+              <div class="price-row fee-row">
+                <span>ค่าธรรมเนียมธุรกรรม</span>
+                <span>฿0 (ฟรี)</span>
+              </div>
+              <div class="price-row total-row">
+                <span class="total-label">ยอดสุทธิที่ต้องชำระ</span>
+                <span class="total-val" id="grand-total">฿150</span>
+              </div>
+            </div>
+
+            <!-- Submit Button to Proceed to Payment -->
+            <button type="button" id="proceed-to-payment-btn" class="btn btn-lime btn-lg full-width" disabled>
+              <span>ไปขั้นตอนชำระเงิน (สแกนพร้อมเพย์)</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <span class="guarantee-note">กรุณายืนยันรหัส OTP ให้เรียบร้อยก่อนดำเนินการชำระเงิน</span>
+          </div>
+
+        </form>
+      </div>
+
     </div>
+  </main>
 
-    <!-- Expired Warning (hidden by default) -->
-    <div id="order-expired-msg" style="display:none; background-color:rgba(239, 68, 68, 0.15); border:1px solid #ef4444; padding:16px; border-radius:var(--radius-md); margin-bottom:20px; color:#f87171;">
-      ⚠️ คำสั่งซื้อนี้หมดเวลา 15 นาทีแล้ว ระบบได้ทำการคืนสต็อกบัตรเรียบร้อย กรุณากดทำรายการสั่งซื้อใหม่อีกครั้ง
-    </div>
-
-    <!-- Order Header & Status -->
-    <div class="order-heading" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 24px; border-bottom:1px solid var(--border-subtle); padding-bottom: 16px;">
-      <div>
-        <span style="color:var(--text-muted); font-size:13px;">คำสั่งซื้อเลขที่</span>
-        <h1 style="font-size: 26px; margin: 4px 0;">Order #ORD-00125</h1>
-        <p style="font-size:14px;">ผู้สั่งซื้อ: <strong>John Doe</strong> (john@example.com, 081-234-5678)</p>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">E-TIKKET</span>
+        <p>แพลตฟอร์มระบบจำหน่ายบัตรคอนเสิร์ตและอีเวนต์ยุคใหม่ จองง่าย ปลอดภัย สแกนจ่ายด้วยพร้อมเพย์อัตโนมัติ</p>
       </div>
-      <div style="text-align:right;">
-        <span style="color:var(--text-muted); font-size:12px; display:block; margin-bottom:4px;">สถานะคำสั่งซื้อ:</span>
-        <span id="order-status-badge" class="badge badge-pending">PENDING_PAYMENT</span>
+      <div class="footer-links">
+        <span>Guest Checkout • CSPRNG QR Ticket • Re-entry Audit</span>
+        <span class="copy">E-TIKKET Prototype &copy; 2026</span>
       </div>
     </div>
-
-    <!-- Order Summary Details -->
-    <div style="background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
-      <h3 style="font-size:16px; margin-bottom:12px;">รายการบัตร</h3>
-      <div class="summary-line" style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px;">
-        <span>Summer Live Concert &bull; บัตรทั่วไป (&times; 3 ใบ)</span>
-        <span>1,197 THB</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; border-top:1px solid var(--border-subtle); padding-top:12px; margin-top:12px;">
-        <span style="color:var(--accent-white);">ยอดเงินที่ต้องชำระ:</span>
-        <span style="color:var(--accent-white); font-size:20px;">1,197 THB</span>
-      </div>
-    </div>
-
-    <!-- Payment Transfer Instructions -->
-    <div class="payment-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; background-color: var(--bg-secondary); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 32px;">
-      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border-right: 1px solid var(--border-subtle); padding-right: 20px;">
-        <div style="background-color:#ffffff; padding:12px; border-radius:var(--radius-md); margin-bottom:12px; width:160px; height:160px; display:flex; align-items:center; justify-content:center; border: 2px solid #000;">
-          <!-- Mock PromptPay QR code -->
-          <svg viewBox="0 0 100 100" width="130" height="130">
-            <rect width="100" height="100" fill="#fff"/>
-            <rect x="10" y="10" width="25" height="25" fill="#000"/>
-            <rect x="15" y="15" width="15" height="15" fill="#fff"/>
-            <rect x="65" y="10" width="25" height="25" fill="#000"/>
-            <rect x="70" y="15" width="15" height="15" fill="#fff"/>
-            <rect x="10" y="65" width="25" height="25" fill="#000"/>
-            <rect x="15" y="70" width="15" height="15" fill="#fff"/>
-            <rect x="45" y="45" width="10" height="10" fill="#000"/>
-            <rect x="40" y="20" width="20" height="5" fill="#000"/>
-            <rect x="20" y="40" width="5" height="20" fill="#000"/>
-            <rect x="60" y="50" width="25" height="10" fill="#000"/>
-            <rect x="45" y="70" width="15" height="15" fill="#000"/>
-          </svg>
-        </div>
-        <span style="font-size:12px; color:var(--text-muted);">QR พร้อมเพย์ตัวอย่าง • ใช้ชำระเงินจริงไม่ได้</span>
-      </div>
-
-      <div style="display:flex; flex-direction:column; justify-content:center; gap:10px; font-size:14px;">
-        <span class="badge badge-outline" style="width:fit-content;">ข้อมูลบัญชีตัวอย่าง</span>
-        <div>
-          <span style="color:var(--text-muted); font-size:12px; display:block;">ธนาคาร:</span>
-          <strong>ธนาคารกสิกรไทย (KBANK)</strong>
-        </div>
-        <div>
-          <span style="color:var(--text-muted); font-size:12px; display:block;">ชื่อบัญชี:</span>
-          <strong>บจก. ทิกเก็ตบ็อกซ์ สตูดิโอ (TicketBox)</strong>
-        </div>
-        <div>
-          <span style="color:var(--text-muted); font-size:12px; display:block;">เลขที่บัญชี:</span>
-          <strong style="font-size:18px; font-family:monospace; color:var(--accent-white); letter-spacing:1px;">XXX-X-XX789-X</strong>
-        </div>
-        <div>
-          <span style="color:var(--text-muted); font-size:12px; display:block;">ยอดเงินที่ต้องโอน (ยอดตรงเป๊ะ):</span>
-          <strong style="color:#10b981; font-size:16px;">1,197.00 THB</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slip Upload Section -->
-    <section style="background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px;">
-      <h2 style="font-size: 18px; margin-bottom: 8px;">แนบสลิปหลักฐานการโอนเงิน</h2>
-      <p style="font-size:13px; margin-bottom: 20px;">
-        รองรับไฟล์ JPEG และ PNG ขนาดไม่เกิน 5 MB
-      </p>
-
-      <div style="border: 2px dashed var(--border-strong); border-radius: var(--radius-md); padding: 32px; text-align: center; background-color: var(--bg-secondary); margin-bottom: 20px;">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2" style="margin-bottom:12px;">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <polyline points="21 15 16 10 5 21"/>
-        </svg>
-        <p style="font-size:14px; margin-bottom: 12px; color:var(--text-secondary);">เลือกไฟล์รูปสลิปที่ต้องการส่ง</p>
-        <input type="file" id="slip-file-input" aria-label="เลือกสลิป JPEG หรือ PNG ไม่เกิน 5 MB" accept="image/jpeg,image/png" style="font-size:13px; color:var(--text-muted);">
-      </div>
-
-      <p id="upload-error" class="inline-error" role="alert" hidden></p>
-<!-- Slip Image Preview -->
-      <div id="slip-preview-container" style="display:none; margin-bottom:20px; text-align:center;">
-        <span style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">ภาพสลิปที่เลือก:</span>
-        <img id="slip-preview-img" src="" alt="Slip Preview" style="max-height:220px; border-radius:var(--radius-md); border:1px solid var(--border-strong);">
-      </div>
-
-      <!-- Submit Action Button -->
-      <button id="submit-slip-btn" class="btn btn-primary btn-block" style="padding:14px; font-size:16px;">
-        📤 อัปโหลดสลิปเพื่อส่งให้แอดมินตรวจสอบ
-      </button>
-
-      <!-- Upload Success Notice (Hidden Initially) -->
-      <div id="upload-success-notice" class="order-notice notice-pending" style="display:none;">
-        <h3 style=" font-size:16px; margin-bottom:6px;">✓ อัปโหลดสลิปเรียบร้อยแล้ว!</h3>
-        <p style="font-size:13px; color:var(--text-primary); margin-bottom:12px;">
-          สถานะ <strong>WAITING_FOR_VERIFY</strong> — รอแอดมินตรวจสอบ เมื่ออนุมัติแล้วจึงออกบัตรและส่งลิงก์เปิดบัตรทางอีเมล
-        </p>
-        <div style="border-top:1px solid rgba(16, 185, 129, 0.3); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:12px; color:var(--text-muted);">ทดสอบมุมมองแอดมิน:</span>
-          <a href="admin-verifications.html" class="btn btn-secondary" style="font-size:12px; padding:6px 12px;" data-prototype-target="admin-v2">
-            เปิดมุมมอง Admin จำลอง →
-          </a>
-        </div>
-      </div>
-    </section>
-
-  <details class="demo-controls"><summary>เครื่องมือจำลองสำหรับตรวจทาน prototype</summary><p>การเลือกไฟล์เป็น preview ภายใน browser ไม่มีการส่งไฟล์ไป R2 จริง</p><button class="btn btn-secondary" id="demo-expire">จำลองหมดเวลาจอง</button><button class="btn btn-secondary" id="demo-reset-order">เริ่ม Order ตัวอย่างใหม่</button></details></main>
-
-  <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-    TICKETBOX Prototype MVP &copy; 2026
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

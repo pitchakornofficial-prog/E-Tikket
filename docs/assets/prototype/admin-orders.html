@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>จัดการคำสั่งซื้อและบริการลูกค้า — E-TIKKET Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="admin-orders" data-prototype-id="admin-orders-v3">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Admin & Platform Architecture</span>
+      <span>Page: <strong>A5. Customer Support & Orders</strong></span>
+      <span>ID: <strong>admin-orders-v3</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" class="active" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Admin Site Header (Customer-style aesthetic + Scrollable Subnav) -->
+  <header class="admin-site-header">
+    <!-- Top Row: Brand & Admin User Profile -->
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="admin-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">PLATFORM ADMIN</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">AD</div>
+          <span class="admin-name">Super Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subnav Row: Moved down with horizontal scroll capability -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="admin-dashboard.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="admin-transactions.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>ธุรกรรมเกตเวย์</span>
+          </a>
+          <a href="admin-settlements.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>ตัดจ่ายผู้จัดงาน</span>
+          </a>
+          <a href="admin-events.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>อนุมัติคอนเสิร์ต</span>
+            <span class="tab-pill-badge">3</span>
+          </a>
+          <a href="admin-orders.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>จัดการคำสั่งซื้อ</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Header & Support tools introduction -->
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">จัดการคำสั่งซื้อและบริการลูกค้า (Customer Support Tools)</h1>
+          <p class="admin-page-sub">ค้นหาคำสั่งซื้อ, แก้ไขอีเมลลูกค้าที่สะกดผิด, ส่งตั๋วซ้ำ, และยกเลิก/ริบตั๋ว QR Code เมื่อมีข้อพิพาท</p>
+        </div>
+      </div>
+
+      <!-- Advanced Filter and Search Container (admin-orders-v2) -->
+      <div class="admin-filter-container">
+        <!-- Row 1: Search & Quick Status Filter Pills & Export -->
+        <div class="filter-row-primary">
+          <div class="search-input-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="order-search-input" placeholder="ค้นหาด้วย Order ID, ชื่อลูกค้า, เบอร์โทร, อีเมล หรือเลขบัตร..." class="admin-search-field" oninput="applyOrderFilters()">
+          </div>
+          <div class="filter-pills-group" id="order-status-filter-pills">
+            <button type="button" class="filter-pill active" data-status="ALL" onclick="setOrderStatusFilter('ALL', this)">ทั้งหมด (5)</button>
+            <button type="button" class="filter-pill" data-status="PAID" onclick="setOrderStatusFilter('PAID', this)">ชำระสำเร็จ (3)</button>
+            <button type="button" class="filter-pill warning" data-status="PENDING" onclick="setOrderStatusFilter('PENDING', this)">รอชำระ/ล็อก 15 นาที (1)</button>
+            <button type="button" class="filter-pill danger" data-status="CANCELLED" onclick="setOrderStatusFilter('CANCELLED', this)">ยกเลิก/ริบตั๋ว (1)</button>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="exportOrdersCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>นำออก CSV</span>
+          </button>
+        </div>
+
+        <!-- Row 2: Date presets & ranges, Event dropdown, Ticket Tier, Amount filter, and Reset -->
+        <div class="filter-row-secondary">
+          <div class="filter-controls-inline">
+            <span class="filter-label-inline">ช่วงวันที่สั่งซื้อ:</span>
+            <div class="filter-pills-group" id="order-date-preset-pills" style="margin-right: 6px;">
+              <button type="button" class="filter-pill active" data-range="today" onclick="setOrderDatePreset('today', this)">วันนี้</button>
+              <button type="button" class="filter-pill" data-range="7d" onclick="setOrderDatePreset('7d', this)">7 วันล่าสุด</button>
+              <button type="button" class="filter-pill" data-range="30d" onclick="setOrderDatePreset('30d', this)">30 วัน</button>
+              <button type="button" class="filter-pill" data-range="all" onclick="setOrderDatePreset('all', this)">ทั้งหมด</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <input type="date" id="order-date-from" class="admin-date-input" value="2026-10-15" title="ตั้งแต่วันที่" onchange="applyOrderFilters()">
+              <span style="font-size: 11px; color: var(--text-muted);">-</span>
+              <input type="date" id="order-date-to" class="admin-date-input" value="2026-10-18" title="ถึงวันที่" onchange="applyOrderFilters()">
+            </div>
+          </div>
+
+          <div class="filter-controls-inline">
+            <span class="filter-label-inline">คอนเสิร์ต:</span>
+            <select id="order-event-filter" class="admin-select-input" onchange="applyOrderFilters()">
+              <option value="ALL">ทุกคอนเสิร์ต (All Events)</option>
+              <option value="Indie Live Wave 2026">Indie Live Wave 2026</option>
+              <option value="Neon Midnight Club">Neon Midnight Club</option>
+              <option value="Acoustic in the Park 2026">Acoustic in the Park 2026</option>
+              <option value="Retro Synthwave Night Vol. 1">Retro Synthwave Night Vol. 1</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 6px;">ประเภทบัตร:</span>
+            <select id="order-tier-filter" class="admin-select-input" onchange="applyOrderFilters()">
+              <option value="ALL">ทุกประเภทบัตร</option>
+              <option value="STUDENT">สิทธิ์นักศึกษา (@ubu.ac.th)</option>
+              <option value="GENERAL">บุคคลทั่วไป (General)</option>
+            </select>
+
+            <span class="filter-label-inline" style="margin-left: 6px;">ยอดเงิน:</span>
+            <select id="order-amount-filter" class="admin-select-input" onchange="applyOrderFilters()">
+              <option value="ALL">ทุกยอดเงิน</option>
+              <option value="under200">&lt; ฿200</option>
+              <option value="200-500">฿200 - ฿500</option>
+              <option value="over500">&gt; ฿500</option>
+            </select>
+
+            <button type="button" class="btn btn-outline btn-xs" style="margin-left: 8px;" onclick="resetOrderFilters()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+              <span>ล้างตัวกรอง</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Count Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px;">
+        <span class="order-count-badge">แสดง <strong id="visible-orders-count" style="color: var(--text-main);">5</strong> จากทั้งหมด 5 คำสั่งซื้อ</span>
+        <span style="font-size: 11px; color: var(--text-muted);">คลิก "ซัพพอร์ต / แก้ไข" เพื่อแก้ไขอีเมล, ส่งตั๋วซ้ำ, หรือยกเลิก/ริบตั๋ว</span>
+      </div>
+
+      <!-- Orders Support Table Card -->
+      <div class="admin-card table-card">
+        <div class="table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Order Ref / วันที่</th>
+                <th>ข้อมูลผู้ซื้อ</th>
+                <th>งานคอนเสิร์ต & ประเภท</th>
+                <th>จำนวน / ยอดรวม</th>
+                <th>สถานะคำสั่งซื้อ</th>
+                <th style="text-align: right;">เครื่องมือซัพพอร์ต</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+
+              <!-- Row 1: Student discount, Paid -->
+              <tr class="tx-row order-row" id="order-row-1"
+                  data-order-id="ORD-202610-8839"
+                  data-customer-name="วรพจน์ สิทธิชัย"
+                  data-email="student@ubu.ac.th"
+                  data-phone="089-765-4321"
+                  data-ticket="TKT-202610-8839-01"
+                  data-event="Indie Live Wave 2026"
+                  data-status="PAID"
+                  data-tier="STUDENT"
+                  data-amount="79"
+                  data-date="2026-10-17">
+                <td>
+                  <strong class="tx-id-text">ORD-202610-8839</strong>
+                  <span class="tx-sub-ref">17 ต.ค. 2026, 23:38 น.</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong id="row-name-1">วรพจน์ สิทธิชัย</strong>
+                    <span class="cust-meta" id="row-email-1">student@ubu.ac.th</span>
+                    <span class="cust-meta">089-765-4321</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Indie Live Wave 2026</span>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+                    <span class="tier-student-tag">🎓 @ubu.ac.th</span>
+                    <span class="event-type-sub">TKT-202610-8839-01</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">1 ใบ</span>
+                  <strong class="price-highlight">฿79.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-lime" id="order-status-badge-1">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระแล้ว (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-dark btn-xs" onclick="openOrderSupportModal('ORD-202610-8839', 'วรพจน์ สิทธิชัย', 'student@ubu.ac.th', 'Indie Live Wave 2026', 'TKT-202610-8839-01', '฿79.00', '1')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>ซัพพอร์ต / แก้ไข</span>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 2: General ticket, Paid -->
+              <tr class="tx-row order-row" id="order-row-2"
+                  data-order-id="ORD-202610-8835"
+                  data-customer-name="ณัฐนันท์ ศิริกุล"
+                  data-email="nattanan@hotmail.com"
+                  data-phone="086-987-6543"
+                  data-ticket="TKT-8835-01, TKT-8835-02"
+                  data-event="Neon Midnight Club"
+                  data-status="PAID"
+                  data-tier="GENERAL"
+                  data-amount="598"
+                  data-date="2026-10-17">
+                <td>
+                  <strong class="tx-id-text">ORD-202610-8835</strong>
+                  <span class="tx-sub-ref">17 ต.ค. 2026, 23:18 น.</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong id="row-name-2">ณัฐนันท์ ศิริกุล</strong>
+                    <span class="cust-meta" id="row-email-2">nattanan@hotmail.com</span>
+                    <span class="cust-meta">086-987-6543</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Neon Midnight Club</span>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+                    <span class="event-type-sub">บุคคลทั่วไป • 2 ใบ (TKT-8835-01, 02)</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">2 ใบ</span>
+                  <strong class="price-highlight">฿598.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-lime" id="order-status-badge-2">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระแล้ว (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-dark btn-xs" onclick="openOrderSupportModal('ORD-202610-8835', 'ณัฐนันท์ ศิริกุล', 'nattanan@hotmail.com', 'Neon Midnight Club', 'TKT-8835-01, 02', '฿598.00', '2')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>ซัพพอร์ต / แก้ไข</span>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 3: Pending Reservation (15-min countdown lock) -->
+              <tr class="tx-row order-row" id="order-row-3"
+                  data-order-id="ORD-202610-8830"
+                  data-customer-name="กิตติศักดิ์ เจริญผล"
+                  data-email="kittisak.c@ubu.ac.th"
+                  data-phone="081-234-5678"
+                  data-ticket="TKT-8830-01"
+                  data-event="Acoustic in the Park 2026"
+                  data-status="PENDING"
+                  data-tier="STUDENT"
+                  data-amount="79"
+                  data-date="2026-10-17">
+                <td>
+                  <strong class="tx-id-text">ORD-202610-8830</strong>
+                  <span class="tx-sub-ref">17 ต.ค. 2026, 22:50 น.</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong id="row-name-3">กิตติศักดิ์ เจริญผล</strong>
+                    <span class="cust-meta" id="row-email-3">kittisak.c@ubu.ac.th</span>
+                    <span class="cust-meta">081-234-5678</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Acoustic in the Park 2026</span>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+                    <span class="tier-student-tag">🎓 @ubu.ac.th</span>
+                    <span class="event-type-sub">TKT-8830-01</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">1 ใบ</span>
+                  <strong class="price-highlight">฿79.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-amber" id="order-status-badge-3">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    รอชำระ (เหลือ 08:42 น.)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-dark btn-xs" onclick="openOrderSupportModal('ORD-202610-8830', 'กิตติศักดิ์ เจริญผล', 'kittisak.c@ubu.ac.th', 'Acoustic in the Park 2026', 'TKT-8830-01', '฿79.00', '3')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>ซัพพอร์ต / แก้ไข</span>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 4: Retro Synthwave Night, 3 tickets, General, Paid -->
+              <tr class="tx-row order-row" id="order-row-4"
+                  data-order-id="ORD-202610-8812"
+                  data-customer-name="ชลธิชา วงศ์สว่าง"
+                  data-email="chonticha.w@yahoo.com"
+                  data-phone="092-345-6789"
+                  data-ticket="TKT-8812-01, TKT-8812-02, TKT-8812-03"
+                  data-event="Retro Synthwave Night Vol. 1"
+                  data-status="PAID"
+                  data-tier="GENERAL"
+                  data-amount="1050"
+                  data-date="2026-10-16">
+                <td>
+                  <strong class="tx-id-text">ORD-202610-8812</strong>
+                  <span class="tx-sub-ref">16 ต.ค. 2026, 19:15 น.</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong id="row-name-4">ชลธิชา วงศ์สว่าง</strong>
+                    <span class="cust-meta" id="row-email-4">chonticha.w@yahoo.com</span>
+                    <span class="cust-meta">092-345-6789</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Retro Synthwave Night Vol. 1</span>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+                    <span class="event-type-sub">บุคคลทั่วไป • 3 ใบ</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">3 ใบ</span>
+                  <strong class="price-highlight">฿1,050.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-lime" id="order-status-badge-4">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    ชำระแล้ว (PAID)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-dark btn-xs" onclick="openOrderSupportModal('ORD-202610-8812', 'ชลธิชา วงศ์สว่าง', 'chonticha.w@yahoo.com', 'Retro Synthwave Night Vol. 1', 'TKT-8812-01..03', '฿1,050.00', '4')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>ซัพพอร์ต / แก้ไข</span>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 5: Cancelled & Revoked Order -->
+              <tr class="tx-row order-row" id="order-row-5"
+                  data-order-id="ORD-202610-8799"
+                  data-customer-name="ธีรภัทร บุญยเกียรติ"
+                  data-email="teerapat.b@gmail.com"
+                  data-phone="085-112-2334"
+                  data-ticket="TKT-8799-01"
+                  data-event="Indie Live Wave 2026"
+                  data-status="CANCELLED"
+                  data-tier="GENERAL"
+                  data-amount="250"
+                  data-date="2026-10-15">
+                <td>
+                  <strong class="tx-id-text">ORD-202610-8799</strong>
+                  <span class="tx-sub-ref">15 ต.ค. 2026, 14:02 น.</span>
+                </td>
+                <td>
+                  <div class="customer-info-cell">
+                    <strong id="row-name-5">ธีรภัทร บุญยเกียรติ</strong>
+                    <span class="cust-meta" id="row-email-5">teerapat.b@gmail.com</span>
+                    <span class="cust-meta">085-112-2334</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="event-name-tag">Indie Live Wave 2026</span>
+                  <div style="display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+                    <span class="event-type-sub">บุคคลทั่วไป • TKT-8799-01</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="gross-sales">1 ใบ</span>
+                  <strong class="price-highlight">฿250.00</strong>
+                </td>
+                <td>
+                  <span class="badge badge-danger" id="order-status-badge-5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    ริบตั๋วแล้ว (CANCELLED)
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <button type="button" class="btn btn-dark btn-xs" onclick="openOrderSupportModal('ORD-202610-8799', 'ธีรภัทร บุญยเกียรติ', 'teerapat.b@gmail.com', 'Indie Live Wave 2026', 'TKT-8799-01', '฿250.00', '5')">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    <span>ซัพพอร์ต / แก้ไข</span>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Empty State Row (Hidden by default) -->
+              <tr id="orders-empty-row" style="display: none;">
+                <td colspan="6" style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
+                  <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-subtle)" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span style="font-weight: 600; font-size: 14px; color: var(--text-main);">ไม่พบคำสั่งซื้อที่ตรงกับเงื่อนไขการค้นหาหรือตัวกรอง</span>
+                    <span style="font-size: 12px; color: var(--text-muted);">ลองปรับเปลี่ยนคำค้นหา หรือกดปุ่ม "ล้างตัวกรอง" เพื่อแสดงคำสั่งซื้อทั้งหมด</span>
+                    <button type="button" class="btn btn-outline btn-xs" onclick="resetOrderFilters()" style="margin-top: 6px;">ล้างตัวกรองทั้งหมด</button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Support Action Modal -->
+  <div id="support-modal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-dialog">
+      <div class="modal-dialog-header">
+        <h3 class="modal-dialog-title">เครื่องมือซัพพอร์ตคำสั่งซื้อ (<span id="modal-order-id">ORD-8839</span>)</h3>
+        <button type="button" class="modal-close-btn" onclick="closeOrderSupportModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        
+        <!-- Summary Info Box -->
+        <div class="modal-info-box">
+          <div class="modal-row">
+            <span class="m-lbl">ผู้สั่งซื้อ:</span>
+            <strong id="modal-buyer-name">วรพจน์ สิทธิชัย</strong>
+          </div>
+          <div class="modal-row">
+            <span class="m-lbl">งานคอนเสิร์ต:</span>
+            <span id="modal-event-title">Indie Live Wave 2026</span>
+          </div>
+          <div class="modal-row">
+            <span class="m-lbl">เลขที่บัตร:</span>
+            <span id="modal-ticket-ids" style="font-family: monospace;">TKT-202610-8839-01</span>
+          </div>
+          <div class="modal-row total">
+            <span class="m-lbl">ยอดเงินรวม:</span>
+            <strong class="m-val-total" id="modal-order-total">฿79.00</strong>
+          </div>
+        </div>
+
+        <!-- Tool 1: Edit Email -->
+        <div class="support-tool-card">
+          <h4 class="tool-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            1. แก้ไขอีเมลลูกค้า (กรณีลูกค้ากรอกผิด)
+          </h4>
+          <p class="tool-desc">ระบบจะอัปเดตอีเมลใหม่ลงในฐานข้อมูล และส่งลิงก์เปิดบัตรตั๋ว QR ไปยังอีเมลใหม่ให้ทันที</p>
+          <div class="promo-input-row" style="margin-top: 8px;">
+            <input type="email" id="edit-email-input" class="form-control" value="student@ubu.ac.th">
+            <button type="button" class="btn btn-dark btn-sm" onclick="saveEditedEmail()">บันทึกอีเมลใหม่</button>
+          </div>
+        </div>
+
+        <!-- Tool 2: Resend Email -->
+        <div class="support-tool-card">
+          <h4 class="tool-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            2. ส่งอีเมลตั๋วซ้ำ (Resend Ticket Email)
+          </h4>
+          <p class="tool-desc">สำหรับกรณีลูกค้าทำอีเมลตกหล่น หรืออีเมลเข้ากล่อง Spam</p>
+          <button type="button" class="btn btn-outline btn-sm full-width" style="margin-top: 8px;" onclick="resendTicketEmail()">
+            <span>กดส่งอีเมลตั๋วไปยังลูกค้าอีกครั้ง</span>
+          </button>
+        </div>
+
+        <!-- Tool 3: Cancel & Revoke -->
+        <div class="support-tool-card danger-card">
+          <h4 class="tool-title danger-text">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            3. ยกเลิกคำสั่งซื้อและริบตั๋ว (Cancel & Revoke Ticket)
+          </h4>
+          <p class="tool-desc">ตั๋ว QR Code ทุกใบในออเดอร์นี้จะถูกเปลี่ยนสถานะเป็น <strong>CANCELLED</strong> และไม่สามารถใช้สแกนเข้างานได้อีกต่อไป</p>
+          <button type="button" class="btn btn-outline btn-sm full-width danger-btn" style="margin-top: 8px;" onclick="cancelAndRevokeOrder()">
+            <span>ยกเลิกออเดอร์และริบตั๋วทันที</span>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-dark btn-sm full-width" onclick="closeOrderSupportModal()">ปิดหน้าต่าง</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="admin-site-footer">
+    <div class="admin-footer-container">
+      <span>E-TIKKET Admin Portal &copy; 2026 • ระบบจัดการธุรกรรมและคอนเสิร์ต</span>
+      <span>Support Audit Log: All customer email corrections & ticket revocations are recorded</span>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+  <script>
+    let currentOrderStatus = 'ALL';
+    let currentSupportRowIndex = '1';
+    let currentSupportOrderId = 'ORD-202610-8839';
+    let currentSupportTicket = 'TKT-202610-8839-01';
+
+    function setOrderStatusFilter(status, btn) {
+      currentOrderStatus = status;
+      const pills = document.querySelectorAll('#order-status-filter-pills .filter-pill');
+      pills.forEach(p => p.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      applyOrderFilters();
+    }
+
+    function setOrderDatePreset(preset, btn) {
+      const pills = document.querySelectorAll('#order-date-preset-pills .filter-pill');
+      pills.forEach(p => p.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const dateFromEl = document.getElementById('order-date-from');
+      const dateToEl = document.getElementById('order-date-to');
+
+      if (preset === 'today') {
+        dateFromEl.value = '2026-10-17';
+        dateToEl.value = '2026-10-18';
+      } else if (preset === '7d') {
+        dateFromEl.value = '2026-10-12';
+        dateToEl.value = '2026-10-18';
+      } else if (preset === '30d') {
+        dateFromEl.value = '2026-09-18';
+        dateToEl.value = '2026-10-18';
+      } else if (preset === 'all') {
+        dateFromEl.value = '2026-10-01';
+        dateToEl.value = '2026-10-31';
+      }
+      applyOrderFilters();
+    }
+
+    function applyOrderFilters() {
+      const query = (document.getElementById('order-search-input').value || '').toLowerCase().trim();
+      const eventFilter = document.getElementById('order-event-filter').value;
+      const tierFilter = document.getElementById('order-tier-filter').value;
+      const amountFilter = document.getElementById('order-amount-filter').value;
+      const dateFrom = document.getElementById('order-date-from').value;
+      const dateTo = document.getElementById('order-date-to').value;
+
+      const rows = document.querySelectorAll('#orders-table-body .order-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const orderId = (row.getAttribute('data-order-id') || '').toLowerCase();
+        const custName = (row.getAttribute('data-customer-name') || '').toLowerCase();
+        const email = (row.getAttribute('data-email') || '').toLowerCase();
+        const phone = (row.getAttribute('data-phone') || '').toLowerCase();
+        const ticket = (row.getAttribute('data-ticket') || '').toLowerCase();
+        const eventName = row.getAttribute('data-event') || '';
+        const status = row.getAttribute('data-status') || '';
+        const tier = row.getAttribute('data-tier') || '';
+        const amount = parseFloat(row.getAttribute('data-amount') || '0');
+        const orderDate = row.getAttribute('data-date') || '';
+
+        // 1. Text Search matching
+        const matchesQuery = !query ||
+          orderId.includes(query) ||
+          custName.includes(query) ||
+          email.includes(query) ||
+          phone.includes(query) ||
+          ticket.includes(query) ||
+          eventName.toLowerCase().includes(query);
+
+        // 2. Status matching
+        const matchesStatus = (currentOrderStatus === 'ALL') || (status === currentOrderStatus);
+
+        // 3. Event matching
+        const matchesEvent = (eventFilter === 'ALL') || (eventName === eventFilter);
+
+        // 4. Tier matching
+        const matchesTier = (tierFilter === 'ALL') || (tier === tierFilter);
+
+        // 5. Amount matching
+        let matchesAmount = true;
+        if (amountFilter === 'under200') {
+          matchesAmount = amount < 200;
+        } else if (amountFilter === '200-500') {
+          matchesAmount = amount >= 200 && amount <= 500;
+        } else if (amountFilter === 'over500') {
+          matchesAmount = amount > 500;
+        }
+
+        // 6. Date matching
+        let matchesDate = true;
+        if (dateFrom && orderDate < dateFrom) matchesDate = false;
+        if (dateTo && orderDate > dateTo) matchesDate = false;
+
+        const isMatch = matchesQuery && matchesStatus && matchesEvent && matchesTier && matchesAmount && matchesDate;
+
+        if (isMatch) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      const countEl = document.getElementById('visible-orders-count');
+      if (countEl) countEl.textContent = visibleCount;
+
+      const emptyRow = document.getElementById('orders-empty-row');
+      if (emptyRow) {
+        emptyRow.style.display = visibleCount === 0 ? '' : 'none';
+      }
+    }
+
+    function resetOrderFilters() {
+      document.getElementById('order-search-input').value = '';
+      document.getElementById('order-event-filter').value = 'ALL';
+      document.getElementById('order-tier-filter').value = 'ALL';
+      document.getElementById('order-amount-filter').value = 'ALL';
+
+      // Reset status pill
+      currentOrderStatus = 'ALL';
+      const statusPills = document.querySelectorAll('#order-status-filter-pills .filter-pill');
+      statusPills.forEach(p => p.classList.remove('active'));
+      if (statusPills[0]) statusPills[0].classList.add('active');
+
+      // Reset date pills to all
+      const datePills = document.querySelectorAll('#order-date-preset-pills .filter-pill');
+      datePills.forEach(p => p.classList.remove('active'));
+      if (datePills[3]) datePills[3].classList.add('active'); // "ทั้งหมด"
+      document.getElementById('order-date-from').value = '2026-10-01';
+      document.getElementById('order-date-to').value = '2026-10-31';
+
+      applyOrderFilters();
+    }
+
+    function exportOrdersCSV() {
+      const countEl = document.getElementById('visible-orders-count');
+      const count = countEl ? countEl.textContent : '5';
+      alert('✓ นำออกไฟล์ CSV คำสั่งซื้อเรียบร้อยแล้ว!\nจำนวนข้อมูลที่ส่งออก: ' + count + ' รายการ (ตามเงื่อนไขตัวกรองปัจจุบัน)');
+    }
+
+    function openOrderSupportModal(orderId, name, email, event, ticketIds, total, rowIndex) {
+      currentSupportRowIndex = rowIndex;
+      currentSupportOrderId = orderId;
+      currentSupportTicket = ticketIds;
+
+      document.getElementById('modal-order-id').textContent = orderId;
+      document.getElementById('modal-buyer-name').textContent = name;
+      document.getElementById('edit-email-input').value = email;
+      document.getElementById('modal-event-title').textContent = event;
+      document.getElementById('modal-ticket-ids').textContent = ticketIds;
+      document.getElementById('modal-order-total').textContent = total;
+      document.getElementById('support-modal').style.display = 'flex';
+    }
+
+    function closeOrderSupportModal() {
+      document.getElementById('support-modal').style.display = 'none';
+    }
+
+    function saveEditedEmail() {
+      const newEmail = document.getElementById('edit-email-input').value.trim();
+      if (!newEmail || !newEmail.includes('@')) {
+        alert('กรุณากรอกอีเมลที่ถูกต้อง');
+        return;
+      }
+
+      // Update in DOM and data attribute
+      const emailEl = document.getElementById('row-email-' + currentSupportRowIndex);
+      if (emailEl) emailEl.textContent = newEmail;
+
+      const row = document.getElementById('order-row-' + currentSupportRowIndex);
+      if (row) row.setAttribute('data-email', newEmail);
+
+      alert('✓ อัปเดตอีเมลของคำสั่งซื้อ ' + currentSupportOrderId + ' เป็น ' + newEmail + ' เรียบร้อยแล้ว!\nระบบได้ส่งอีเมลลิงก์เปิดตั๋ว QR ไปยังอีเมลใหม่ให้ลูกค้าแล้วทันที');
+    }
+
+    function resendTicketEmail() {
+      const email = document.getElementById('edit-email-input').value.trim();
+      alert('✓ ส่งอีเมลตั๋วซ้ำสำหรับ ' + currentSupportOrderId + ' ไปยัง ' + email + ' เรียบร้อยแล้ว!');
+    }
+
+    function cancelAndRevokeOrder() {
+      if (confirm('คำเตือน: คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อ ' + currentSupportOrderId + '?\nตั๋ว QR Code ทั้งหมด (' + currentSupportTicket + ') จะถูกริบทันทีและไม่สามารถสแกนเข้างานได้อีก')) {
+        closeOrderSupportModal();
+
+        const badge = document.getElementById('order-status-badge-' + currentSupportRowIndex);
+        if (badge) {
+          badge.className = 'badge badge-danger';
+          badge.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> ริบตั๋วแล้ว (CANCELLED)';
+        }
+
+        const row = document.getElementById('order-row-' + currentSupportRowIndex);
+        if (row) {
+          row.setAttribute('data-status', 'CANCELLED');
+        }
+
+        // Update status pill counter if needed
+        applyOrderFilters();
+
+        alert('✕ ยกเลิกคำสั่งซื้อ ' + currentSupportOrderId + ' และริบตั๋วเรียบร้อยแล้ว!\nตั๋ว ' + currentSupportTicket + ' ถูกปรับสถานะเป็น CANCELLED เรียบร้อย');
+      }
+    }
+
+    // Initialize default filter state on load
+    document.addEventListener('DOMContentLoaded', function() {
+      applyOrderFilters();
+    });
+  </script>
+</body>
+</html>

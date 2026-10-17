@@ -3,140 +3,283 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Summer Live Concert - รายละเอียดและซื้อบัตร</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <title>Indie Live Wave 2026 — รายละเอียดงานและซื้อบัตร (E-TIKKET)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
-<body data-prototype-page="event" data-prototype-id="event-v2">
+<body data-prototype-page="event" data-prototype-id="event-v6">
 
   <!-- Prototype Control Bar -->
   <div class="prototype-bar">
     <div class="prototype-meta">
-      <span class="prototype-tag">PHAT PROTOTYPE</span><span class="prototype-note">จำลอง UI • ไม่มีธุรกรรมจริง</span>
-      <span>Page: <strong>Event Detail & Selection</strong></span>
-      <span>ID: <strong>event-v2</strong></span>
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">9-Page Architecture</span>
+      <span>Page: <strong>2. Event Detail</strong></span>
+      <span>ID: <strong>event-v6</strong></span>
     </div>
     <nav class="prototype-nav">
-      <a href="index.html" data-prototype-target="home-v2">1. Home <small>home-v2</small></a>
-      <a href="event-detail.html" class="active" data-prototype-target="event-v2">2. Event Detail <small>event-v2</small></a>
-      <a href="checkout.html" data-prototype-target="checkout-v2">3. Checkout (15m) <small>checkout-v2</small></a>
-      <a href="tickets.html" data-prototype-target="tickets-v2">4. My Tickets <small>tickets-v2</small></a>
-      <a href="admin-verifications.html" data-prototype-target="admin-v2">5. Admin Verify <small>admin-v2</small></a>
-      <a href="organizer-checkin.html" data-prototype-target="scanner-v2">6. Scanner (Re-entry) <small>scanner-v2</small></a>
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" class="active" data-prototype-target="event-v6">2. Detail</a>
+      <a href="waiting-room.html" data-prototype-target="waiting-v2">3. Queue</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <a href="my-tickets.html" data-prototype-target="lookup-v1">7. Lookup</a>
+      <a href="scanner.html" data-prototype-target="scanner-v4">8. Scanner</a>
+      <a href="news.html" data-prototype-target="news-v1">9. News</a>
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
     </nav>
   </div>
 
   <header class="site-header">
     <div class="header-container">
       <a href="index.html" class="brand">
-        <span>TICKETBOX</span>
-        <span class="brand-badge">MVP</span>
+        <span class="brand-text">E-TIKKET</span>
+        <span class="brand-dot"></span>
       </a>
-      <nav class="nav-links">
-        <a href="index.html">&larr; ย้อนกลับไปหน้ารวมงาน</a>
+      <nav class="nav-actions">
+        <a href="index.html" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          ย้อนกลับไปหน้าแรก
+        </a>
       </nav>
     </div>
   </header>
 
   <main class="main-content">
-    <div class="event-layout">
+    <div class="event-page-container">
 
-      <!-- Event Information Section -->
-      <section>
-        <img id="event-poster" class="event-poster" src="poster-summer.svg" alt="ภาพโปสเตอร์ตัวอย่าง Summer Live Concert">
+      <!-- Section 1 (Top): Clean 16:9 Landscape Poster Banner (Strictly No Text Overlay) -->
+      <section class="detail-poster-section">
+        <div class="landscape-poster-wrap detail-view">
+          <img src="poster-summer.svg" alt="Indie Live Wave 2026" class="landscape-img">
+        </div>
+      </section>
 
-        <span class="badge badge-success" style="margin-bottom: 12px;">✓ เปิดจำหน่ายบัตร</span>
-        <h1 id="event-name" class="event-name">Summer Live Concert</h1>
-        <p class="lead" style="margin-bottom: 20px;">
-          สัมผัสค่ำคืนดนตรีสดอะคูสติกริมแม่น้ำ บรรยากาศสุดชิลล์ พบกับ 4 ศิลปินอินดี้ท้องถิ่น พร้อมเครื่องดื่มและอาหารสตรีทฟู้ดตลอดงาน
-        </p>
-
-        <div style="background-color: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
-          <h3 style="margin-bottom: 16px;">ข้อมูลการจัดงาน</h3>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 14px;">
-            <div>
-              <span style="color:var(--text-muted); display:block;">วันที่จัดงาน</span>
-              <strong id="event-date" style="color:var(--text-primary);">วันเสาร์ที่ 24 ตุลาคม 2026</strong>
-            </div>
-            <div>
-              <span style="color:var(--text-muted); display:block;">เวลาประตูเปิด</span>
-              <strong id="event-time" style="color:var(--text-primary);">18:00 น.</strong>
-            </div>
-            <div>
-              <span style="color:var(--text-muted); display:block;">สถานที่จัดงาน</span>
-              <strong id="event-venue" style="color:var(--text-primary);">The Riverfront Warehouse (เจริญกรุง)</strong>
-            </div>
-            <div>
-              <span style="color:var(--text-muted); display:block;">ผู้จัดงาน</span>
-              <strong style="color:var(--text-primary);">Indie Music Club Bangkok</strong>
+      <!-- Section 2: Box to Purchase Tickets (Inside Content, Clean, No Sticky Floating Bar) -->
+      <section class="ticket-purchase-box">
+        <div class="purchase-box-header">
+          <div>
+            <span class="event-cat-tag">TICKET BOOKING</span>
+            <h1 class="event-main-title">Indie Live Wave 2026</h1>
+            <p class="event-brief-meta">
+              <span>📅 เสาร์ที่ 24 ตุลาคม 2026</span>
+              <span>⏰ ประตูเปิด 17:00 น. • เริ่มแสดง 18:00 - 23:30 น.</span>
+              <span>📍 The Riverfront Warehouse, กรุงเทพฯ <a href="https://maps.google.com/?q=The+Riverfront+Warehouse+Bangkok" target="_blank" style="color: var(--lime-accent); text-decoration: underline; margin-left: 4px; font-weight: 600;">(เปิด Map ↗)</a></span>
+            </p>
+          </div>
+          <div class="pricing-summary-block">
+            <span class="price-prefix">ราคาบัตรเข้างาน</span>
+            <div class="price-val-row">
+              <strong class="main-price">฿150</strong>
             </div>
           </div>
         </div>
 
-        <div style="background-color: var(--bg-secondary); border-left: 3px solid var(--accent-white); padding: 16px; border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary);">
-          <strong>ข้อกำหนดการเข้างาน:</strong> นำ QR Code ใน E-Ticket มาสแกนที่จุดลงทะเบียนหน้างาน ระบบรองรับการเข้า-ออกชั่วคราว (Re-entry) โดยต้องสแกน Check-out ทุกครั้งก่อนออกจากงาน
+        <div class="purchase-box-controls">
+          <div class="ticket-type-selector">
+            <label class="form-label">รอบการแสดงและประเภทบัตร</label>
+            <div class="round-chip active">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+              <span>รอบวันเสาร์ 24 ต.ค. 2026 (18:00 - 23:30 น.) — บัตรเข้างานทั่วไป (General Admission)</span>
+            </div>
+          </div>
+
+          <div class="purchase-box-action">
+            <a href="checkout.html?event=summer" class="btn btn-lime btn-lg full-width" data-prototype-target="checkout-v5">
+              <span>ซื้อบัตรเข้างาน</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <span class="quota-hint">⚡ เหลือบัตร 42 ใบ • จำกัดซื้อได้ไม่เกิน 4 ใบต่อ 1 อีเมล</span>
+          </div>
         </div>
       </section>
 
-      <!-- Booking / Checkout Form Box -->
-      <aside>
-        <div class="purchase-panel">
-          <h2 style="font-size: 20px; margin-bottom: 20px;">ซื้อบัตรเข้างาน</h2>
-
-          <form id="guest-order-form" action="checkout.html" method="GET">
-            <!-- Quantity Selector -->
-            <div class="form-group">
-              <label class="form-label" for="ticket-quantity">จำนวนบัตรที่ต้องการ</label>
-              <input type="number" id="ticket-quantity" class="form-input" min="1" max="173" step="1" value="3" data-price="399" required><small id="availability-note">เหลือ 173 ใบ • จำนวนต้องไม่เกินบัตรที่มี</small>
+      <!-- Section 3: Comprehensive Event Details Grid -->
+      <section class="detail-content-section">
+        
+        <!-- 1. ข้อมูลสำคัญของงาน (Event Highlights Overview) -->
+        <div class="content-card">
+          <h2 class="content-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            ข้อมูลภาพรวมของงานแสดง
+          </h2>
+          <div class="event-meta-spec-grid">
+            <div class="spec-item">
+              <span class="spec-label">ชื่องาน</span>
+              <strong class="spec-val">Indie Live Wave 2026</strong>
             </div>
-
-            <!-- Guest Customer Information -->
-            <h3 style="font-size: 15px; margin: 20px 0 12px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">ข้อมูลผู้สั่งซื้อ (ไม่ต้องสมัครสมาชิก)</h3>
-
-            <div class="form-group">
-              <label class="form-label" for="cust-name">ชื่อ - นามสกุล *</label>
-              <input type="text" id="cust-name" class="form-input" value="John Doe" required placeholder="เช่น สมชาย ใจดี">
+            <div class="spec-item">
+              <span class="spec-label">ผู้จัดงาน (Organizer)</span>
+              <strong class="spec-val">
+                SoundWave Entertainment ร่วมกับ Indie Club Bangkok
+                <span class="verified-organizer-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  ยืนยันตัวตนแล้ว
+                </span>
+              </strong>
             </div>
-
-            <div class="form-group">
-              <label class="form-label" for="cust-email">อีเมลสำหรับรับบัตร E-Ticket *</label>
-              <input type="email" id="cust-email" class="form-input" value="john@example.com" required placeholder="john@example.com">
-              <small style="color:var(--text-muted); font-size:11px;">ระบบจะส่ง E-Ticket และ QR Code ไปยังอีเมลนี้หลังแอดมินยืนยันยอด</small>
+            <div class="spec-item">
+              <span class="spec-label">วันที่จัดงาน</span>
+              <strong class="spec-val">วันเสาร์ที่ 24 ตุลาคม 2026</strong>
             </div>
-
-            <div class="form-group">
-              <label class="form-label" for="cust-phone">เบอร์โทรศัพท์ติดต่อ *</label>
-              <input type="tel" id="cust-phone" class="form-input" value="081-234-5678" required placeholder="08X-XXX-XXXX">
+            <div class="spec-item">
+              <span class="spec-label">เวลาเปิดประตู & เวลาแสดง</span>
+              <strong class="spec-val">ประตูเปิด 17:00 น. | การแสดงเริ่ม 18:00 - 23:30 น.</strong>
             </div>
-
-            <!-- Price Breakdown Summary -->
-            <div style="background-color: var(--bg-secondary); border-radius: var(--radius-md); padding: 16px; margin: 20px 0;">
-              <div style="display:flex; justify-content:space-between; margin-bottom: 8px; font-size:14px;">
-                <span style="color:var(--text-secondary);">ราคาบัตรรวม:</span>
-                <span id="subtotal-display" style="font-weight:600;">1,197 THB</span>
+            <div class="spec-item full-span">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 4px;">
+                <span class="spec-label" style="margin-bottom: 0;">สถานที่จัดงาน</span>
+                <a href="https://maps.google.com/?q=The+Riverfront+Warehouse+Bangkok" target="_blank" class="btn btn-outline btn-sm" style="font-size: 11px; padding: 2px 10px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; color: var(--text-main); border-color: var(--border-subtle); text-decoration: none;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                  <span>📍 เปิด Google Maps นำทาง ↗</span>
+                </a>
               </div>
-
-              <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border-subtle); padding-top:10px; font-size:16px;">
-                <strong style="color:var(--accent-white);">ยอดรวมสุทธิ:</strong>
-                <strong id="total-display" style="color:var(--accent-white); font-size:20px;">1,197 THB</strong>
-              </div>
+              <strong class="spec-val">The Riverfront Warehouse (โกดัง 4 ริมแม่น้ำเจ้าพระยา), ถนนเจริญกรุง, กรุงเทพฯ</strong>
             </div>
-
-            <button type="submit" class="btn btn-primary btn-block">ยืนยันคำสั่งซื้อ →</button><p id="order-form-error" class="inline-error" role="alert" hidden></p>
-
-            <p style="text-align:center; font-size:12px; color:var(--text-muted); margin-top:12px;">
-              🔒 ระบบจะล็อกจองบัตรให้ท่านเป็นเวลา 15 นาทีหลังจากกดยืนยัน
-            </p>
-          </form>
+          </div>
         </div>
-      </aside>
+
+        <!-- 2. รายชื่อศิลปิน (Artist Lineup) -->
+        <div class="content-card">
+          <h2 class="content-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+            รายชื่อศิลปิน (Artist Lineup)
+          </h2>
+          <p class="content-paragraph">
+            พบกับ 6 วงดนตรีอินดี้และศิลปินหน้าใหม่ไฟแรงที่จะมาร่วมถ่ายทอดเสียงดนตรีสดตลอดค่ำคืน:
+          </p>
+          <div class="lineup-grid">
+            <div class="artist-badge">🎸 The River Breeze (Indie Folk / Acoustic)</div>
+            <div class="artist-badge">🎤 Velvet Sunset (Dream Pop / Synth)</div>
+            <div class="artist-badge">🥁 Midnight Echo (Alternative Rock)</div>
+            <div class="artist-badge">🎹 Neon Dreams (City Pop / Indie Pop)</div>
+            <div class="artist-badge">🎺 Brass & Soul (Funk / Soul Live Band)</div>
+            <div class="artist-badge">🎧 DJ After-Wave (Closing Beats)</div>
+          </div>
+        </div>
+
+        <!-- 3. รายละเอียดงาน (Event Description) -->
+        <div class="content-card">
+          <h2 class="content-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            รายละเอียดงาน & บรรยากาศภายในงาน
+          </h2>
+          <p class="content-paragraph">
+            สัมผัสประสบการณ์คอนเสิร์ตดนตรีสดที่เน้นความใกล้ชิด อบอุ่น และเป็นกันเอง บนพื้นที่โกดังเก่าริมแม่น้ำเจ้าพระยาที่ได้รับการออกแบบระบบอะคูสติกและระบบแสงสีเสียงมาตรฐานระดับสตูดิโอ ภายในงานมีโซนอาหารสตรีทฟู้ด คราฟต์เบเกอรี และเครื่องดื่มให้บริการตลอดทั้งคืน เหมาะสำหรับการมาพักผ่อน ฟังเพลงดีๆ และพบปะเพื่อนใหม่ที่หลงใหลในเสียงดนตรีเหมือนกัน
+          </p>
+        </div>
+
+        <!-- 4. แผนที่สถานที่จัดงาน (Venue & Embed Map) -->
+        <div class="content-card">
+          <h2 class="content-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            สถานที่จัดแสดง & แผนที่การเดินทาง
+          </h2>
+          <p class="content-paragraph">
+            <strong>The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ</strong><br>
+            เดินทางสะดวกด้วย BTS สถานีสะพานตากสิน (ต่อเรือด่วนเจ้าพระยาหรือวินมอเตอร์ไซค์ 5 นาที) หรือเดินทางด้วยรถยนต์ส่วนบุคคล มีพื้นที่ลานจอดรถรองรับได้มากกว่า 200 คัน
+          </p>
+          
+          <div class="embed-map-wrapper">
+            <div class="map-mockup-graphic">
+              <div class="map-pin-pulse">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#0f172a" stroke="#ccff00" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3" fill="#ccff00"></circle></svg>
+              </div>
+              <span class="map-label-tag">The Riverfront Warehouse (เจริญกรุง)</span>
+            </div>
+            <div class="map-action-bar">
+              <span>พิกัด GPS: 13.7128° N, 100.5102° E</span>
+              <a href="https://maps.google.com" target="_blank" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                เปิดใน Google Maps
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. วิธีการชำระเงิน (PromptPay Auto) -->
+        <div class="content-card">
+          <h2 class="content-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            วิธีการชำระเงิน (PromptPay ตรวจสอบอัตโนมัติ)
+          </h2>
+          <div class="payment-explain-steps">
+            <div class="explain-step">
+              <span class="step-num">1</span>
+              <div>
+                <strong>สแกน PromptPay QR Code</strong>
+                <p>สแกนชำระเงินผ่านแอปพลิเคชันของทุกธนาคารในไทย</p>
+              </div>
+            </div>
+            <div class="explain-step">
+              <span class="step-num">2</span>
+              <div>
+                <strong>ระบบตรวจเงินเข้าอัตโนมัติ 1-2 วินาที</strong>
+                <p>ตรวจสอบเงินโอนทันที <strong>ไม่ต้องอัปโหลดสลิป</strong> และไม่ต้องรอแอดมิน</p>
+              </div>
+            </div>
+            <div class="explain-step">
+              <span class="step-num">3</span>
+              <div>
+                <strong>รับตั๋ว QR เข้างานทันที</strong>
+                <p>หน้าจอออกตั๋วทันที พร้อมส่งลิงก์สำรองเข้าอีเมลของคุณ</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. เงื่อนไขการเข้างาน & Re-entry Policy -->
+        <div class="content-card">
+          <h2 class="content-heading">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            เงื่อนไขการเข้างานและนโยบาย Re-entry
+          </h2>
+          <ul class="condition-list">
+            <li><strong>การสแกนบัตร:</strong> แสดงบัตร QR Code ผ่านหน้าจอมือถือให้เจ้าหน้าที่สแกนที่ประตูทางเข้า</li>
+            <li><strong>การเข้า-ออกงาน (Re-entry):</strong> หากมีความจำเป็นต้องออกจากพื้นที่งานชั่วคราว ให้แจ้งเจ้าหน้าที่สแกนออก (Check-out) และสแกนเข้าใหม่ (Check-in) ได้อย่างปลอดภัย</li>
+            <li><strong>จำกัดการสั่งซื้อ:</strong> ซื้อได้สูงสุดไม่เกิน 4 ใบ ต่อ 1 อีเมล</li>
+          </ul>
+        </div>
+
+      </section>
 
     </div>
-  <p class="art-note">ภาพประกอบและการสร้าง Order เป็นข้อมูลจำลอง ไม่ใช่การซื้อจริง</p></main>
+  </main>
 
-  <footer style="border-top: 1px solid var(--border-subtle); padding: 24px 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-    TICKETBOX Prototype MVP &copy; 2026
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="brand-text">E-TIKKET</span>
+        <p>แพลตฟอร์มระบบจำหน่ายบัตรคอนเสิร์ตและอีเวนต์ยุคใหม่ จองง่าย ปลอดภัย สแกนจ่ายด้วยพร้อมเพย์อัตโนมัติ</p>
+      </div>
+      <div class="footer-links">
+        <span>Guest Checkout • CSPRNG QR Ticket • Re-entry Audit</span>
+        <span class="copy">E-TIKKET Prototype &copy; 2026</span>
+      </div>
+    </div>
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

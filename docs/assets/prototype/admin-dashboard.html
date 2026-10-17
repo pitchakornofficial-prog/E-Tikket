@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — E-TIKKET แพลตฟอร์มจัดการคอนเสิร์ต</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body data-prototype-page="admin-dashboard" data-prototype-id="admin-dash-v3">
+
+  <!-- Prototype Control Bar -->
+  <div class="prototype-bar">
+    <div class="prototype-meta">
+      <span class="prototype-tag">PHAT PROTOTYPE</span>
+      <span class="prototype-note">Admin & Platform Architecture</span>
+      <span>Page: <strong>A1. Admin Dashboard (Executive Overview)</strong></span>
+      <span>ID: <strong>admin-dash-v3</strong></span>
+    </div>
+    <nav class="prototype-nav">
+      <!-- Public Journey Links -->
+      <a href="index.html" data-prototype-target="home-v6">1. Home</a>
+      <a href="event-detail.html" data-prototype-target="event-v6">2. Detail</a>
+      <a href="checkout.html" data-prototype-target="checkout-v5">4. Checkout</a>
+      <a href="payment.html" data-prototype-target="payment-v5">5. Payment</a>
+      <a href="tickets.html" data-prototype-target="tickets-v4">6. Tickets</a>
+      <!-- Admin Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="admin-dashboard.html" class="active" data-prototype-target="admin-dash-v3">A1. Dashboard</a>
+      <a href="admin-transactions.html" data-prototype-target="admin-trans-v3">A2. Gateway Sync</a>
+      <a href="admin-settlements.html" data-prototype-target="admin-settle-v3">A3. Payouts</a>
+      <a href="admin-events.html" data-prototype-target="admin-events-v4">A4. Event Approval</a>
+      <a href="admin-orders.html" data-prototype-target="admin-orders-v3">A5. Support & Orders</a>
+      <!-- Organizer Portal Links -->
+      <span style="color:#555;">|</span>
+      <a href="organizer-dashboard.html" data-prototype-target="org-dash-v4">O1. Org Dash</a>
+      <a href="organizer-events.html" data-prototype-target="org-events-v5">O2. My Events</a>
+      <a href="organizer-orders.html" data-prototype-target="org-orders-v4">O3. Attendees</a>
+      <a href="organizer-scanner.html" data-prototype-target="org-scanner-v4">O4. Gate Token</a>
+      <a href="organizer-payouts.html" data-prototype-target="org-payouts-v4">O5. Settlements</a>
+    </nav>
+  </div>
+
+  <!-- Admin Site Header (Customer-style aesthetic + Scrollable Subnav) -->
+  <header class="admin-site-header">
+    <!-- Top Row: Brand & Admin User Profile -->
+    <div class="admin-header-container">
+      <div class="admin-brand-group">
+        <a href="admin-dashboard.html" class="brand">
+          <span class="brand-text">E-TIKKET</span>
+          <span class="brand-dot"></span>
+        </a>
+        <span class="admin-badge">PLATFORM ADMIN</span>
+      </div>
+
+      <div class="admin-user-menu">
+        <a href="index.html" class="btn btn-outline btn-sm" target="_blank" title="เปิดหน้าเว็บลูกค้า">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>ดูหน้าเว็บลูกค้า</span>
+        </a>
+        <div class="admin-avatar-pill">
+          <div class="avatar-circle">AD</div>
+          <span class="admin-name">Super Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subnav Row: Moved down with horizontal scroll capability -->
+    <div class="admin-subnav-bar">
+      <div class="admin-subnav-container">
+        <nav class="admin-nav-tabs">
+          <a href="admin-dashboard.html" class="admin-tab active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>แดชบอร์ดภาพรวม</span>
+          </a>
+          <a href="admin-transactions.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>ธุรกรรมเกตเวย์</span>
+          </a>
+          <a href="admin-settlements.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span>ตัดจ่ายผู้จัดงาน</span>
+          </a>
+          <a href="admin-events.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>อนุมัติคอนเสิร์ต</span>
+            <span class="tab-pill-badge">3</span>
+          </a>
+          <a href="admin-orders.html" class="admin-tab">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>จัดการคำสั่งซื้อ</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content admin-main">
+    <div class="admin-content-container">
+
+      <!-- Executive Header & Timeframe Switcher -->
+      <div class="dashboard-controls-row">
+        <div>
+          <h1 class="admin-page-title">แดชบอร์ดภาพรวมแพลตฟอร์ม (Executive Overview)</h1>
+          <p class="admin-page-sub">ศูนย์ติดตามสถานะการเงิน, ยอดจำหน่ายบัตร, การอนุมัติคอนเสิร์ต และเกตเวย์ PromptPay แบบเรียลไทม์</p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <!-- Timeframe Filter Buttons -->
+          <div class="timeframe-filter-group" id="dashboard-timeframe-pills">
+            <button type="button" class="timeframe-pill" onclick="switchDashboardTimeframe('today', this)">วันนี้</button>
+            <button type="button" class="timeframe-pill active" onclick="switchDashboardTimeframe('7d', this)">7 วันล่าสุด</button>
+            <button type="button" class="timeframe-pill" onclick="switchDashboardTimeframe('month', this)">เดือนนี้</button>
+            <button type="button" class="timeframe-pill" onclick="switchDashboardTimeframe('all', this)">ภาพรวมทั้งหมด</button>
+          </div>
+
+          <!-- Gateway Live Ping Pill -->
+          <div class="gateway-live-pill">
+            <span class="status-live-dot"></span>
+            <span>PromptPay Gateway: เชื่อมต่อสมบูรณ์ (84ms)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Hub (ทางลัดเข้าถึงงานหลัก 4 ระบบแบบ 1 คลิก) -->
+      <div class="quick-action-grid">
+        <!-- Tile 1: Gateway Sync -->
+        <a href="admin-transactions.html" class="quick-action-tile active-accent">
+          <div class="tile-top-row">
+            <div class="tile-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <span class="tile-badge warning">รอตรวจซิงก์ 2 รายการ</span>
+          </div>
+          <div>
+            <h3 class="tile-title">ตรวจสอบธุรกรรมเกตเวย์</h3>
+            <p class="tile-desc">ระบบรับเงิน PromptPay อัตโนมัติ ตรวจสอบยอดและ Webhook</p>
+            <div class="tile-metric-value" id="quick-metric-tx">1,420 รายการ</div>
+          </div>
+          <span class="tile-action-link">เข้าสู่หน้าธุรกรรม &rarr;</span>
+        </a>
+
+        <!-- Tile 2: Payouts -->
+        <a href="admin-settlements.html" class="quick-action-tile">
+          <div class="tile-top-row">
+            <div class="tile-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            </div>
+            <span class="tile-badge info">4 รอบถึงกำหนด</span>
+          </div>
+          <div>
+            <h3 class="tile-title">ตัดจ่ายเงินผู้จัดงาน</h3>
+            <p class="tile-desc">หักค่าธรรมเนียม 5% เรียบร้อย พร้อมโอนเงินส่วนแบ่งให้ผู้จัด</p>
+            <div class="tile-metric-value" id="quick-metric-settle" style="color: #0284c7;">฿284,500 สุทธิ</div>
+          </div>
+          <span class="tile-action-link">ตรวจสอบรอบตัดจ่าย &rarr;</span>
+        </a>
+
+        <!-- Tile 3: Event Approval -->
+        <a href="admin-events.html" class="quick-action-tile">
+          <div class="tile-top-row">
+            <div class="tile-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <span class="tile-badge alert">รออนุมัติ 3 งาน</span>
+          </div>
+          <div>
+            <h3 class="tile-title">อนุมัติและดูแลคอนเสิร์ต</h3>
+            <p class="tile-desc">ตรวจสอบรายละเอียดงาน ราคาบัตรนักศึกษา และเปิดขาย</p>
+            <div class="tile-metric-value" id="quick-metric-events">8 งานเปิดขาย</div>
+          </div>
+          <span class="tile-action-link">ไปหน้าอนุมัติงาน &rarr;</span>
+        </a>
+
+        <!-- Tile 4: Customer Support & Orders -->
+        <a href="admin-orders.html" class="quick-action-tile">
+          <div class="tile-top-row">
+            <div class="tile-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <span class="tile-badge success">สำเร็จ 99.8%</span>
+          </div>
+          <div>
+            <h3 class="tile-title">จัดการคำสั่งซื้อ & บริการลูกค้า</h3>
+            <p class="tile-desc">แก้ไขอีเมลลูกค้าที่สะกดผิด, ส่งตั๋ว QR ซ้ำ, ริบตั๋วข้อพิพาท</p>
+            <div class="tile-metric-value" id="quick-metric-orders">9,500 บัตรสำเร็จ</div>
+          </div>
+          <span class="tile-action-link">เปิดเครื่องมือซัพพอร์ต &rarr;</span>
+        </a>
+      </div>
+
+      <!-- Key Financial & Operational Metric Cards -->
+      <div class="stats-cards-grid">
+        <!-- Card 1: Gross Sales -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">ยอดขายรวมทั้งแพลตฟอร์ม (Gross GMV)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+          <div class="stat-card-value" id="metric-gmv">฿1,425,000</div>
+          <div class="stat-card-trend trend-up">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            <span id="metric-gmv-sub">+14.8% เทียบกับสัปดาห์ก่อน • เงินผู้จัด ฿1,353,750</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Platform Net Revenue -->
+        <div class="stat-card highlight">
+          <div class="stat-card-header">
+            <span class="stat-lbl">รายได้ค่าธรรมเนียมแพลตฟอร์ม (Net Fee 5%)</span>
+            <div class="stat-icon-badge lime">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-card-value text-lime-dark" id="metric-fee">฿71,250</div>
+          <div class="stat-card-trend">
+            <span class="trend-sub" id="metric-fee-sub">กำไรสุทธิคำนวณจากยอดที่ชำระสำเร็จแล้ว 100%</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Total Tickets Issued -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">บัตรที่ออกสำเร็จทั้งหมด (Tickets Issued)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+          </div>
+          <div class="stat-card-value" id="metric-tickets">9,500 <span class="val-sub">/ 12,000 ใบ</span></div>
+          <div class="stat-card-trend">
+            <span class="trend-sub" id="metric-tickets-sub">อัตราขายได้ 79.2% • โควตาคงเหลือ 2,500 ใบ</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Active Events -->
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-lbl">สถานะคอนเสิร์ตในระบบ (Events Health)</span>
+            <div class="stat-icon-badge">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+            </div>
+          </div>
+          <div class="stat-card-value" id="metric-events">8 <span class="val-sub">งานเปิดขายอยู่</span></div>
+          <div class="stat-card-trend" style="display: flex; gap: 6px;">
+            <span class="badge badge-amber" style="font-size: 11px;">3 รออนุมัติ</span>
+            <span class="badge badge-dark" style="font-size: 11px;">2 Sold Out</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Weekly Sales Trend & Quota Distribution Analytics Card -->
+      <div class="dashboard-chart-card">
+        <div class="chart-header-row">
+          <div>
+            <h2 class="card-title-main">แนวโน้มยอดขายรายวัน (Daily Sales & Revenue Inflow)</h2>
+            <span class="card-title-sub">ติดตามยอดเงินชำระผ่าน PromptPay Gateway ตลอดสัปดาห์</span>
+          </div>
+          <div class="chart-meta-summary">
+            <div class="chart-meta-item">
+              <span class="chart-meta-lbl">ยอดขายเฉลี่ย/วัน</span>
+              <strong class="chart-meta-val">฿203,571</strong>
+            </div>
+            <div class="chart-meta-item">
+              <span class="chart-meta-lbl">วันที่จำหน่ายสูงสุด (Peak Day)</span>
+              <strong class="chart-meta-val" style="color: #15803d;">เสาร์ 17 ต.ค. (฿342.8k)</strong>
+            </div>
+            <div class="chart-meta-item">
+              <span class="chart-meta-lbl">อัตราความสำเร็จ (Payment Success)</span>
+              <strong class="chart-meta-val">99.8%</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7-Day CSS Bar Chart -->
+        <div class="weekly-bars-container" id="weekly-bars-chart">
+          <!-- Mon -->
+          <div class="bar-col" title="จันทร์ 12 ต.ค.: ฿115,200 (720 ใบ)">
+            <span class="bar-amount-lbl">฿115k</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill" style="height: 34%;"></div>
+            </div>
+            <span class="bar-day-name">จ. 12</span>
+          </div>
+
+          <!-- Tue -->
+          <div class="bar-col" title="อังคาร 13 ต.ค.: ฿138,400 (890 ใบ)">
+            <span class="bar-amount-lbl">฿138k</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill" style="height: 40%;"></div>
+            </div>
+            <span class="bar-day-name">อ. 13</span>
+          </div>
+
+          <!-- Wed -->
+          <div class="bar-col" title="พุธ 14 ต.ค.: ฿164,500 (1,050 ใบ)">
+            <span class="bar-amount-lbl">฿164k</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill" style="height: 48%;"></div>
+            </div>
+            <span class="bar-day-name">พ. 14</span>
+          </div>
+
+          <!-- Thu -->
+          <div class="bar-col" title="พฤหัสบดี 15 ต.ค.: ฿192,000 (1,280 ใบ)">
+            <span class="bar-amount-lbl">฿192k</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill" style="height: 56%;"></div>
+            </div>
+            <span class="bar-day-name">พฤ. 15</span>
+          </div>
+
+          <!-- Fri -->
+          <div class="bar-col" title="ศุกร์ 16 ต.ค.: ฿284,500 (1,840 ใบ)">
+            <span class="bar-amount-lbl">฿284k</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill weekend" style="height: 82%;"></div>
+            </div>
+            <span class="bar-day-name">ศ. 16</span>
+          </div>
+
+          <!-- Sat (Peak Day) -->
+          <div class="bar-col" title="เสาร์ 17 ต.ค.: ฿342,800 (2,180 ใบ) - ยอดขายเปิดตัวสูงสุด!">
+            <span class="bar-amount-lbl" style="color: #15803d; font-weight: 700;">฿342k ★</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill peak" style="height: 100%;"></div>
+            </div>
+            <span class="bar-day-name" style="font-weight: 700; color: #0f172a;">ส. 17</span>
+          </div>
+
+          <!-- Sun -->
+          <div class="bar-col" title="อาทิตย์ 18 ต.ค.: ฿187,600 (1,220 ใบ)">
+            <span class="bar-amount-lbl">฿187k</span>
+            <div class="bar-tube">
+              <div class="bar-tube-fill weekend" style="height: 54%;"></div>
+            </div>
+            <span class="bar-day-name">อา. 18</span>
+          </div>
+        </div>
+
+        <!-- Ticket Tier Ratio Box (นักศึกษา vs ทั่วไป) -->
+        <div class="ticket-dist-box">
+          <div class="dist-legend-row">
+            <span class="legend-item">
+              <span class="legend-dot student"></span>
+              <strong>สิทธิ์นักศึกษา (@ubu.ac.th):</strong> 6,240 ใบ (65.7% ของยอดขาย)
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot general"></span>
+              <strong>บุคคลทั่วไป (General):</strong> 3,260 ใบ (34.3% ของยอดขาย)
+            </span>
+          </div>
+          <div class="dist-bar-track">
+            <div class="dist-bar-student" style="width: 65.7%;" title="สิทธิ์นักศึกษา 65.7%"></div>
+            <div class="dist-bar-general" style="width: 34.3%;" title="บุคคลทั่วไป 34.3%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout: Top Events Quota vs Urgent Action Items & Live Feed -->
+      <div class="admin-dashboard-two-col">
+        
+        <!-- Left Column: Top Selling Events Summary -->
+        <div class="admin-card">
+          <div class="card-head-row">
+            <div>
+              <h2 class="card-title-main">อันดับคอนเสิร์ตที่มียอดขายสูงสุด (Top Events)</h2>
+              <span class="card-title-sub">ติดตามอัตราการจำหน่ายบัตรและสถานะโควตาคงเหลือ</span>
+            </div>
+            <a href="admin-events.html" class="card-link-action">จัดการงานทั้งหมด &rarr;</a>
+          </div>
+
+          <div class="event-ranking-list">
+            <!-- Event 1: Indie Live Wave -->
+            <div class="event-rank-item">
+              <div class="rank-num">1</div>
+              <img src="poster-summer.svg" alt="Indie Live Wave" class="rank-thumb">
+              <div class="rank-details">
+                <div class="rank-title-row">
+                  <strong class="rank-name">Indie Live Wave 2026</strong>
+                  <span class="rank-sold">458 / 500 ใบ (91.6%)</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: 91.6%;"></div>
+                </div>
+                <div class="rank-meta-row">
+                  <span>ผู้จัด: Soundbox Live Studio</span>
+                  <strong>ยอดขาย: ฿68,700 (Fee ฿3,435)</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 2: Neon Midnight Club -->
+            <div class="event-rank-item">
+              <div class="rank-num">2</div>
+              <img src="poster-neon.svg" alt="Neon Midnight Club" class="rank-thumb">
+              <div class="rank-details">
+                <div class="rank-title-row">
+                  <strong class="rank-name">Neon Midnight Club Festival</strong>
+                  <span class="rank-sold">1,820 / 2,000 ใบ (91.0%)</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: 91.0%;"></div>
+                </div>
+                <div class="rank-meta-row">
+                  <span>ผู้จัด: ElectroWave Group</span>
+                  <strong>ยอดขาย: ฿544,180 (Fee ฿27,209)</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 3: Retro Synthwave Night (SOLD OUT) -->
+            <div class="event-rank-item">
+              <div class="rank-num">3</div>
+              <img src="poster-rock.svg" alt="Retro Synthwave Night" class="rank-thumb">
+              <div class="rank-details">
+                <div class="rank-title-row">
+                  <strong class="rank-name">Retro Synthwave Night Vol. 1</strong>
+                  <span class="badge badge-dark" style="font-size: 10px;">SOLD OUT 100%</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: 100%; background-color: #0f172a;"></div>
+                </div>
+                <div class="rank-meta-row">
+                  <span>ผู้จัด: Neon Pulse Events</span>
+                  <strong>ยอดขาย: ฿105,000 (Fee ฿5,250)</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event 4: Sunset Acoustic Rooftop -->
+            <div class="event-rank-item">
+              <div class="rank-num">4</div>
+              <img src="poster-jazz.svg" alt="Sunset Acoustic Rooftop" class="rank-thumb">
+              <div class="rank-details">
+                <div class="rank-title-row">
+                  <strong class="rank-name">Sunset Acoustic Rooftop</strong>
+                  <span class="rank-sold">145 / 150 ใบ (96.7%)</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: 96.7%; background-color: #e11d48;"></div>
+                </div>
+                <div class="rank-meta-row">
+                  <span>ผู้จัด: The Sky Bar & Lounge</span>
+                  <strong>ยอดขาย: ฿50,750 (Fee ฿2,537)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Urgent Action Checklist & Live PromptPay Feed -->
+        <div class="admin-card">
+          <!-- Urgent Action Checklist -->
+          <div class="card-head-row">
+            <div>
+              <h2 class="card-title-main">รายการที่ต้องดำเนินการด่วน (Action Required)</h2>
+              <span class="card-title-sub">ภารกิจที่รอการตรวจสอบและอนุมัติจากผู้ดูแลระบบ</span>
+            </div>
+          </div>
+
+          <div class="urgent-checklist-wrap">
+            <!-- Item 1: Pending Events -->
+            <div class="urgent-item-row alert">
+              <div class="urgent-item-left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <div>
+                  <strong>3 คอนเสิร์ตรออนุมัติเปิดขาย</strong>
+                  <div style="font-size: 11px; color: var(--text-muted);">Acoustic in the Park 2026 ฯลฯ รอตรวจราคาโควตา</div>
+                </div>
+              </div>
+              <a href="admin-events.html" class="btn btn-dark btn-xs">ตรวจอนุมัติ &rarr;</a>
+            </div>
+
+            <!-- Item 2: Pending Webhook Re-sync -->
+            <div class="urgent-item-row warning" id="urgent-webhook-row">
+              <div class="urgent-item-left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <div>
+                  <strong>2 ธุรกรรมเกตเวย์รอซิงก์สถานะ</strong>
+                  <div style="font-size: 11px; color: var(--text-muted);">Webhook ดีเลย์จากฝั่งธนาคาร (ORD-8836, 8820)</div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline btn-xs" onclick="resyncDashboardWebhook()">กด Re-sync</button>
+            </div>
+
+            <!-- Item 3: Payouts Due -->
+            <div class="urgent-item-row info">
+              <div class="urgent-item-left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                <div>
+                  <strong>4 รอบตัดจ่ายถึงกำหนดโอน</strong>
+                  <div style="font-size: 11px; color: var(--text-muted);">ยอดสุทธิรวม ฿284,500 รอการบันทึกสลิปโอน</div>
+                </div>
+              </div>
+              <a href="admin-settlements.html" class="btn btn-dark btn-xs">ตัดจ่าย &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Live PromptPay Transactions Feed -->
+          <div class="card-head-row" style="margin-top: 24px; padding-top: 18px; border-top: 1px dashed var(--border-subtle);">
+            <div>
+              <h2 class="card-title-main">ธุรกรรมชำระเงินล่าสุด (PromptPay Feed)</h2>
+              <span class="card-title-sub">ระบบตรวจจับยอดเงินแบบ Webhook อัตโนมัติ</span>
+            </div>
+            <a href="admin-transactions.html" class="card-link-action">ดูทั้งหมด &rarr;</a>
+          </div>
+
+          <div class="transactions-compact-list">
+            <!-- Feed 1 -->
+            <div class="tx-compact-item">
+              <div class="tx-status-icon success">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <div class="tx-info">
+                <div class="tx-headline">
+                  <strong>ORD-202610-8839</strong>
+                  <span class="tx-amount">+฿79.00</span>
+                </div>
+                <div class="tx-sub-meta">
+                  <span>วรพจน์ สิทธิชัย (🎓 @ubu.ac.th) • Indie Live Wave</span>
+                  <span class="tx-time">เมื่อสักครู่</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feed 2 -->
+            <div class="tx-compact-item">
+              <div class="tx-status-icon success">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <div class="tx-info">
+                <div class="tx-headline">
+                  <strong>ORD-202610-8838</strong>
+                  <span class="tx-amount">+฿299.00</span>
+                </div>
+                <div class="tx-sub-meta">
+                  <span>กนกวรรณ รัตนะ • Neon Midnight Club</span>
+                  <span class="tx-time">3 นาทีที่แล้ว</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feed 3 -->
+            <div class="tx-compact-item">
+              <div class="tx-status-icon success">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <div class="tx-info">
+                <div class="tx-headline">
+                  <strong>ORD-202610-8837</strong>
+                  <span class="tx-amount">+฿350.00</span>
+                </div>
+                <div class="tx-sub-meta">
+                  <span>เอกชัย ชัยชนะ • Sunset Acoustic</span>
+                  <span class="tx-time">12 นาทีที่แล้ว</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feed 4: Pending Sync -->
+            <div class="tx-compact-item sync-pending" id="feed-pending-item">
+              <div class="tx-status-icon pending">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+              <div class="tx-info">
+                <div class="tx-headline">
+                  <strong>ORD-202610-8836</strong>
+                  <span class="tx-amount text-muted">฿150.00</span>
+                </div>
+                <div class="tx-sub-meta">
+                  <span class="text-warning">รอยืนยัน Webhook จากเกตเวย์</span>
+                  <a href="javascript:void(0)" onclick="resyncDashboardWebhook()" class="sync-action-link">กด Re-sync</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Admin Footer -->
+  <footer class="admin-site-footer">
+    <div class="admin-footer-container">
+      <span>E-TIKKET Admin Portal &copy; 2026 • ระบบจัดการธุรกรรมและคอนเสิร์ต</span>
+      <span>PromptPay Gateway Status: Operational • Response 84ms • Webhook Active</span>
+    </div>
+  </footer>
+
+  <script src="script.js?v=8"></script>
+  <script>
+    function switchDashboardTimeframe(period, btn) {
+      const pills = document.querySelectorAll('#dashboard-timeframe-pills .timeframe-pill');
+      pills.forEach(p => p.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const gmvEl = document.getElementById('metric-gmv');
+      const gmvSubEl = document.getElementById('metric-gmv-sub');
+      const feeEl = document.getElementById('metric-fee');
+      const ticketsEl = document.getElementById('metric-tickets');
+
+      if (period === 'today') {
+        gmvEl.textContent = '฿187,600';
+        gmvSubEl.textContent = 'ยอดขายวันนี้ (1,220 ใบ) • เงินผู้จัด ฿178,220';
+        feeEl.textContent = '฿9,380';
+        ticketsEl.innerHTML = '1,220 <span class="val-sub">/ 12,000 ใบ</span>';
+      } else if (period === '7d') {
+        gmvEl.textContent = '฿1,425,000';
+        gmvSubEl.textContent = '+14.8% เทียบกับสัปดาห์ก่อน • เงินผู้จัด ฿1,353,750';
+        feeEl.textContent = '฿71,250';
+        ticketsEl.innerHTML = '9,500 <span class="val-sub">/ 12,000 ใบ</span>';
+      } else if (period === 'month') {
+        gmvEl.textContent = '฿3,840,000';
+        gmvSubEl.textContent = '+22.4% อัตราเติบโตเดือนนี้ • เงินผู้จัด ฿3,648,000';
+        feeEl.textContent = '฿192,000';
+        ticketsEl.innerHTML = '24,600 <span class="val-sub">/ 30,000 ใบ</span>';
+      } else if (period === 'all') {
+        gmvEl.textContent = '฿8,950,000';
+        gmvSubEl.textContent = 'ยอดขายสะสมรวมทั้งสิ้น • เงินผู้จัด ฿8,502,500';
+        feeEl.textContent = '฿447,500';
+        ticketsEl.innerHTML = '58,200 <span class="val-sub">/ 70,000 ใบ</span>';
+      }
+    }
+
+    function resyncDashboardWebhook() {
+      const pendingRow = document.getElementById('urgent-webhook-row');
+      const feedItem = document.getElementById('feed-pending-item');
+
+      if (confirm('ต้องการส่งคำสั่ง Re-sync สถานะ Webhook ไปยัง PromptPay Gateway หรือไม่?')) {
+        if (feedItem) {
+          feedItem.className = 'tx-compact-item';
+          feedItem.innerHTML = `
+            <div class="tx-status-icon success">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="tx-info">
+              <div class="tx-headline">
+                <strong>ORD-202610-8836</strong>
+                <span class="tx-amount">+฿150.00</span>
+              </div>
+              <div class="tx-sub-meta">
+                <span>ซิงก์สำเร็จเรียบร้อย • ออกตั๋ว QR สำเร็จแล้ว</span>
+                <span class="tx-time" style="color:#10b981;">เพิ่งซิงก์</span>
+              </div>
+            </div>
+          `;
+        }
+        if (pendingRow) {
+          pendingRow.style.opacity = '0.5';
+          pendingRow.innerHTML = `
+            <div class="urgent-item-left">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div>
+                <strong>ซิงก์สถานะเกตเวย์ครบถ้วนแล้ว</strong>
+                <div style="font-size: 11px; color: var(--text-muted);">ไม่มีธุรกรรมค้างยืนยันในระบบ</div>
+              </div>
+            </div>
+            <span class="badge badge-lime">ซิงก์แล้ว</span>
+          `;
+        }
+        alert('✓ Re-sync สถานะกับ PromptPay Gateway สำเร็จ!\nยอดเงิน ฿150.00 ได้รับการยืนยัน และระบบได้สร้างตั๋ว QR Code ส่งให้ลูกค้าทันที');
+      }
+    }
+  </script>
+</body>
+</html>

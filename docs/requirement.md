@@ -682,3 +682,84 @@ Ticket-number search intentionally does not expose QR codes or view_token access
 ### Design Notes
 
 The current design direction uses a "Modern Monochromatic / High-Contrast Black & White aesthetic". Light mode will invert this paradigm (white backgrounds, black text, neutral gray borders) while retaining the minimalist, high-contrast feel. Semantic colors (e.g., emerald for PAID, red for REJECTED) will be adjusted for accessible contrast in both modes.
+
+## Confirmed Admin & Organizer Portal Decisions
+
+- Scope: Specification and architecture of Admin and Organizer portals, workflows, and screen composition.
+- Status: Agreed
+- Source: Explicit user answers in `$grill-workflow` on 2026-10-17 (Asia/Bangkok).
+
+| ID | Selected option | State | Confirmed decision |
+| --- | --- | --- | --- |
+| AO-01 | Separate Portals | Agreed | Separate URLs and layout structures completely: `/admin/*` for Platform Admin, and `/organizer/*` for Event Organizers. |
+| AO-02 | Admin Manual Onboarding | Agreed | Admin manually creates and invites Organizer accounts to maintain quality control and avoid unvetted event creations in MVP. |
+| AO-03 | Token/PIN Gate Scanner | Agreed | Gate staff use an event-specific Scanner Token Link or PIN to scan tickets on mobile immediately without requiring an organizer login. |
+| AO-04 | Admin First Prototype Priority | Agreed | Prioritize designing the Admin Portal prototype first, focusing on Payment Transactions & Gateway Sync, Event Approval, and the Platform Overview Dashboard. |
+| AO-05 | Payout & Settlement Workflow | Agreed | Admin manages payouts to organizers: calculates net revenue after platform fee (e.g. 5%), shows organizer bank accounts, and records transfers via 'Mark as Settled' with transfer slip proof. |
+| AO-06 | Event Approval Workflow | Agreed | Organizer events require Admin approval: Draft → Pending Approval → Admin Approve (Publish) or Request Changes before going live on the catalog. Admin retains emergency Pause/Suspend capability. |
+| AO-07 | Customer Support Tools | Agreed | Admin has comprehensive order support: search orders, correct misspelled buyer emails, resend ticket emails, and cancel orders (which automatically revokes/cancels associated ticket QR codes). |
+| AO-08 | Automated Gateway Sync (No Slips) | Agreed | Platform operates on PromptPay QR Gateway; customers do not upload slips. Admin portal manages real-time gateway transactions, with a 'Sync/Query Status' action to reconcile delayed webhooks or drop-offs. |
+
+### Admin & Organizer Portal Structure Overview
+
+#### 1. Admin Portal (`/admin/*`)
+- **Admin Login:** `/admin/login` (Secure session cookie + bcrypt)
+- **Dashboard Overview:** `/admin/dashboard` (Platform GMV, Net platform revenue, Active events, Payouts due, Gateway sync alerts)
+- **Payment Transactions & Gateway Sync:** `/admin/transactions` (Real-time gateway transactions feed, Webhook status, Re-check Gateway button, Manual dispute resolution)
+- **Organizer Payouts & Settlement:** `/admin/settlements` (Event revenue summary, Platform fee deduction, Organizer bank details, Mark as Settled + slip attachment)
+- **Event Moderation & Approval:** `/admin/events` (Pending approval review queue, Approve & Publish, Request changes, Emergency pause/suspend, Verified Organizer badge toggle)
+- **Order Management & Customer Support:** `/admin/orders` (Order list, Buyer email correction tool, Resend ticket email button, Cancel order & Revoke tickets)
+- **Organizer Management:** `/admin/organizers` (Add new organizer, manage bank accounts, set custom commission fee %)
+- **Platform Settings:** `/admin/settings` (Default platform fee %, Bank account for bank transfer, PromptPay gateway keys)
+
+#### 2. Organizer Portal (`/organizer/*`)
+- **Organizer Login:** `/organizer/login`
+- **Dashboard Overview:** `/organizer/dashboard` (Tickets sold / quota, Gross event revenue, Net payout after fee, Live Checked-in counter)
+- **Event Management:** `/organizer/events` (List, Create event wizard: poster, venue, date, time, ticket tier & quota, Submit for Approval)
+- **Orders & Attendee List:** `/organizer/orders` (Attendee names, phone, email, ticket numbers, CSV export)
+- **Gate Scanner Access:** `/organizer/scanner` (Generate / copy scanner access token link for gate staff, live gate audit log)
+- **Financial Settlement:** `/organizer/payouts` (Settlement history, net earnings, bank transfer status)
+
+## Confirmed Organizer Portal Specification Decisions
+
+- Scope: Organizer Portal architecture, screen composition, ticket tiering, event lifecycle, and attendee management.
+- Status: Agreed
+- Source: Explicit user answers in `$grill-workflow` on 2026-10-18 (Asia/Bangkok).
+
+| ID | Selected option | State | Confirmed decision |
+| --- | --- | --- | --- |
+| ORG-01 | 5 Core Screens | Agreed | 5 core Organizer screens: Dashboard (sales/check-in overview), My Events (event management & creation wizard), Attendee Orders (buyer list & CSV export), Gate Scanner (staff token link generator & live audit), and Payouts (net revenue, transfer status & bank settings). |
+| ORG-02 | Multi-tier Tickets | Agreed | Support 1–4 ticket tiers per event (e.g., Early Bird, General Admission, VIP) with individual prices and quotas per tier. |
+| ORG-03 | Gated Event Editing | Agreed | General details (description, poster) are editable immediately when live; modifications to date/time, venue, ticket price, or reduced quotas require Admin re-approval to protect existing ticket buyers. |
+| ORG-04 | Full Attendee Data & CSV | Agreed | Organizer can view buyer full name, phone number, email, ticket number, and check-in status, with CSV export for gate door lists and operations. |
+| ORG-05 | Self-Service Payout Account | Agreed | Organizer inputs bank name, account number, and account holder name directly in Payout Settings; verified by Admin before initiating transfer settlements. |
+| ORG-06 | Monochromatic Prototype Ready | Agreed | Adopt the established high-contrast Black & White aesthetic matching the Customer and Admin portals; ready to proceed directly to prototype without separate `$grill-design`. |
+
+### Organizer Portal Screen Structure (`/organizer/*`)
+
+1. **Organizer Dashboard (`/organizer/dashboard`):**
+   - KPI Cards: Total Gross Sales, Net Payout After 5% Fee, Total Tickets Sold vs Total Quota, Real-time Check-in Attendance (Inside/Outside).
+   - Event Status Table: Quick glance at active events, status (`Draft`, `Pending Approval`, `Published`, `Ended`), ticket progress bar, and shortcut to gate scanner.
+
+2. **Event Management (`/organizer/events` & `/organizer/events/new`):**
+   - Event list with filtering (`All`, `Published`, `Draft`, `Pending Approval`, `Past`).
+   - Create/Edit Event Wizard: Title, description, banner image upload (R2), venue, date & showtime.
+   - Multi-tier Ticket Builder: Add up to 4 tiers (Tier Name, Price, Quota, Sales Start/End).
+   - Action Bar: Save as Draft, Submit for Admin Approval.
+
+3. **Attendee Orders & Door List (`/organizer/orders`):**
+   - Search bar by buyer name, email, phone, or ticket number.
+   - Filter by Event and Ticket Tier.
+   - Table: Order ID, Buyer Name, Contact, Ticket Tier, Quantity, Check-in Status (`Inside`, `Outside`).
+   - Action: "Export CSV" for door staff emergency backup list.
+
+4. **Gate Scanner Token Management (`/organizer/scanner`):**
+   - Generate event-specific Scanner Token Link / QR Code for staff.
+   - Security: Gate staff can scan tickets immediately on mobile without requiring organizer credentials or login.
+   - Live Gate Activity Feed: Real-time scan log (`CHECK_IN`, `CHECK_OUT`, `DUPLICATE`, `INVALID`).
+
+5. **Financial Settlement & Payouts (`/organizer/payouts`):**
+   - Summary: Total Earnings, Settled Amount, Pending Settlement.
+   - Breakdown Table: Per-event Gross Sales, Platform Fee Deduction (5%), Net Earnings, Settlement Status (`Pending`, `Processing`, `Settled`).
+   - Payout Bank Account Card: Bank Name, Account Number, Account Name with status badge (`Verified` / `Pending Verification`).
+
