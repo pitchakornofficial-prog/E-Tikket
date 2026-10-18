@@ -1,6 +1,7 @@
 import "dotenv/config";
+import crypto from "crypto";
 import bcrypt from "bcryptjs";
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient, Role, OrderStatus, PaymentStatus, TicketStatus, ScanAction, ScanResult, DeliveryStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const BCRYPT_COST = 12;
@@ -50,6 +51,7 @@ async function seedCleanSampleEvents(organizerId: string) {
   await prisma.article.deleteMany({});
   await prisma.articleTag.deleteMany({});
   await prisma.ticketScan.deleteMany({});
+  await prisma.ticketChecker.deleteMany({});
   await prisma.ticket.deleteMany({});
   await prisma.payment.deleteMany({});
   await prisma.order.deleteMany({});
@@ -433,6 +435,382 @@ Sound Experiment BKK คือพื้นที่สำหรับการ�
   }
 }
 
+async function seedOrdersTicketsCheckersAndScans(
+  organizerId: string,
+  adminId: string,
+  eventMap: Record<string, string>
+) {
+  const sha256 = (s: string) => crypto.createHash("sha256").update(s).digest("hex");
+  const indieEventId = eventMap["Indie Live Wave 2026"];
+  const ubuEventId = eventMap["UBU Acoustic Night Vol.3"];
+
+  if (!indieEventId) return;
+
+  // 1. Gate Staff Checkers
+  const checker1 = await prisma.ticketChecker.create({
+    data: {
+      organizerId,
+      eventId: indieEventId,
+      name: "เจ้าหน้าที่สมคิด (Riverfront Gate 1)",
+      phone: "089-111-2233",
+      gateNote: "ประตูใหญ่ ริมแม่น้ำเจ้าพระยา",
+      accessToken: "gate-token-riverfront-01",
+      tokenHash: sha256("gate-token-riverfront-01"),
+      isActive: true,
+    },
+  });
+
+  const checker2 = await prisma.ticketChecker.create({
+    data: {
+      organizerId,
+      eventId: indieEventId,
+      name: "เจ้าหน้าที่วิชัย (Re-entry Gate 2)",
+      phone: "082-333-4455",
+      gateNote: "จุดตรวจเข้า-ออกชั่วคราว ประตูทิศเหนือ",
+      accessToken: "gate-token-reentry-02",
+      tokenHash: sha256("gate-token-reentry-02"),
+      isActive: true,
+    },
+  });
+
+  // 2. Orders & Tickets in every status
+  // Case 1: PAID (Student Privilege @ubu.ac.th, 1 ticket)
+  const order1 = await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "วรพจน์ สิทธิชัย",
+      customerEmail: "student@ubu.ac.th",
+      customerPhone: "089-765-4321",
+      quantity: 1,
+      ticketTier: "STUDENT",
+      totalAmount: 79.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 3.95,
+      organizerRevenue: 75.05,
+      checkoutTokenHash: sha256("checkout-token-8839"),
+      viewTokenHash: sha256("view-token-8839"),
+      status: OrderStatus.PAID,
+      deliveryStatus: DeliveryStatus.SENT,
+      expiresAt: new Date(Date.now() + 86400000),
+    },
+  });
+
+  await prisma.ticket.create({
+    data: {
+      eventId: indieEventId,
+      orderId: order1.id,
+      ticketNumber: "TK-202610-8839-01",
+      qrTokenHash: sha256("qr-raw-token-8839-01"),
+      qrArtifactKey: "tickets/qr-sample-8839-01.png",
+      status: TicketStatus.OUTSIDE,
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      orderId: order1.id,
+      amount: 79.00,
+      slipUrl: "/qr-transfer-sample.svg",
+      slipHash: sha256("slip-content-8839"),
+      status: PaymentStatus.APPROVED,
+      verifiedById: adminId,
+      verifiedAt: new Date(Date.now() - 3600000),
+    },
+  });
+
+  // Case 2: PAID (General, 1 ticket, Checked in INSIDE)
+  const order2 = await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "นายสมชาย รัตนวงศ์",
+      customerEmail: "somchai.r@gmail.com",
+      customerPhone: "081-829-1122",
+      quantity: 1,
+      ticketTier: "GENERAL",
+      totalAmount: 150.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 7.50,
+      organizerRevenue: 142.50,
+      checkoutTokenHash: sha256("checkout-token-10291"),
+      viewTokenHash: sha256("view-token-10291"),
+      status: OrderStatus.PAID,
+      deliveryStatus: DeliveryStatus.SENT,
+      expiresAt: new Date(Date.now() + 86400000),
+    },
+  });
+
+  const ticket2 = await prisma.ticket.create({
+    data: {
+      eventId: indieEventId,
+      orderId: order2.id,
+      ticketNumber: "TK-88210-01",
+      qrTokenHash: sha256("qr-raw-token-10291-01"),
+      qrArtifactKey: "tickets/qr-sample-10291-01.png",
+      status: TicketStatus.INSIDE,
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      orderId: order2.id,
+      amount: 150.00,
+      slipUrl: "/qr-transfer-sample.svg",
+      slipHash: sha256("slip-content-10291"),
+      status: PaymentStatus.APPROVED,
+      verifiedById: adminId,
+      verifiedAt: new Date(Date.now() - 7200000),
+    },
+  });
+
+  // Scan for ticket2 (Check-in INSIDE)
+  await prisma.ticketScan.create({
+    data: {
+      eventId: indieEventId,
+      ticketId: ticket2.id,
+      staffId: organizerId,
+      checkerId: checker1.id,
+      checkerName: checker1.name,
+      action: ScanAction.CHECK_IN,
+      result: ScanResult.VALID,
+      note: "สแกนเข้างาน ประตู Riverfront Gate 1 สำเร็จ",
+      scannedAt: new Date(Date.now() - 3600000),
+    },
+  });
+
+  // Case 3: PAID (General, 2 tickets, Re-entry Audit)
+  const order3 = await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "นางสาวรพีพร จันทร์ดี",
+      customerEmail: "rapeeporn.j@gmail.com",
+      customerPhone: "086-112-3344",
+      quantity: 2,
+      ticketTier: "GENERAL",
+      totalAmount: 300.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 15.00,
+      organizerRevenue: 285.00,
+      checkoutTokenHash: sha256("checkout-token-10450"),
+      viewTokenHash: sha256("view-token-10450"),
+      status: OrderStatus.PAID,
+      deliveryStatus: DeliveryStatus.SENT,
+      expiresAt: new Date(Date.now() + 86400000),
+    },
+  });
+
+  const ticket3a = await prisma.ticket.create({
+    data: {
+      eventId: indieEventId,
+      orderId: order3.id,
+      ticketNumber: "TK-88210-02",
+      qrTokenHash: sha256("qr-raw-token-10450-01"),
+      qrArtifactKey: "tickets/qr-sample-10450-01.png",
+      status: TicketStatus.INSIDE,
+    },
+  });
+
+  const ticket3b = await prisma.ticket.create({
+    data: {
+      eventId: indieEventId,
+      orderId: order3.id,
+      ticketNumber: "TK-88210-03",
+      qrTokenHash: sha256("qr-raw-token-10450-02"),
+      qrArtifactKey: "tickets/qr-sample-10450-02.png",
+      status: TicketStatus.OUTSIDE,
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      orderId: order3.id,
+      amount: 300.00,
+      slipUrl: "/qr-transfer-sample.svg",
+      slipHash: sha256("slip-content-10450"),
+      status: PaymentStatus.APPROVED,
+      verifiedById: adminId,
+      verifiedAt: new Date(Date.now() - 5400000),
+    },
+  });
+
+  // Scans for ticket 3a & 3b
+  await prisma.ticketScan.create({
+    data: {
+      eventId: indieEventId,
+      ticketId: ticket3a.id,
+      staffId: organizerId,
+      checkerId: checker1.id,
+      checkerName: checker1.name,
+      action: ScanAction.CHECK_IN,
+      result: ScanResult.VALID,
+      note: "สแกนเข้างาน ประตู Riverfront Gate 1",
+      scannedAt: new Date(Date.now() - 5000000),
+    },
+  });
+
+  await prisma.ticketScan.create({
+    data: {
+      eventId: indieEventId,
+      ticketId: ticket3b.id,
+      staffId: organizerId,
+      checkerId: checker1.id,
+      checkerName: checker1.name,
+      action: ScanAction.CHECK_IN,
+      result: ScanResult.VALID,
+      note: "สแกนเข้างาน ประตู Riverfront Gate 1",
+      scannedAt: new Date(Date.now() - 4800000),
+    },
+  });
+
+  await prisma.ticketScan.create({
+    data: {
+      eventId: indieEventId,
+      ticketId: ticket3b.id,
+      staffId: organizerId,
+      checkerId: checker2.id,
+      checkerName: checker2.name,
+      action: ScanAction.CHECK_OUT,
+      result: ScanResult.VALID,
+      note: "สแกนออกชั่วคราว (Re-entry) ประตูทิศเหนือ",
+      scannedAt: new Date(Date.now() - 1800000),
+    },
+  });
+
+  // Case 4: WAITING_FOR_VERIFY (For admin verification testing!)
+  const order4 = await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "นางสาวกานดา สุขใจ",
+      customerEmail: "kanda.s@hotmail.com",
+      customerPhone: "084-555-6789",
+      quantity: 2,
+      ticketTier: "GENERAL",
+      totalAmount: 300.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 15.00,
+      organizerRevenue: 285.00,
+      checkoutTokenHash: sha256("checkout-token-5542"),
+      viewTokenHash: null,
+      status: OrderStatus.WAITING_FOR_VERIFY,
+      expiresAt: new Date(Date.now() + 3600000),
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      orderId: order4.id,
+      amount: 300.00,
+      slipUrl: "/qr-transfer-sample.svg",
+      slipHash: sha256("slip-content-5542"),
+      status: PaymentStatus.PENDING,
+    },
+  });
+
+  // Case 5: WAITING_FOR_VERIFY on UBU event (Student price)
+  if (ubuEventId) {
+    const order5 = await prisma.order.create({
+      data: {
+        eventId: ubuEventId,
+        customerName: "นายธีรเดช เจริญสุข",
+        customerEmail: "theeradech.c@ubu.ac.th",
+        customerPhone: "082-999-1234",
+        quantity: 1,
+        ticketTier: "STUDENT",
+        totalAmount: 79.00,
+        platformFeePercent: 5.00,
+        platformFeeAmount: 3.95,
+        organizerRevenue: 75.05,
+        checkoutTokenHash: sha256("checkout-token-5543"),
+        viewTokenHash: null,
+        status: OrderStatus.WAITING_FOR_VERIFY,
+        expiresAt: new Date(Date.now() + 3600000),
+      },
+    });
+
+    await prisma.payment.create({
+      data: {
+        orderId: order5.id,
+        amount: 79.00,
+        slipUrl: "/qr-transfer-sample.svg",
+        slipHash: sha256("slip-content-5543"),
+        status: PaymentStatus.PENDING,
+      },
+    });
+  }
+
+  // Case 6: PENDING_PAYMENT (Reserved with countdown timer active)
+  await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "นายอภิสิทธิ์ วงศ์ษา",
+      customerEmail: "apisit.w@yahoo.com",
+      customerPhone: "089-333-7788",
+      quantity: 1,
+      ticketTier: "GENERAL",
+      totalAmount: 150.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 7.50,
+      organizerRevenue: 142.50,
+      checkoutTokenHash: sha256("checkout-token-3310"),
+      viewTokenHash: null,
+      status: OrderStatus.PENDING_PAYMENT,
+      expiresAt: new Date(Date.now() + 12 * 60 * 1000), // 12 mins left
+    },
+  });
+
+  // Case 7: REJECTED (Admin rejected slip with reason)
+  const order7 = await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "นายเอกชัย ชัยชนะ",
+      customerEmail: "ekkachai.c@gmail.com",
+      customerPhone: "087-444-2211",
+      quantity: 1,
+      ticketTier: "GENERAL",
+      totalAmount: 150.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 7.50,
+      organizerRevenue: 142.50,
+      checkoutTokenHash: sha256("checkout-token-9912"),
+      viewTokenHash: null,
+      status: OrderStatus.REJECTED,
+      expiresAt: new Date(Date.now() - 3600000),
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      orderId: order7.id,
+      amount: 150.00,
+      slipUrl: "/qr-transfer-sample.svg",
+      slipHash: sha256("slip-content-9912"),
+      status: PaymentStatus.REJECTED,
+      rejectReason: "สลิปยอดเงินไม่ถูกต้อง ไม่พบรายการโอนในบัญชีธนาคาร",
+      verifiedById: adminId,
+      verifiedAt: new Date(Date.now() - 1800000),
+    },
+  });
+
+  // Case 8: EXPIRED (Unpaid and timed out)
+  await prisma.order.create({
+    data: {
+      eventId: indieEventId,
+      customerName: "นายพิชัย รัตนชัย",
+      customerEmail: "pichai.r@gmail.com",
+      customerPhone: "081-332-9988",
+      quantity: 1,
+      ticketTier: "GENERAL",
+      totalAmount: 150.00,
+      platformFeePercent: 5.00,
+      platformFeeAmount: 7.50,
+      organizerRevenue: 142.50,
+      checkoutTokenHash: sha256("checkout-token-1102"),
+      viewTokenHash: null,
+      status: OrderStatus.EXPIRED,
+      expiresAt: new Date(Date.now() - 7200000),
+    },
+  });
+}
+
 async function main() {
   const admin = staffConfig("ADMIN");
   const organizer = staffConfig("ORGANIZER");
@@ -448,6 +826,9 @@ async function main() {
 
   await seedArticles(adminUser.id, organizerUser.id, eventMap);
   console.info("Seeded comprehensive news articles, categories, and tags.");
+
+  await seedOrdersTicketsCheckersAndScans(organizerUser.id, adminUser.id, eventMap);
+  console.info("Seeded comprehensive orders across all statuses, payments, tickets, checkers, and audit scans.");
 }
 
 main()

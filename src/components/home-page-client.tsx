@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { PrototypeControlBar } from "./prototype-control-bar";
 import { PublicNavbar } from "./public-navbar";
 import { EventCatalogBrowser, CatalogEvent } from "./event-catalog-browser";
 
@@ -15,11 +14,12 @@ export function HomePageClient({ events, error }: HomePageClientProps) {
 
   return (
     <div data-prototype-page="home" data-prototype-id="home-v6">
-      {/* 1. Prototype Control Bar */}
-      <PrototypeControlBar firstEventId={events[0]?.id} />
-
-      {/* 2. Site Navigation Header with Center Search Bar */}
-      <PublicNavbar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      {/* 1. Site Navigation Header with Prototype Control Bar & Center Search */}
+      <PublicNavbar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        firstEventId={events[0]?.id}
+      />
 
       {/* 3. Main Content matching docs/assets/prototype/index.html */}
       <main className="main-content">

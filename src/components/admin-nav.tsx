@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "./logout-button";
 import { ClipboardCheckIcon, MusicIcon, FileTextIcon, SlidersIcon, UsersIcon } from "./icons";
-import { ThemeToggle } from "./theme-toggle";
-import { PrototypeControlBar } from "./prototype-control-bar";
 
 export function AdminNav() {
   const pathname = usePathname();
@@ -17,9 +15,7 @@ export function AdminNav() {
   const isCategories = pathname.startsWith("/admin/categories");
 
   return (
-    <>
-      <PrototypeControlBar />
-      <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
+    <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
       <div className="max-w-6xl mx-auto px-4 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-0">
         <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-6 w-full sm:w-auto">
           <div className="flex items-center justify-between w-full sm:w-auto">
@@ -29,7 +25,6 @@ export function AdminNav() {
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-black dark:bg-white text-white dark:text-black font-mono font-bold">ADMIN</span>
             </Link>
             <div className="sm:hidden flex items-center gap-2">
-              <ThemeToggle />
               <LogoutButton />
             </div>
           </div>
@@ -94,7 +89,6 @@ export function AdminNav() {
         </div>
 
         <div className="hidden sm:flex items-center gap-3">
-          <ThemeToggle />
           <LogoutButton />
         </div>
       </div>

@@ -19,8 +19,6 @@ import {
   RefreshCwIcon,
   DownloadIcon,
 } from "@/components/icons";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { PrototypeControlBar } from "@/components/prototype-control-bar";
 
 
 interface TicketItem {
@@ -188,11 +186,8 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
 
 
   return (
-    <div data-prototype-page="tickets" data-prototype-id="tickets-v4">
-      {/* 1. Prototype Control Bar */}
-      <PrototypeControlBar />
-
-      {/* 2. Site Header */}
+    <div>
+      {/* Site Header */}
       <header className="site-header">
         <div className="header-container">
           <Link href="/" className="brand">

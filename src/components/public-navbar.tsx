@@ -6,9 +6,14 @@ import { usePathname } from "next/navigation";
 interface PublicNavbarProps {
   searchQuery?: string;
   onSearchChange?: (val: string) => void;
+  firstEventId?: string;
+  showControlBar?: boolean;
 }
 
-export function PublicNavbar({ searchQuery = "", onSearchChange }: PublicNavbarProps) {
+export function PublicNavbar({
+  searchQuery = "",
+  onSearchChange,
+}: PublicNavbarProps) {
   const pathname = usePathname();
 
   return (

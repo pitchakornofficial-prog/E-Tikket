@@ -15,7 +15,6 @@ import {
   CheckIcon,
   CopyIcon,
 } from "@/components/icons";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 interface OrderData {
   orderId: string;
@@ -294,18 +293,20 @@ function CheckoutContent() {
   const isCritical = timeRemaining !== null && timeRemaining > 0 && timeRemaining < 60;
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white flex flex-col font-sans transition-colors duration-200">
-      {/* Header */}
-      <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-neutral-900 dark:text-white font-black tracking-tight text-xl uppercase">
-            <span>E-TIKKET</span>
-            <span className="w-2 h-2 rounded-full bg-[#ccff00] shadow-[0_0_8px_#ccff00] inline-block -mt-1" />
+    <div>
+      {/* Site Header */}
+      <header className="site-header">
+        <div className="header-container">
+          <Link href="/" className="brand">
+            <span className="brand-text">E-TIKKET</span>
+            <span className="brand-dot"></span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-neutral-500 hidden sm:inline">Guest Checkout</span>
-            <ThemeToggle />
-          </div>
+          <nav className="nav-actions">
+            <Link href={`/events/${order.event.id}`} className="nav-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              ย้อนกลับ
+            </Link>
+          </nav>
         </div>
       </header>
 

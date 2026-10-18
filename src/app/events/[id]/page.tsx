@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { calculateAvailableTickets } from "@/lib/inventory";
 import { TicketPurchaseForm } from "@/components/ticket-purchase-form";
-import { PrototypeControlBar } from "@/components/prototype-control-bar";
 import { formatPrice } from "@/lib/format";
 
 interface PageProps {
@@ -80,11 +79,8 @@ export default async function EventDetailPage({ params }: PageProps) {
     : [];
 
   return (
-    <div data-prototype-page="event" data-prototype-id="event-v6">
-      {/* 1. Prototype Control Bar */}
-      <PrototypeControlBar firstEventId={event.id} />
-
-      {/* 2. Site Header */}
+    <div>
+      {/* Site Header */}
       <header className="site-header">
         <div className="header-container">
           <Link href="/" className="brand">

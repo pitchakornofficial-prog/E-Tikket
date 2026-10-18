@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PrototypeControlBar } from "@/components/prototype-control-bar";
 import { formatPrice } from "@/lib/format";
 
 interface TicketOrder {
@@ -92,11 +91,8 @@ export default function MyTicketsPage() {
   };
 
   return (
-    <div data-prototype-page="lookup" data-prototype-id="lookup-v1">
-      {/* 1. Prototype Control Bar */}
-      <PrototypeControlBar />
-
-      {/* 2. Site Header */}
+    <div>
+      {/* Site Header */}
       <header className="site-header">
         <div className="header-container">
           <Link href="/" className="brand">
