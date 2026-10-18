@@ -626,7 +626,8 @@ export default function MobileGateScannerPage({ params }: RouteProps) {
       <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-black text-sm tracking-wider uppercase">TICKETBOX</span>
+            <span className="font-black text-sm tracking-wider uppercase">E-TIKKET</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] shadow-[0_0_6px_#ccff00] inline-block -mt-0.5" />
             <span className="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-neutral-900 text-white dark:bg-white dark:text-black">
               GATE STAFF
             </span>

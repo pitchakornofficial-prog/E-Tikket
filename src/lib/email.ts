@@ -49,7 +49,7 @@ function getAppUrl(): string {
 }
 
 function getFromEmail(): string {
-  return process.env.EMAIL_FROM || "TICKETBOX <noreply@etikket.com>";
+  return process.env.EMAIL_FROM || "E-TIKKET <noreply@etikket.com>";
 }
 
 /**
@@ -140,7 +140,7 @@ export async function sendRejectionEmail(
   const { to, customerName, orderId, eventName, reason } = payload;
   const rejectReason = reason || "สลิปไม่ถูกต้อง หรือยอดเงินไม่ตรงกับคำสั่งซื้อ";
 
-  const subject = `[TICKETBOX] แจ้งผลการตรวจสอบการชำระเงินไม่ผ่าน - คำสั่งซื้อ #${orderId}`;
+  const subject = `[E-TIKKET] แจ้งผลการตรวจสอบการชำระเงินไม่ผ่าน - คำสั่งซื้อ #${orderId}`;
   const text = `สวัสดีคุณ ${customerName},\n\nรายการคำสั่งซื้อ #${orderId} สำหรับงาน "${eventName}" ไม่ผ่านการตรวจสอบการชำระเงิน\nสาเหตุ: ${rejectReason}\n\nกรุณาติดต่อทีมงานผู้จัดหากมีข้อสงสัย`;
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e5e5e5; border-radius: 8px;">
@@ -171,12 +171,12 @@ export async function sendTicketEmail(
   const { to, customerName, orderId, eventName, eventDate, startTime, venue, tickets, viewUrl } = payload;
   const fullViewUrl = `${getAppUrl()}${viewUrl}`;
 
-  const subject = `[TICKETBOX] บัตรเข้างานของคุณพร้อมแล้ว! - ${eventName} (#${orderId})`;
+  const subject = `[E-TIKKET] บัตรเข้างานของคุณพร้อมแล้ว! - ${eventName} (#${orderId})`;
   const text = `สวัสดีคุณ ${customerName},\n\nการชำระเงินสำหรับงาน "${eventName}" ได้รับการอนุมัติแล้ว!\nวันจัดงาน: ${eventDate} เวลา: ${startTime} น.\nสถานที่: ${venue}\nจำนวนบัตร: ${tickets.length} ใบ\n\nเปิดดูบัตรเข้างานและ QR Code ของคุณได้ที่: ${fullViewUrl}`;
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e5e5e5; border-radius: 8px; background-color: #ffffff;">
       <div style="border-bottom: 2px solid #000000; padding-bottom: 12px; margin-bottom: 20px;">
-        <h1 style="font-size: 20px; margin: 0; color: #000000; letter-spacing: -0.5px;">TICKETBOX</h1>
+        <h1 style="font-size: 20px; margin: 0; color: #000000; letter-spacing: -0.5px;">E-TIKKET</h1>
       </div>
       <h2 style="color: #16a34a; margin-top: 0;">การชำระเงินได้รับการอนุมัติเรียบร้อยแล้ว</h2>
       <p>สวัสดีคุณ <strong>${customerName}</strong>,</p>
@@ -233,12 +233,12 @@ export async function sendReissueTicketEmail(
   const { to, customerName, orderId, eventName, oldTicketNumber, newTicketNumber, viewUrl } = payload;
   const fullViewUrl = `${getAppUrl()}${viewUrl}`;
 
-  const subject = `[TICKETBOX] แจ้งเตือนการยกเลิกและออกบัตรใหม่ทดแทน - ${eventName}`;
+  const subject = `[E-TIKKET] แจ้งเตือนการยกเลิกและออกบัตรใหม่ทดแทน - ${eventName}`;
   const text = `สวัสดีคุณ ${customerName},\n\nระบบได้ทำการยกเลิกบัตรใบเดิม (${oldTicketNumber}) และออกบัตรใหม่ทดแทน (${newTicketNumber}) สำหรับงาน "${eventName}" เรียบร้อยแล้ว\n\nเปิดดูบัตรใบใหม่และ QR Code ได้ที่: ${fullViewUrl}`;
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e5e5e5; border-radius: 8px; background-color: #ffffff;">
       <div style="border-bottom: 2px solid #000000; padding-bottom: 12px; margin-bottom: 20px;">
-        <h1 style="font-size: 20px; margin: 0; color: #000000;">TICKETBOX SECURITY</h1>
+        <h1 style="font-size: 20px; margin: 0; color: #000000;">E-TIKKET SECURITY</h1>
       </div>
       <h2 style="color: #000000; margin-top: 0;">ออกบัตรใหม่ทดแทนสำเร็จ (Reissue Ticket)</h2>
       <p>สวัสดีคุณ <strong>${customerName}</strong>,</p>

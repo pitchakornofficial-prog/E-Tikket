@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { LogoutButton } from "./logout-button";
 import { ClipboardCheckIcon, MusicIcon, FileTextIcon, SlidersIcon, UsersIcon } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
+import { PrototypeControlBar } from "./prototype-control-bar";
 
 export function AdminNav() {
   const pathname = usePathname();
@@ -16,12 +17,15 @@ export function AdminNav() {
   const isCategories = pathname.startsWith("/admin/categories");
 
   return (
-    <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
+    <>
+      <PrototypeControlBar />
+      <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
       <div className="max-w-6xl mx-auto px-4 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-0">
         <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-6 w-full sm:w-auto">
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link href="/admin" className="flex items-center gap-2 text-black dark:text-white font-bold tracking-wider text-base uppercase">
-              <span>TICKETBOX</span>
+              <span>E-TIKKET</span>
+              <span className="w-2 h-2 rounded-full bg-[#ccff00] shadow-[0_0_8px_#ccff00] inline-block -mt-1" />
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-black dark:bg-white text-white dark:text-black font-mono font-bold">ADMIN</span>
             </Link>
             <div className="sm:hidden flex items-center gap-2">

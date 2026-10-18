@@ -550,13 +550,13 @@ export function TicketPurchaseForm({
       <button
         type="submit"
         disabled={isSubmitting || (isStudentEligible && !otpVerified)}
-        className="w-full min-h-[44px] py-3 px-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded text-sm hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors flex items-center justify-center text-center focus:outline-none focus:ring-2 focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+        className="btn btn-lime btn-lg full-width font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed justify-center"
       >
         {isSubmitting ? (
           "กำลังดำเนินการ..."
         ) : (
           <span className="inline-flex items-center gap-1.5">
-            ยืนยันคำสั่งซื้อ <ArrowRightIcon className="w-4 h-4" />
+            ยืนยันคำสั่งซื้อซื้อบัตรเข้างาน <ArrowRightIcon className="w-4 h-4" />
           </span>
         )}
       </button>

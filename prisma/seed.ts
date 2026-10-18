@@ -57,51 +57,95 @@ async function seedCleanSampleEvents(organizerId: string) {
 
   const sampleEvents = [
     {
-      name: "Summer Live Concert 2026",
+      name: "Indie Live Wave 2026",
       category: "Indie Pop",
+      genre: "LIVE CONCERT • INDIE FESTIVAL",
       description: "คอนเสิร์ตอินดี้รับลมริมแม่น้ำเจ้าพระยา รวมศิลปินอินดี้ป็อปแถวหน้า พร้อมระบบเสียงคุณภาพระดับสตูดิโอ",
       imageUrl: "/poster-summer.svg",
-      venue: "The Riverfront Warehouse (เจริญกรุง)",
+      posterVerticalUrl: "/poster-summer.svg",
+      posterHorizontalUrl: "/poster-summer.svg",
+      venue: "The Riverfront Warehouse (เจริญกรุง), กรุงเทพฯ",
       eventDate: new Date("2026-10-24"),
       startTime: "18:00",
-      ticketPrice: 450.00,
-      totalTickets: 100,
+      doorsOpenTime: "17:00",
+      showStartTime: "18:00",
+      showEndTime: "22:30",
+      ticketPrice: 150.00,
+      studentDiscountActive: true,
+      studentPrice: 79.00,
+      totalTickets: 150,
+      artists: "Safeplanet, Dept, Anatomy Rabbit, Yew",
+      googleMapsUrl: "https://maps.google.com/?q=The+Riverfront+Warehouse+Charoen+Krung",
+      entryRules: "1. แสดง QR Code ตั๋วจากอีเมลหรือหน้าเว็บ E-TIKKET\n2. บัตรรองรับ Re-entry ออกชั่วคราวได้โดยสแกนออกกับเจ้าหน้าที่\n3. ห้ามนำอาวุธและสารเสพติดเข้าพื้นที่งาน",
       status: "PUBLISHED" as const,
     },
     {
-      name: "Neon Indie Rock Fest",
+      name: "UBU Acoustic Night Vol.3",
+      category: "Acoustic",
+      genre: "CAMPUS & MUSIC • UBON",
+      description: "ค่ำคืนดนตรีโฟล์คและอคูสติกริมสระน้ำ มหาวิทยาลัยอุบลราชธานี พบกับศิลปินโฟล์คอินดี้และวงดนตรีนักศึกษา",
+      imageUrl: "/poster-indie.svg",
+      posterVerticalUrl: "/poster-indie.svg",
+      posterHorizontalUrl: "/poster-indie.svg",
+      venue: "ลานกิจกรรมริมสระ ม.อุบลราชธานี",
+      eventDate: new Date("2026-10-31"),
+      startTime: "17:30",
+      doorsOpenTime: "16:30",
+      showStartTime: "17:30",
+      showEndTime: "22:00",
+      ticketPrice: 150.00,
+      studentDiscountActive: true,
+      studentPrice: 79.00,
+      totalTickets: 200,
+      artists: "เขียนไขและวานิช, นิมิตรอคูสติกแบนด์, UBU Music Club",
+      googleMapsUrl: "https://maps.google.com/?q=Ubon+Ratchathani+University",
+      entryRules: "1. แสดงบัตรพร้อมบัตรนักศึกษาสำหรับผู้ใช้สิทธิ์ @ubu.ac.th\n2. เข้าออกงานได้ตลอดเวลาโดยผ่านจุดสแกนประตู",
+      status: "PUBLISHED" as const,
+    },
+    {
+      name: "Midnight Underground Club",
       category: "Rock",
+      genre: "NIGHTLIFE • ROCK / INDIE",
       description: "ค่ำคืนแห่งเสียงกีตาร์ริฟฟ์หนักแน่น แสงไฟนีออน และดนตรี Indie Rock / Post-Punk แบบสดๆ เต็มอิ่ม",
       imageUrl: "/poster-indie.svg",
-      venue: "The Underground Club (เอกมัย)",
-      eventDate: new Date("2026-11-15"),
-      startTime: "19:30",
-      ticketPrice: 650.00,
-      totalTickets: 120,
-      status: "PUBLISHED" as const,
-    },
-    {
-      name: "Acoustic in the Garden",
-      category: "Acoustic",
-      description: "ดนตรีโฟล์คและอคูสติกท่ามกลางสวนธรรมชาติ บรรยากาศสบายๆ ยามเย็น เหมาะสำหรับการพักผ่อนฟังเพลงชิลๆ",
-      imageUrl: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1200&q=80",
-      venue: "Saranrom Garden Live Stage (พระนคร)",
-      eventDate: new Date("2026-12-19"),
-      startTime: "17:00",
+      posterVerticalUrl: "/poster-indie.svg",
+      posterHorizontalUrl: "/poster-indie.svg",
+      venue: "The Basement Club, ทองหล่อ",
+      eventDate: new Date("2026-11-06"),
+      startTime: "20:00",
+      doorsOpenTime: "19:00",
+      showStartTime: "20:00",
+      showEndTime: "01:00",
       ticketPrice: 250.00,
-      totalTickets: 80,
+      studentDiscountActive: false,
+      studentPrice: null,
+      totalTickets: 120,
+      artists: "The Dark Wave, Solitude Is Bliss, Desktop Error",
+      googleMapsUrl: "https://maps.google.com/?q=Thong+Lo+Bangkok",
+      entryRules: "1. ผู้เข้าร่วมงานต้องมีอายุ 20 ปีบริบูรณ์ขึ้นไป\n2. ตรวจบัตรประชาชนตัวจริงก่อนเข้างาน",
       status: "PUBLISHED" as const,
     },
     {
-      name: "Midnight Electronic Wave",
-      category: "EDM",
-      description: "ปาร์ตี้ส่งท้ายปีเก่าต้อนรับปีใหม่กับดนตรี Electronic, Synthwave และ Bassline สั่นสะเทือนเวที",
-      imageUrl: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
-      venue: "Space BKK Arena (รัชดา)",
-      eventDate: new Date("2026-12-31"),
-      startTime: "21:00",
-      ticketPrice: 890.00,
-      totalTickets: 200,
+      name: "Sunset Vibes Sessions",
+      category: "Electronic",
+      genre: "CHILL & DJ • ROOFTOP",
+      description: "ปาร์ตี้ดนตรีชิลล์ยามพระอาทิตย์ตกดินบนชั้นดาดฟ้า วิวเมืองกรุงเทพฯ แบบ 360 องศา",
+      imageUrl: "/poster-summer.svg",
+      posterVerticalUrl: "/poster-summer.svg",
+      posterHorizontalUrl: "/poster-summer.svg",
+      venue: "Horizon Bar Rooftop, สุขุมวิท",
+      eventDate: new Date("2026-11-14"),
+      startTime: "17:00",
+      doorsOpenTime: "16:00",
+      showStartTime: "17:00",
+      showEndTime: "23:00",
+      ticketPrice: 450.00,
+      studentDiscountActive: false,
+      studentPrice: null,
+      totalTickets: 100,
+      artists: "DJ Sunset Groove, Chillout Syndicate",
+      googleMapsUrl: "https://maps.google.com/?q=Sukhumvit+Bangkok",
+      entryRules: "1. ห้ามนำอาหารและเครื่องดื่มภายนอกเข้างาน\n2. สแกน QR ตั๋วที่หน้าลิฟต์ชั้น 1",
       status: "PUBLISHED" as const,
     },
   ];
@@ -192,16 +236,16 @@ async function seedArticles(
       categoryId: categoryMap["event-news"],
       publishedAt: new Date(Date.now() - 2 * 86400000),
       tagSlugs: ["live-music", "indie-pop", "festival"],
-      eventName: "Summer Live Concert 2026",
+      eventName: "Indie Live Wave 2026",
     },
     {
-      title: "รีวิวค่ำคืนสุดเดือด Neon Indie Rock Fest: ริฟฟ์กีตาร์และแสงนีออนใต้ดิน",
-      slug: "review-neon-indie-rock-fest",
-      excerpt: "เจาะลึกบรรยากาศคอนเสิร์ตใต้ดินเอกมัย แสงนีออนตัดกับพลังดนตรี Post-Punk ที่ทำเอาแฟนเพลงเหงื่อท่วมฮอลล์ตั้งแต่เพลงแรก",
+      title: "รีวิวค่ำคืนสุดเดือด Midnight Underground Club: ริฟฟ์กีตาร์และแสงนีออนใต้ดิน",
+      slug: "review-midnight-underground-club",
+      excerpt: "เจาะลึกบรรยากาศคอนเสิร์ตใต้ดิน แสงนีออนตัดกับพลังดนตรี Post-Punk ที่ทำเอาแฟนเพลงเหงื่อท่วมฮอลล์ตั้งแต่เพลงแรก",
       coverImageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80",
-      content: `## ดนตรีสดที่ไม่ประนีประนอม ณ The Underground Club เอกมัย
+      content: `## ดนตรีสดที่ไม่ประนีประนอม ณ The Basement Club ทองหล่อ
 
-หากคุณกำลังมองหาประสบการณ์ดนตรีสดที่ดิบ แน่น และทรงพลัง **Neon Indie Rock Fest** คือคำตอบที่ชัดเจนที่สุดของค่ำคืนนี้
+หากคุณกำลังมองหาประสบการณ์ดนตรีสดที่ดิบ แน่น และทรงพลัง **Midnight Underground Club** คือคำตอบที่ชัดเจนที่สุดของค่ำคืนนี้
 
 ### บรรยากาศภายในงาน
 ตั้งแต่ก้าวแรกที่ลงสู่ชั้นใต้ดิน แสงไฟนีออนสีแดงและม่วงสลัวสะท้อนกับกำแพงปูนเปลือย เสียงเบสไลน์ที่กระแทกกระทั้นทำให้ทั้งห้องสั่นสะเทือน แฟนเพลงกว่า 100 คนยืนเบียดเสียดกันหน้าเวทีเล็กๆ ที่ไร้ที่กั้น ให้ความรู้สึกใกล้ชิดกับศิลปินอย่างแท้จริง
@@ -212,13 +256,13 @@ async function seedArticles(
 - มอสพิท (Mosh Pit) เล็กๆ ที่เกิดขึ้นอย่างเป็นกันเองและปลอดภัย
 
 ### ความประทับใจโดยรวม
-Neon Indie Rock Fest พิสูจน์ให้เห็นว่า ดนตรีอินดี้ร็อกไทยยังมีพลังงานที่ล้นเหลือ สถานที่อย่าง The Underground Club เอกมัย คือหนึ่งในหมุดหมายสำคัญของชาวอันเดอร์กราวด์อย่างแท้จริง`,
+Midnight Underground Club พิสูจน์ให้เห็นว่า ดนตรีอินดี้ร็อกไทยยังมีพลังงานที่ล้นเหลือ สถานที่อย่าง The Basement Club คือหนึ่งในหมุดหมายสำคัญของชาวอันเดอร์กราวด์อย่างแท้จริง`,
       status: "PUBLISHED" as const,
       authorId: adminId,
       categoryId: categoryMap["concert-reviews"],
       publishedAt: new Date(Date.now() - 3 * 86400000),
       tagSlugs: ["indie-rock", "live-music", "bangkok-venues"],
-      eventName: "Neon Indie Rock Fest",
+      eventName: "Midnight Underground Club",
     },
     {
       title: "บทสัมภาษณ์พิเศษ: เสียงสะท้อนของวงอินดี้รุ่นใหม่ และความหมายของ Bar Gig",
@@ -244,17 +288,17 @@ Neon Indie Rock Fest พิสูจน์ให้เห็นว่า ดน�
       tagSlugs: ["interview", "live-music", "bangkok-venues"],
     },
     {
-      title: "ชวนฟัง Acoustic in the Garden: ดนตรีโฟล์คท่ามกลางสวนสราญรมย์ยามเย็น",
-      slug: "acoustic-in-the-garden-folk-experience",
-      excerpt: "สัมผัสความอบอุ่นของบทเพลงอะคูสติกและโฟล์คกลางธรรมชาติ พร้อมโซนเสื่อปิกนิกและเครื่องดื่มคราฟต์สุดชิล",
+      title: "ชวนฟัง UBU Acoustic Night: ดนตรีโฟล์คริมสระน้ำ ม.อุบลราชธานี",
+      slug: "ubu-acoustic-night-experience",
+      excerpt: "สัมผัสความอบอุ่นของบทเพลงอะคูสติกและโฟล์คริมสระน้ำ มหาวิทยาลัยอุบลราชธานี พร้อมสิทธิ์พิเศษสำหรับนักศึกษา",
       coverImageUrl: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1200&q=80",
-      content: `## หลีกหนีความเร่งรีบ สู่เสียงดนตรีอะคูสติกใต้ร่มไม้ใหญ่
+      content: `## หลีกหนีความเร่งรีบ สู่เสียงดนตรีอะคูสติกริมสระน้ำ
 
-สำหรับใครที่เหน็ดเหนื่อยจากความวุ่นวายของชีวิตเมือง **Acoustic in the Garden** วันที่ 19 ธันวาคม 2026 ณ **Saranrom Garden Live Stage** คืออีเวนต์ที่คุณไม่ควรพลาด
+สำหรับใครที่เหน็ดเหนื่อยจากความวุ่นวายของการเรียนและการทำงาน **UBU Acoustic Night Vol.3** วันที่ 31 ตุลาคม 2026 ณ **ลานกิจกรรมริมสระ ม.อุบลราชธานี** คืออีเวนต์ที่คุณไม่ควรพลาด
 
 ### สัมผัสธรรมชาติกับเสียงเพลงโฟล์ค
-- **เวลาจัดงาน:** 17:00 น. เป็นต้นไป ช่วงเวลาที่แดดร่มลมตกและแสงอาทิตย์สีทองสาดส่องผ่านยอดไม้
-- **บัตรเข้างาน:** เพียง 250 บาท พร้อมเสื่อปิกนิกสำหรับนั่งฟังเพลงบนสนามหญ้า
+- **เวลาจัดงาน:** 17:30 น. เป็นต้นไป ช่วงเวลาที่แดดร่มลมตกริมสระน้ำ
+- **บัตรเข้างาน:** เพียง 150 บาท (นักศึกษา @ubu.ac.th รับสิทธิ์พิเศษเพียง 79 บาท)
 - **เครื่องดนตรี Acoustic แท้ๆ:** กีตาร์โปร่ง, ไวโอลิน, ฮาร์โมนิก้า และเครื่องเคาะเพอร์คัสชัน
 
 เตรียมตัวหยิบหนังสือเล่มโปรด ชวนเพื่อนหรือคนพิเศษมานั่งปล่อยใจไปกับเสียงเพลงโฟล์คอันอบอุ่นกันได้เลย!`,
@@ -263,32 +307,32 @@ Neon Indie Rock Fest พิสูจน์ให้เห็นว่า ดน�
       categoryId: categoryMap["event-news"],
       publishedAt: new Date(Date.now() - 6 * 86400000),
       tagSlugs: ["acoustic", "live-music"],
-      eventName: "Acoustic in the Garden",
+      eventName: "UBU Acoustic Night Vol.3",
     },
     {
-      title: "คู่มือเตรียมตัวไป Midnight Electronic Wave ปาร์ตี้ส่งท้ายปีอย่างไรให้ฟินและปลอดภัย",
-      slug: "guide-midnight-electronic-wave-party",
-      excerpt: "สรุปสิ่งที่ต้องเตรียมตัว Dress code การเดินทางด้วยรถไฟฟ้า และข้อควรรู้เกี่ยวกับ E-Ticket QR Code เพื่อการเข้างานที่รวดเร็ว",
+      title: "คู่มือเตรียมตัวไป Sunset Vibes Sessions ปาร์ตี้รูฟท็อปอย่างไรให้ฟินและปลอดภัย",
+      slug: "guide-sunset-vibes-sessions",
+      excerpt: "สรุปสิ่งที่ต้องเตรียมตัว Dress code การเดินทาง และข้อควรรู้เกี่ยวกับ E-Ticket QR Code เพื่อการเข้างานที่รวดเร็ว",
       coverImageUrl: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80",
-      content: `## เคาท์ดาวน์ส่งท้ายปีเก่ากับจังหวะ Synthwave & Electronic
+      content: `## ปาร์ตี้รับลมหนาวยามเย็นกับจังหวะ Chill & DJ บนชั้นดาดฟ้า
 
-ค่ำคืนวันที่ 31 ธันวาคมนี้ **Space BKK Arena (รัชดา)** จะลุกเป็นไฟกับงาน **Midnight Electronic Wave 2026** นี่คือคู่มือสำคัญสำหรับการเตรียมตัว!
+วันที่ 14 พฤศจิกายนนี้ **Horizon Bar Rooftop (สุขุมวิท)** จะเต็มไปด้วยเสียงดนตรีและวิวเมือง 360 องศา นี่คือคู่มือสำคัญสำหรับการเตรียมตัว!
 
 ### ข้อควรรู้ก่อนเดินทาง
-1. **การเดินทาง:** แนะนำให้ใช้ MRT ลงสถานีศูนย์วัฒนธรรมฯ หรือห้วยขวาง แล้วต่อวินมอเตอร์ไซค์ 3 นาที หลีกเลี่ยงการนำรถยนต์ส่วนตัวมาเนื่องจากที่จอดรถมีจำกัด
-2. **Dress Code:** Cyberpunk, Neon, Futuristic หรือชุดดำคุมโทนที่เคลื่อนไหวสะดวก
+1. **การเดินทาง:** แนะนำให้ใช้ BTS ลงสถานีพร้อมพงษ์ หลีกเลี่ยงการนำรถยนต์ส่วนตัวมาเนื่องจากที่จอดรถมีจำกัด
+2. **Dress Code:** Smart Casual หรือชุดโทนสบายๆ ที่เคลื่อนไหวสะดวก
 3. **การเข้างานด้วย E-Ticket:**
    - แคปหน้าจอหรือเปิดหน้าบัตร QR Code จากอีเมล/ลิงก์ยืนยันให้พร้อม
    - ปรับความสว่างหน้าจอโทรศัพท์ให้สูงสุดก่อนเข้าแถวสแกนบัตร
    - งานนี้รองรับการ **Re-entry** หากต้องการออกไปรับลมด้านนอก สามารถสแกนบัตรออก (Check-out) และสแกนกลับเข้า (Re-entry) ได้ตลอดเวลา
 
-เตรียมพลังงานและรองเท้าที่ใส่สบาย แล้วมาเต้นข้ามปีไปด้วยกัน!`,
+เตรียมพลังงานและกล้องถ่ายรูป แล้วมาดื่มด่ำกับบรรยากาศพระอาทิตย์ตกดินไปด้วยกัน!`,
       status: "PUBLISHED" as const,
       authorId: organizerId,
       categoryId: categoryMap["music-guides"],
       publishedAt: new Date(Date.now() - 7 * 86400000),
       tagSlugs: ["electronic", "ticket-tips", "bangkok-venues"],
-      eventName: "Midnight Electronic Wave",
+      eventName: "Sunset Vibes Sessions",
     },
     {
       title: "5 พิกัด Live House และบาร์ดนตรีอินดี้ขนาดเล็กในกรุงเทพฯ ที่คอดนตรีสดห้ามพลาด",

@@ -39,13 +39,13 @@ export async function generateMetadata({
 
   if (!article) {
     return {
-      title: "ไม่พบบทความ | TICKETBOX",
+      title: "ไม่พบบทความ | E-TIKKET",
       description: "ไม่พบเนื้อหาบทความที่คุณค้นหา",
     };
   }
 
   // AC-23, AC-24: Dynamic SEO metadata with fallbacks
-  const title = article.seoTitle || `${article.title} | TICKETBOX`;
+  const title = article.seoTitle || `${article.title} | E-TIKKET`;
   const description =
     article.seoDescription ||
     article.excerpt ||
@@ -328,8 +328,8 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 py-8 text-center text-xs text-neutral-600 font-mono mt-16">
-        <p>E-Tikket News & Articles • TICKETBOX MVP</p>
+      <footer className="border-t border-neutral-200 dark:border-neutral-900 py-8 text-center text-xs text-neutral-500 font-mono mt-16">
+        <p>E-TIKKET News & Articles • E-TIKKET Prototype</p>
       </footer>
     </div>
   );

@@ -20,6 +20,7 @@ import {
   DownloadIcon,
 } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { PrototypeControlBar } from "@/components/prototype-control-bar";
 
 
 interface TicketItem {
@@ -187,20 +188,23 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
 
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white font-sans flex flex-col transition-colors duration-200 selection:bg-white selection:text-black">
-      {/* Header */}
-      <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-neutral-900 dark:text-white font-bold tracking-wider text-lg uppercase">
-            <span>TICKETBOX</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-900 text-white dark:bg-white dark:text-black font-mono">MVP</span>
+    <div data-prototype-page="tickets" data-prototype-id="tickets-v4">
+      {/* 1. Prototype Control Bar */}
+      <PrototypeControlBar />
+
+      {/* 2. Site Header */}
+      <header className="site-header">
+        <div className="header-container">
+          <Link href="/" className="brand">
+            <span className="brand-text">E-TIKKET</span>
+            <span className="brand-dot"></span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-neutral-500 font-mono hidden sm:inline">
-              E-Ticket • แสดงที่ประตูทางเข้า
-            </span>
-            <ThemeToggle />
-          </div>
+          <nav className="nav-actions">
+            <Link href="/" className="nav-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+              สำรวจงานอื่นเพิ่มเติม
+            </Link>
+          </nav>
         </div>
       </header>
 
@@ -590,7 +594,7 @@ export default function TicketsPage({ searchParams }: TicketsPageProps) {
 
       {/* Footer */}
       <footer className="border-t border-neutral-200 dark:border-neutral-900 py-6 text-center text-xs text-neutral-500 dark:text-neutral-600">
-        <p>E-Tikket Ticket View • TICKETBOX MVP</p>
+        <p>E-TIKKET Ticket View • E-TIKKET Prototype</p>
       </footer>
     </div>
   );

@@ -5,10 +5,10 @@ import { PublicNavbar } from "@/components/public-navbar";
 import { CalendarIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, XIcon, SlidersIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "ข่าวสารและบทความดนตรี | TICKETBOX",
+  title: "ข่าวสารและบทความดนตรี | E-TIKKET",
   description: "อัปเดตข่าวสารคอนเสิร์ต บทสัมภาษณ์ศิลปิน และเรื่องราวดนตรีอินดี้ล่าสุดในประเทศไทย",
   openGraph: {
-    title: "ข่าวสารและบทความดนตรี | TICKETBOX",
+    title: "ข่าวสารและบทความดนตรี | E-TIKKET",
     description: "อัปเดตข่าวสารคอนเสิร์ต บทสัมภาษณ์ศิลปิน และเรื่องราวดนตรีอินดี้ล่าสุดในประเทศไทย",
     type: "website",
   },
@@ -88,7 +88,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             ข่าวสารและเรื่องราวดนตรี
           </h1>
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            เจาะลึกบทความ รีวิวคอนเสิร์ต และเกร็ดดนตรีอินดี้จากผู้จัดงานและทีมงาน TICKETBOX
+            เจาะลึกบทความ รีวิวคอนเสิร์ต และเกร็ดดนตรีอินดี้จากผู้จัดงานและทีมงาน E-TIKKET
           </p>
         </div>
 
@@ -179,7 +179,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-900 dark:to-neutral-950 text-neutral-500 dark:text-neutral-700 font-mono text-xs">
-                      TICKETBOX NEWS
+                      E-TIKKET NEWS
                     </div>
                   )}
                   {/* Category Pill */}
@@ -302,8 +302,8 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-900 py-8 text-center text-xs text-neutral-600 font-mono mt-16">
-        <p>E-Tikket News & Articles • TICKETBOX MVP</p>
+      <footer className="border-t border-neutral-200 dark:border-neutral-900 py-8 text-center text-xs text-neutral-500 font-mono mt-16">
+        <p>E-TIKKET News & Articles • E-TIKKET Prototype</p>
       </footer>
     </div>
   );

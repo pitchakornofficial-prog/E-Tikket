@@ -298,9 +298,9 @@ function CheckoutContent() {
       {/* Header */}
       <header className="border-b border-neutral-200 dark:border-neutral-900 bg-white/90 dark:bg-neutral-950/90 backdrop-blur sticky top-0 z-40 transition-colors">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-neutral-900 dark:text-white font-bold tracking-wider text-lg uppercase">
-            <span>TICKETBOX</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-300 font-mono">MVP</span>
+          <Link href="/" className="flex items-center gap-2 text-neutral-900 dark:text-white font-black tracking-tight text-xl uppercase">
+            <span>E-TIKKET</span>
+            <span className="w-2 h-2 rounded-full bg-[#ccff00] shadow-[0_0_8px_#ccff00] inline-block -mt-1" />
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-xs text-neutral-500 hidden sm:inline">Guest Checkout</span>

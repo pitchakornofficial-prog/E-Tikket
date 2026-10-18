@@ -61,7 +61,7 @@ export async function generateTicketsPdf(data: TicketPdfData): Promise<Uint8Arra
 
     let currentY = height - margin - 30;
 
-    // 1. Header Bar: TICKETBOX branding
+    // 1. Header Bar: E-TIKKET branding
     page.drawRectangle({
       x: margin,
       y: currentY - 15,
@@ -70,7 +70,7 @@ export async function generateTicketsPdf(data: TicketPdfData): Promise<Uint8Arra
       color: rgb(0, 0, 0),
     });
 
-    page.drawText("TICKETBOX", {
+    page.drawText("E-TIKKET", {
       x: margin + 20,
       y: currentY,
       size: 20,
@@ -282,8 +282,8 @@ export async function generateTicketsPdf(data: TicketPdfData): Promise<Uint8Arra
       color: rgb(0.8, 0.8, 0.8),
     });
 
-    page.drawText("TICKETBOX SECURE QR VERIFICATION • RE-ENTRY SUPPORTED • DO NOT DUPLICATE", {
-      x: (width - fontBold.widthOfTextAtSize("TICKETBOX SECURE QR VERIFICATION • RE-ENTRY SUPPORTED • DO NOT DUPLICATE", 8)) / 2,
+    page.drawText("E-TIKKET SECURE QR VERIFICATION • RE-ENTRY SUPPORTED • DO NOT DUPLICATE", {
+      x: (width - fontBold.widthOfTextAtSize("E-TIKKET SECURE QR VERIFICATION • RE-ENTRY SUPPORTED • DO NOT DUPLICATE", 8)) / 2,
       y: footerY + 6,
       size: 8,
       font: fontBold,
